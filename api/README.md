@@ -3,13 +3,17 @@
 To install dependencies:
 
 ```bash
-bun install
+npm ci
 ```
 
-To run:
+To run on your local machine:
 
 ```bash
-bun run server.ts
+npm run clean-build;
+npm start;
 ```
 
-This project was created using `bun init` in bun v0.4.1. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+To run only the api in docker:
+```bash
+npm run dev
+```
