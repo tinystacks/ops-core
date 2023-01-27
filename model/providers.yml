@@ -1,0 +1,54 @@
+openapi: '3.0.2'
+info:
+  title: API Title
+  version: '1.0'
+  description: Hello!
+paths: {}
+
+components:
+  schemas:
+    Providers:
+      properties:
+        id:
+          description: A unique ID for this provider. Your console is not valid if providers share an ID. These IDs are referenced in widgets
+          type: string
+
+    AwsProfileProvider:
+       allOf:
+        - $ref: '#/components/schemas/Providers'
+        - type: object
+          properties:
+            credentials:
+              oneOf:
+                - $ref: '#/components/schemas/AwsKeys'
+                - $ref: '#/components/schemas/AwsAssumedRole'
+                - $ref: '#/components/schemas/LocalAwsProfile'
+    AwsKeys:
+      properties:
+        AwsAccessKeyId:
+          type: string
+        AwsSecretAccessKey:
+          type: string
+        AwsSessionToken:
+          description: Optional - specify this if you're using temporary credentials or an assumed role
+          type: string
+    AwsAssumedRole:
+      properties:
+        roleArn:
+          description: The IAM role to assume
+          type: string
+        sessionName:
+          description: The session name to use to assume the role
+          type: string
+        primaryAwsProfileProvider:
+          description: The profile to use to assume the target role.
+          oneOf:
+            - $ref: '#/components/schemas/AwsKeys'
+            - $ref: '#/components/schemas/AwsAssumedRole'
+            - $ref: '#/components/schemas/LocalAwsProfile'
+    LocalAwsProfile:
+      properties:
+        profileName:
+          type: string
+          description: The local aws credentials profile to use. This is usually specified in ~/.aws/credentials
+    

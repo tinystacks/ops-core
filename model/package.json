@@ -1,0 +1,15 @@
+{
+  "name": "ops-console-model",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "openapi -i base.yml -o ./dist --exportCore=false --exportServices=false --indent=2",
+    "clean-build": "rm -rf ./dist && npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "openapi-typescript-codegen": "^0.23.0"
+  }
+}

@@ -1,0 +1,13 @@
+version: '3'
+services:
+  ops-console-api:
+    image: ops-console-api:local
+    build:
+      dockerfile: Dockerfile
+      context: ./api
+    environment:
+      - NODE_ENV=dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - "$HOME/.aws:/root/.aws"

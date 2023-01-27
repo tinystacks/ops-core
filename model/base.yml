@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  title: API Title
+  version: '1.0'
+  description: Hello!
+paths: {}
+
+components:
+  schemas:
+    Console:
+      description: A console is a top-level construct that defines all  
+      type: object
+      properties:
+        name:
+          description: a human-readable name for your console.
+          type: string
+        pages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Page'
+        providers:
+          type: array
+          items:
+            $ref: providers.yml#/components/schemas/Providers
+    Widget:
+      type: object
+      properties:
+        id:
+          description: A unique ID for this widget. Your console is not valid if widgets share an ID
+          type: string
+        displayName:
+          description: A human-readable display name, usually used to title a widget
+          type: string
+        showDisplayName:
+          description: Whether to show the display name
+          type: boolean
+        description:
+          type: string
+        showDescription:
+          type: string
+        type:
+          type: string
+          description: This describes how this widget should be rendered. The "type" should be equivalent to the Object definition's name of the widget you are trying to render.
+      #TODO navigation
+    Page:
+      allOf:
+        - $ref: '#/components/schemas/Widget'
+        - type: object
+          properties:
+            widgets:
+              type: array
+              items:
+                $ref: '#/components/schemas/Widget'
+            route:
+              description: A URL-safe route where this page can be accessed
+              type: string
+    TabPanel:
+      allOf:
+        - $ref: '#/components/schemas/Widget'
+        - type: object
+          properties:
+            tabs:
+              description: A list of tab widgets to be displayed
+              type: array
+              items:
+                $ref: '#/components/schemas/Tab'
+    Tab:
+      allOf:
+        - $ref: '#/components/schemas/Widget'
+        - type: object
+          properties:
+            tabDisplayName:
+              description: A human readable, non-unique name to be displayed
+              type: string
+            widgets:
+                description: A list of widgets to display
+                type: array
+                items:
+                  $ref: '#/components/schemas/Widget'
