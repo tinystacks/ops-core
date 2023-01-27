@@ -42,6 +42,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@tinystacks/ops-model": "file:../../ops-model",
     "colors": "^1.4.0",
     "commander": "^10.0.0"
   }
