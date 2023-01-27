@@ -29,7 +29,7 @@
     "test-file": "",
     "test-file-cov": "",
     "view-test-cov": "jest --coverage && open coverage/lcov-report/index.html",
-    "prepare": "husky install"
+    "prepare": ""
   },
   "author": "",
   "license": "ISC",
