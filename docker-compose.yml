@@ -7,6 +7,7 @@ services:
       context: ./api
     environment:
       - NODE_ENV=dev
+      - CONFIG_PATH="./example.yml"
     ports:
       - "8000:8000"
     volumes:

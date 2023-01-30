@@ -2,6 +2,8 @@ FROM public.ecr.aws/docker/library/node:18-slim
 
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
+ARG CONFIG_PATH
+ENV CONFIG_PATH=${CONFIG_PATH}
 ENV PORT=8000
 
 WORKDIR /app

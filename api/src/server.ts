@@ -12,6 +12,11 @@ async function startServer () {
   if (process.env.NODE_ENV === 'dev') {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('dotenv').config();
+    const CONFIG_PATH = process.env.CONFIG_PATH;
+  
+    if (!CONFIG_PATH) {
+      console.warn('No config path specified! API results may be empty.');
+    }
   }
   
   // Constants
@@ -51,9 +56,9 @@ async function startServer () {
     response.status(200).send(responseBody);
   });
   
-  app.get('/*', (_request: Request, response: Response) => {
-    response.status(204).send();
-  });
+  // app.get('/*', (_request: Request, response: Response) => {
+  //   response.status(204).send();
+  // });
   
   app.use(errorMiddleware);
   
