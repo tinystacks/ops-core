@@ -4,7 +4,7 @@ import {
   Page,
   Provider,
   Widget
-} from "@tinystacks/ops-model";
+} from '@tinystacks/ops-model';
 
 type YamlWidget = {
   [WidgetName: string]: Widget
@@ -33,4 +33,4 @@ export {
   YamlPage,
   YamlProvider,
   YamlConsole
-}
+};
