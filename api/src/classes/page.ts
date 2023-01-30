@@ -16,13 +16,13 @@ class Page extends Parseable implements PageType {
     this.widgets = widgets;
   }
   
-  static fromYaml(yamlJson: YamlPage): Page {
+  static fromYaml (yamlJson: YamlPage): Page {
     const {
       route,
       widgets: widgetObjects = []
     } = yamlJson.Page;
     const widgets = widgetObjects.map((widgetObject: YamlWidget) => {
-      const [type, properties]: [string, WidgetType] = Object.entries(widgetObject)?.at(0);
+      const [type, properties]: [string, WidgetType] = Object.entries(widgetObject).at(0);
       return {
         ...properties,
         type
@@ -34,7 +34,7 @@ class Page extends Parseable implements PageType {
     );
   }
   
-  static toYaml(page: Page): YamlPage {
+  static toYaml (page: Page): YamlPage {
     const {
       route,
       widgets: widgetObjects = []

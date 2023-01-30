@@ -28,7 +28,7 @@ class Console extends Parseable implements ConsoleType {
     } = yamlJson.Console;
     const pages = pageObjects.map(Page.fromYaml);
     const providers = providerObjects.map((providerObject: YamlProvider) => {
-      const [type, properties]: [string, ProviderType] = Object.entries(providerObject)?.at(0);
+      const [type, properties]: [string, ProviderType] = Object.entries(providerObject).at(0);
       return {
         ...properties,
         type
@@ -77,6 +77,20 @@ class Console extends Parseable implements ConsoleType {
     );
   }
 
+  addPage (page: Page): void {
+    this.pages = this.pages || [];
+    this.pages.push(page);
+  }
+
+  updatePage (index: number, page: Page): void {
+    this.pages = this.pages || [];
+    this.pages[index] = page;
+  }
+  
+  deletePage (pageRoute: string): void {
+    this.pages = this.pages || [];
+    this.pages = this.pages.filter(page => page.route !== pageRoute);
+  }
 }
 
 export default Console;
