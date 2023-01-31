@@ -1,7 +1,8 @@
 import { Page as PageType, Widget as WidgetType } from '@tinystacks/ops-model';
 import Widget from './widget';
 import Parseable from './parseable';
-import { YamlPage, YamlWidget } from '../types';
+import { GenericWidgetType, YamlPage, YamlWidget } from '../types';
+import GenericWidget from './generic-widget';
 
 class Page extends Parseable implements PageType {
   route: string;
@@ -21,13 +22,7 @@ class Page extends Parseable implements PageType {
       route,
       widgets: widgetObjects = []
     } = yamlJson.Page;
-    const widgets = widgetObjects.map((widgetObject: YamlWidget) => {
-      const [type, properties]: [string, WidgetType] = Object.entries(widgetObject).at(0);
-      return {
-        ...properties,
-        type
-      };
-    });
+    const widgets = widgetObjects.map(GenericWidget.fromYaml);
     return new Page(
       route,
       widgets
@@ -37,14 +32,9 @@ class Page extends Parseable implements PageType {
   static toYaml (page: Page): YamlPage {
     const {
       route,
-      widgets: widgetObjects = []
+      widgets: widgetClasses = []
     } = page;
-    const widgets = widgetObjects.map<YamlWidget>((widgetObject: WidgetType) => {
-      const { type } = widgetObject;
-      return {
-        [type]: widgetObject
-      };
-    });
+    const widgets: YamlWidget[] = widgetClasses.map(GenericWidget.toYaml);
     return {
       Page: {
         route,
@@ -56,8 +46,9 @@ class Page extends Parseable implements PageType {
   static fromObject (object: PageType): Page {
     const {
       route,
-      widgets // TODO: How to map widgets for property filtering, etc.? Do we even need to?
+      widgets: widgetObjects = []
     } = object;
+    const widgets = widgetObjects.map(GenericWidget.fromObject)
     return new Page(
       route,
       widgets

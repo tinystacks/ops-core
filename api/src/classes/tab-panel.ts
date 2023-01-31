@@ -33,8 +33,9 @@ class TabPanel extends Widget implements TabPanelType {
       showDisplayName,
       description,
       showDescription,
-      tabs
+      tabs: tabObjects = []
     } = object;
+    const tabs = tabObjects.map(Tab.fromObject);
     return new TabPanel(
       id,
       displayName,
@@ -45,6 +46,8 @@ class TabPanel extends Widget implements TabPanelType {
       tabs
     );
   }
+
+  getData(): void {}
 }
 
 export default TabPanel;

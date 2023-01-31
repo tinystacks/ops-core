@@ -5,8 +5,8 @@ export default function () {
   return {
     async PUT (request: Request, response: Response, next: NextFunction) {
       try {
-        const console = await PageController.putPage(request.params.consoleName, request.params.pageRoute, request.body);
-        response.status(200).send(console);
+        const page = await PageController.putPage(request.params.consoleName, request.params.pageRoute, request.body);
+        response.status(200).send(page);
       } catch (error) {
         next(error);
       }
@@ -14,8 +14,8 @@ export default function () {
 
     async DELETE (request: Request, response: Response, next: NextFunction) {
       try {
-        const console = await PageController.deletePage(request.params.consoleName, request.params.pageRoute);
-        response.status(200).send(console);
+        const page = await PageController.deletePage(request.params.consoleName, request.params.pageRoute);
+        response.status(200).send(page);
       } catch (error) {
         next(error);
       }

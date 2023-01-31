@@ -5,8 +5,8 @@ export default function () {
   return {
     async GET (request: Request, response: Response, next: NextFunction) {
       try {
-        const console = await PageController.getPages(request.params.consoleName);
-        response.status(200).send(console);
+        const pages = await PageController.getPages(request.params.consoleName);
+        response.status(200).send(pages);
       } catch (error) {
         next(error);
       }
@@ -14,8 +14,8 @@ export default function () {
     
     async POST (request: Request, response: Response, next: NextFunction) {
       try {
-        const console = await PageController.postPage(request.params.consoleName, request.body);
-        response.status(200).send(console);
+        const page = await PageController.postPage(request.params.consoleName, request.body);
+        response.status(200).send(page);
       } catch (error) {
         next(error);
       }

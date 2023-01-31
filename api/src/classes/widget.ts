@@ -7,6 +7,7 @@ abstract class Widget implements WidgetType {
   showDisplayName?: boolean;
   description?: string;
   showDescription?: string;
+  abstract getData (): void;
 
   constructor (
     id: string,

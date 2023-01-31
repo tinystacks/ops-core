@@ -45,7 +45,7 @@ const LocalClient = {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
       const existingPageIndex = console.pages?.findIndex(p => p.route === pageRoute);
-      if (existingPageIndex === -1) throw HttpError.BadRequest(`Cannot update page with route ${pageRoute} because this page does not exist on console ${consoleName}!`);
+      if (existingPageIndex === -1) throw HttpError.NotFound(`Cannot update page with route ${pageRoute} because this page does not exist on console ${consoleName}!`);
       // No trickery allowed.
       page.route = pageRoute;
       console.updatePage(existingPageIndex, page);
@@ -59,7 +59,7 @@ const LocalClient = {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
       const existingPage = console.pages?.find(p => p.route === pageRoute);
-      if (isNil(existingPage)) throw HttpError.BadRequest(`Cannot delete page with route ${pageRoute} because this page does not exist on console ${consoleName}!`);
+      if (isNil(existingPage)) throw HttpError.NotFound(`Cannot delete page with route ${pageRoute} because this page does not exist on console ${consoleName}!`);
       console.deletePage(pageRoute);
       await ConsoleClient.saveConsole(console.name, console);
       return existingPage;
