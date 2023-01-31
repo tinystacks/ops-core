@@ -17,11 +17,11 @@ const LocalClient = {
     const configPath = process.env.CONFIG_PATH;
     if (configPath) {
       const configFilePath = resolvePath(configPath);
-      console.debug('configFilePath: ', configFilePath);
+      // console.debug('configFilePath: ', configFilePath);
       const configFile = FsUtils.tryToReadFile(configFilePath);
       if (!configFile) throw HttpError.NotFound(`Cannot fetch consoles! Config file ${configPath} not found!`);
       const configJson = yaml.load(configFile.toString()) as YamlConsole;
-      console.debug('configJson: ', JSON.stringify(configJson));
+      // console.debug('configJson: ', JSON.stringify(configJson));
       if (!isNil(configJson)) return Console.fromYaml(configJson);
       return undefined;
     }
