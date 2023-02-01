@@ -56,9 +56,6 @@ export class ParsingService {
 
   public validatePropertiesOnWidgets(widgets: Array<Widget>){ 
     widgets.forEach(widget => { 
-      //this.validatePropertyExists(widget, 'displayName');
-      //this.validatePropertyExists(widget, 'description'); 
-      // can validate more properties in future but based off example these are sufficient
       this.validatePropertyExists(widget, 'type', "Widget");
       this.validatePropertyExists(widget, 'id', "Widget");
       
