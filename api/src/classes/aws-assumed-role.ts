@@ -5,8 +5,8 @@ class AwsAssumedRole implements AwsAssumedRoleType {
   sessionName?: string;
 
   constructor (
-    roleArn?: string,
-    sessionName?: string
+    roleArn: string,
+    sessionName: string
   ) {
     this.roleArn = roleArn;
     this.sessionName = sessionName;

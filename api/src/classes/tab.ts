@@ -6,14 +6,14 @@ class Tab extends Widget implements TabType {
   widgetIds?: string[];
 
   constructor (
-    id?: string,
-    displayName?: string,
-    type?: string,
-    tabDisplayName?: string,
+    id: string,
+    displayName: string,
+    type: string,
+    tabDisplayName: string,
     widgetIds: string[] = [],
-    showDisplayName?: boolean,
-    description?: string,
-    showDescription?: string
+    showDisplayName: boolean,
+    description: string,
+    showDescription: string
   ) {
     super(
       id,

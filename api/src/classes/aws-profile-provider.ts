@@ -9,7 +9,7 @@ class AwsProfileProvider extends Provider implements AwsProfileProviderType {
 
   constructor (
     id: string,
-    credentials?: AwsAssumedRole | AwsKeys | LocalAwsProfile
+    credentials: AwsAssumedRole | AwsKeys | LocalAwsProfile
   ) {
     super(id);
     this.credentials = credentials;

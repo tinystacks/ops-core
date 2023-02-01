@@ -9,12 +9,12 @@ abstract class Widget implements WidgetType {
   showDescription?: string;
 
   constructor (
-    id?: string,
-    displayName?: string,
-    type?: string,
-    showDisplayName?: boolean,
-    description?: string,
-    showDescription?: string
+    id: string,
+    displayName: string,
+    type: string,
+    showDisplayName: boolean,
+    description: string,
+    showDescription: string
   ) {
     this.id = id;
     this.displayName = displayName;

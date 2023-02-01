@@ -8,8 +8,8 @@ class Page extends Parseable implements PageType {
   widgetIds?: string[];
 
   constructor (
-    id?: string, 
-    route?: string,
+    id: string, 
+    route: string,
     widgetIds: string[] = []
   ) {
     super();
