@@ -8,7 +8,6 @@ jest.mock('../../src/clients/console-client', () => ({
 
 import Console from '../../src/classes/console';
 import GenericWidget from '../../src/classes/generic-widget';
-import Widget from '../../src/classes/widget';
 import WidgetClient from '../../src/clients/widget-client';
 import HttpError from 'http-errors';
 
@@ -36,7 +35,7 @@ describe('widget client tests', () => {
         }
       });
       it('Config file', () => {
-        const error = HttpError.NotFound(`Cannot fetch consoles! Config file test.yml not found!`);
+        const error = HttpError.NotFound('Cannot fetch consoles! Config file test.yml not found!');
         let thrownError;
         try {
           WidgetClient.handleError(error);
@@ -45,22 +44,22 @@ describe('widget client tests', () => {
         } finally {
           expect(thrownError).toBeDefined();
           expect(thrownError).toEqual(
-            HttpError.NotFound(`Cannot fetch widgets! Config file test.yml not found!`)
+            HttpError.NotFound('Cannot fetch widgets! Config file test.yml not found!')
           );
         }
       });
     });
     it('re-throws error', () => {
       const error = new Error('Error!');
-        let thrownError;
-        try {
-          WidgetClient.handleError(error);
-        } catch (e) {
-          thrownError = e;
-        } finally {
-          expect(thrownError).toBeDefined();
-          expect(thrownError).toEqual(error);
-        }
+      let thrownError;
+      try {
+        WidgetClient.handleError(error);
+      } catch (e) {
+        thrownError = e;
+      } finally {
+        expect(thrownError).toBeDefined();
+        expect(thrownError).toEqual(error);
+      }
     });
   });
   describe('getWidget', () => {
@@ -77,7 +76,7 @@ describe('widget client tests', () => {
         ],
         providers: [],
         pages: []
-      })
+      });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
       const result = await WidgetClient.getWidget('mock-console', 'mock-id');
@@ -90,7 +89,7 @@ describe('widget client tests', () => {
         widgets: [],
         providers: [],
         pages: []
-      })
+      });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
       let thrownError;
@@ -101,7 +100,7 @@ describe('widget client tests', () => {
       } finally {
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.NotFound(`Widget with id mock-id does not exist on console mock-console!`)
+          HttpError.NotFound('Widget with id mock-id does not exist on console mock-console!')
         );
       }
     });
@@ -121,7 +120,7 @@ describe('widget client tests', () => {
         ],
         providers: [],
         pages: []
-      })
+      });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
       const result = await WidgetClient.getWidget('mock-console', 'mock-id');
@@ -130,7 +129,7 @@ describe('widget client tests', () => {
     });
     it('throws if an error occurs', async () => {
       const mockError = new Error('Error!');
-      mockGetConsole.mockImplementationOnce(()=> { throw mockError; })
+      mockGetConsole.mockImplementationOnce(()=> { throw mockError; });
 
       let thrownError;
       try {
@@ -200,7 +199,7 @@ describe('widget client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.Conflict(`Cannot create new widget with id mock-id because a widget with this id already exists on console mock-console!`)
+          HttpError.Conflict('Cannot create new widget with id mock-id because a widget with this id already exists on console mock-console!')
         );
       }
     });
@@ -269,7 +268,7 @@ describe('widget client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.NotFound(`Cannot update widget with id mock-id because this widget does not exist on console mock-console!`)
+          HttpError.NotFound('Cannot update widget with id mock-id because this widget does not exist on console mock-console!')
         );
       }
     });
@@ -319,7 +318,7 @@ describe('widget client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.NotFound(`Cannot delete widget with id mock-id because this widget does not exist on console mock-console!`)
+          HttpError.NotFound('Cannot delete widget with id mock-id because this widget does not exist on console mock-console!')
         );
       }
     });

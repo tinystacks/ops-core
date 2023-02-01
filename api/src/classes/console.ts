@@ -40,7 +40,7 @@ class Console extends Parseable implements ConsoleType {
         type
       };
     });
-    const widgets = widgetObjects.map(GenericWidget.fromYaml)
+    const widgets = widgetObjects.map(GenericWidget.fromYaml);
     return new Console(
       name,
       pages,

@@ -66,7 +66,7 @@ describe('local console client tests', () => {
         expect(mockTryToReadFile).toBeCalled();
         expect(mockTryToReadFile).toBeCalledWith(mockConfigPath);
         expect(thrownError).toBeDefined();
-        expect(thrownError).toEqual(HttpError.NotFound(`Cannot fetch consoles! Config file ./mock.yml not found!`));
+        expect(thrownError).toEqual(HttpError.NotFound('Cannot fetch consoles! Config file ./mock.yml not found!'));
       }
     });
     it('returns Console on success', async () => {
@@ -99,7 +99,7 @@ describe('local console client tests', () => {
       process.env.CONFIG_PATH = mockConfigPath;
       mockResolve.mockReturnValueOnce(mockConfigPath);
       mockTryToReadFile.mockReturnValueOnce(Buffer.from('Console: '));
-      mockLoad.mockReturnValueOnce(undefined)
+      mockLoad.mockReturnValueOnce(undefined);
       let thrownError;
       try {
         await LocalConsoleClient.getLocalConsole();
@@ -148,7 +148,7 @@ describe('local console client tests', () => {
       process.env.CONFIG_PATH = mockConfigPath;
       mockResolve.mockReturnValueOnce(mockConfigPath);
       mockTryToReadFile.mockReturnValueOnce(Buffer.from('Console: '));
-      mockDump.mockReturnValueOnce('Console: ')
+      mockDump.mockReturnValueOnce('Console: ');
       jest.spyOn(LocalConsoleClient, 'getLocalConsole').mockResolvedValueOnce(mockConsole);
       
       const result = await LocalConsoleClient.saveLocalConsole(mockConsole);

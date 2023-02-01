@@ -20,14 +20,14 @@ describe('FsUtils tests', () => {
   describe('tryToReadFile', () => {
     it('logs error and returns undefined if an error is thrown', () => {
       const mockError = new Error('Error!');
-      mockReadFileSync.mockImplementationOnce(() => { throw mockError; })
+      mockReadFileSync.mockImplementationOnce(() => { throw mockError; });
 
       const file = FsUtils.tryToReadFile('./mock');
 
       expect(mockReadFileSync).toBeCalled();
       expect(console.error).toBeCalled();
       expect(console.error).toBeCalledWith('An error occured when reading the file specified at ./mock!', mockError);
-      expect(file).toBeUndefined()
+      expect(file).toBeUndefined();
     });
     
     it('logs warning and returns undefined if the file is nil', () => {

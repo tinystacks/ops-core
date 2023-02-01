@@ -35,7 +35,7 @@ describe('page client tests', () => {
         }
       });
       it('Config file', () => {
-        const error = HttpError.NotFound(`Cannot fetch consoles! Config file test.yml not found!`);
+        const error = HttpError.NotFound('Cannot fetch consoles! Config file test.yml not found!');
         let thrownError;
         try {
           PageClient.handleError(error);
@@ -44,22 +44,22 @@ describe('page client tests', () => {
         } finally {
           expect(thrownError).toBeDefined();
           expect(thrownError).toEqual(
-            HttpError.NotFound(`Cannot fetch pages! Config file test.yml not found!`)
+            HttpError.NotFound('Cannot fetch pages! Config file test.yml not found!')
           );
         }
       });
     });
     it('re-throws error', () => {
       const error = new Error('Error!');
-        let thrownError;
-        try {
-          PageClient.handleError(error);
-        } catch (e) {
-          thrownError = e;
-        } finally {
-          expect(thrownError).toBeDefined();
-          expect(thrownError).toEqual(error);
-        }
+      let thrownError;
+      try {
+        PageClient.handleError(error);
+      } catch (e) {
+        thrownError = e;
+      } finally {
+        expect(thrownError).toBeDefined();
+        expect(thrownError).toEqual(error);
+      }
     });
   });
   describe('getPage', () => {
@@ -75,7 +75,7 @@ describe('page client tests', () => {
         ],
         providers: [],
         widgets: []
-      })
+      });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
       const result = await PageClient.getPage('mock-console', '/mock-route');
@@ -88,7 +88,7 @@ describe('page client tests', () => {
         pages: [],
         providers: [],
         widgets: []
-      })
+      });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
       let thrownError;
@@ -99,7 +99,7 @@ describe('page client tests', () => {
       } finally {
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.NotFound(`Page with route /mock-route does not exist in console mock-console!`)
+          HttpError.NotFound('Page with route /mock-route does not exist in console mock-console!')
         );
       }
     });
@@ -118,7 +118,7 @@ describe('page client tests', () => {
         ],
         providers: [],
         widgets: []
-      })
+      });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
       const result = await PageClient.getPages('mock-console');
@@ -127,7 +127,7 @@ describe('page client tests', () => {
     });
     it('throws if an error occurs', async () => {
       const mockError = new Error('Error!');
-      mockGetConsole.mockImplementationOnce(()=> { throw mockError; })
+      mockGetConsole.mockImplementationOnce(()=> { throw mockError; });
 
       let thrownError;
       try {
@@ -195,7 +195,7 @@ describe('page client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.Conflict(`Cannot create new page with route /mock-route because a page with this route already exists on console mock-console!`)
+          HttpError.Conflict('Cannot create new page with route /mock-route because a page with this route already exists on console mock-console!')
         );
       }
     });
@@ -261,7 +261,7 @@ describe('page client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.NotFound(`Cannot update page with route /mock-route because this page does not exist on console mock-console!`)
+          HttpError.NotFound('Cannot update page with route /mock-route because this page does not exist on console mock-console!')
         );
       }
     });
@@ -310,7 +310,7 @@ describe('page client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.NotFound(`Cannot delete page with route /mock-route because this page does not exist on console mock-console!`)
+          HttpError.NotFound('Cannot delete page with route /mock-route because this page does not exist on console mock-console!')
         );
       }
     });

@@ -68,7 +68,7 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
     };
   }
 
-  getData(): void {}
+  getData (): void { return; }
 }
 
 export default GenericWidget;

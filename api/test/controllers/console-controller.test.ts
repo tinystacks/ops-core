@@ -28,7 +28,7 @@ describe('console controller tests', () => {
       pages: [],
       providers: [],
       widgets: []
-    }
+    };
     await ConsoleController.postConsole(requestBody);
     expect(mockSaveConsole).toBeCalled();
     expect(mockSaveConsole).toBeCalledWith(requestBody.name, requestBody);
@@ -39,7 +39,7 @@ describe('console controller tests', () => {
       pages: [],
       providers: [],
       widgets: []
-    }
+    };
     await ConsoleController.putConsole('mock-console-2', requestBody);
     expect(mockSaveConsole).toBeCalled();
     expect(mockSaveConsole).toBeCalledWith('mock-console-2', {

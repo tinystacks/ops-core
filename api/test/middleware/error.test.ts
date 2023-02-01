@@ -112,4 +112,4 @@ describe('error middleware tests', () => {
     expect(mockJson).toBeCalledWith(HttpError.InternalServerError('An unexpected error occured!'));
     expect(mockNext).toBeCalled();
   });
-})
+});
