@@ -47,10 +47,10 @@ class Console extends Parseable implements ConsoleType {
       name,
       pages: pageObjects = [],
       providers: providerObjects = [],
-      widgets: widgetObjecst = []
+      widgets: widgetObjects = []
     } = console;
     const pages = pageObjects.map(Page.toYaml);
-    const widgets = widgetObjecst; //need to update this
+    const widgets = widgetObjects;
     const providers = providerObjects.map((providerObject: ProviderType & Json) => {
       const { type } = providerObject;
       return {

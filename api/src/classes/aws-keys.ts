@@ -8,7 +8,7 @@ class AwsKeys implements AwsKeysType {
   constructor (
     AwsAccessKeyId: string,
     AwsSecretAccessKey: string,
-    AwsSessionToken: string
+    AwsSessionToken?: string
   ) {
     this.AwsAccessKeyId = AwsAccessKeyId;
     this.AwsSecretAccessKey = AwsSecretAccessKey;
