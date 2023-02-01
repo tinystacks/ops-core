@@ -1,6 +1,6 @@
 import yaml from 'js-yaml';
 import isNil from 'lodash.isnil';
-import Console from '../classes/console';
+import Console from '../../classes/console';
 import HttpError from 'http-errors';
 import {
   writeFileSync
@@ -8,11 +8,11 @@ import {
 import {
   resolve as resolvePath
 } from 'path';
-import FsUtils from '../utils/fs-utils';
-import { YamlConsole } from '../types';
+import FsUtils from '../../utils/fs-utils';
+import { YamlConsole } from '../../types';
 
 // TODO: should we make this a class that implement a ConsoleClient interface?
-const LocalClient = {
+const LocalConsoleClient = {
   async getLocalConsole (): Promise<Console> {
     const configPath = process.env.CONFIG_PATH;
     if (configPath) {
@@ -23,7 +23,7 @@ const LocalClient = {
       const configJson = yaml.load(configFile.toString()) as YamlConsole;
       // console.debug('configJson: ', JSON.stringify(configJson));
       if (!isNil(configJson)) return Console.fromYaml(configJson);
-      return undefined;
+      throw HttpError.InternalServerError('Cannot fetch consoles! The contents of the config file was empty or invalid!');
     }
     throw HttpError.InternalServerError('Cannot fetch consoles! No value was found for CONFIG_PATH!');
   },
@@ -56,30 +56,4 @@ const LocalClient = {
   }
 };
 
-const ConsoleClient = {
-  async getConsole (_consoleName: string): Promise<Console> {
-    // TODO: Add switching based on context for sourcing from other places.
-    return LocalClient.getLocalConsole();
-  },
-  async getConsoles (): Promise<Console[]> {
-    // TODO: Add switching based on context for sourcing from other places.
-    const consoles = [];
-    const localConsole = await LocalClient.getLocalConsole();
-    if (localConsole) consoles.push(localConsole);
-    return consoles;
-  },
-  async saveConsole (_consoleName: string, console: Console): Promise<Console> {
-    // TODO: Add switching based on context for sourcing from other places.
-    return LocalClient.saveLocalConsole(console);
-  },
-  async deleteConsole (consoleName: string): Promise<Console> {
-    // TODO: Add switching based on context for sourcing from other places.
-    return LocalClient.deleteLocalConsole(consoleName);
-  }
-};
-
-export {
-  ConsoleClient,
-  LocalClient
-};
-export default ConsoleClient;
+export default LocalConsoleClient;

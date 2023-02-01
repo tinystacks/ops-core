@@ -78,13 +78,16 @@ class Console extends Parseable implements ConsoleType {
     const {
       name,
       pages: pageObjects = [],
-      providers
+      providers,
+      widgets: widgetObjects = []
     } = object;
     const pages = pageObjects.map(Page.fromObject);
+    const widgets = widgetObjects.map(GenericWidget.fromObject);
     return new Console(
       name,
       pages,
-      providers
+      providers,
+      widgets
     );
   }
 

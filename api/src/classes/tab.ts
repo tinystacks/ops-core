@@ -1,16 +1,16 @@
-import { Tab as TabType, Widget as WidgetType } from '@tinystacks/ops-model';
+import { Tab as TabType } from '@tinystacks/ops-model';
 import Widget from './widget';
 
 class Tab extends Widget implements TabType {
   tabDisplayName: string;
-  widgets: WidgetType[];
+  widgetIds: string[];
 
   constructor (
     id: string,
     displayName: string,
     type: string,
     tabDisplayName: string,
-    widgets: WidgetType[] = [],
+    widgetIds: string[] = [],
     showDisplayName?: boolean,
     description?: string,
     showDescription?: string
@@ -24,7 +24,7 @@ class Tab extends Widget implements TabType {
       showDescription
     );
     this.tabDisplayName = tabDisplayName;
-    this.widgets = widgets;
+    this.widgetIds = widgetIds;
   }
 
   static fromObject (object: TabType): Tab {
@@ -33,7 +33,7 @@ class Tab extends Widget implements TabType {
       displayName,
       type,
       tabDisplayName,
-      widgets,
+      widgetIds,
       showDisplayName,
       description,
       showDescription
@@ -43,14 +43,14 @@ class Tab extends Widget implements TabType {
       displayName,
       type,
       tabDisplayName,
-      widgets,
+      widgetIds,
       showDisplayName,
       description,
       showDescription
     );
   }
 
-  getData(): void {}
+  getData (): void { return; }
 }
 
 export default Tab;

@@ -12,6 +12,7 @@ const PageController = {
   },
   async putPage (consoleName: string, pageRoute: string, updatePageBody: PageType): Promise<PageType> {
     const page = Page.fromObject(updatePageBody);
+    page.route = pageRoute;
     return PageClient.updatePage(consoleName, pageRoute, page);
   },
   async deletePage (consoleName: string, pageRoute: string): Promise<PageType> {

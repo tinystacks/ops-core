@@ -3,25 +3,26 @@ import Page from '../classes/page';
 import HttpError from 'http-errors';
 import ConsoleClient from './console-client';
 
-// TODO: should we make this a class that implement a PageClient interface?
-const LocalClient = {
+const PageClient = {
   handleError (error: unknown): never {
     if (HttpError.isHttpError(error)) {
       if (error.message.includes('CONFIG_PATH') || error.message.includes('Config file')) {
-        error.message?.replaceAll('console', 'page');
+        error.message = error.message?.replaceAll('console', 'page');
       }
     }
     throw error;
   },
-  async getLocalPage (consoleName: string, pageRoute: string): Promise<Page> {
+  async getPage (consoleName: string, pageRoute: string): Promise<Page> {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
-      return console.pages?.find(page => page.route === pageRoute);
+      const existingPage = console.pages?.find(page => page.route === pageRoute);
+      if (!existingPage) throw HttpError.NotFound(`Page with route ${pageRoute} does not exist in console ${consoleName}!`);
+      return existingPage;
     } catch (error) {
       return this.handleError(error);
     }
   },
-  async getLocalPages (consoleName: string): Promise<Page[]> {
+  async getPages (consoleName: string): Promise<Page[]> {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
       return console.pages;
@@ -29,19 +30,19 @@ const LocalClient = {
       return this.handleError(error);
     }
   },
-  async createLocalPage (consoleName: string, page: Page): Promise<Page> {
+  async createPage (consoleName: string, page: Page): Promise<Page> {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
       const existingPage = console.pages?.find(p => p.route === page.route);
       if (existingPage) throw HttpError.Conflict(`Cannot create new page with route ${page.route} because a page with this route already exists on console ${consoleName}!`);
       console.addPage(page);
       await ConsoleClient.saveConsole(console.name, console);
-      return this.getLocalPage(consoleName, page.route);
+      return this.getPage(consoleName, page.route);
     } catch (error) {
       return this.handleError(error);
     }
   },
-  async updateLocalPage (consoleName: string, pageRoute: string, page: Page): Promise<Page> {
+  async updatePage (consoleName: string, pageRoute: string, page: Page): Promise<Page> {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
       const existingPageIndex = console.pages?.findIndex(p => p.route === pageRoute);
@@ -50,12 +51,12 @@ const LocalClient = {
       page.route = pageRoute;
       console.updatePage(existingPageIndex, page);
       await ConsoleClient.saveConsole(console.name, console);
-      return this.getLocalPage(consoleName, page.route);
+      return this.getPage(consoleName, page.route);
     } catch (error) {
       return this.handleError(error);
     }
   },
-  async deleteLocalPage (consoleName: string, pageRoute: string): Promise<Page> {
+  async deletePage (consoleName: string, pageRoute: string): Promise<Page> {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
       const existingPage = console.pages?.find(p => p.route === pageRoute);
@@ -69,27 +70,4 @@ const LocalClient = {
   }
 };
 
-const PageClient = {
-  async getPages (consoleName: string): Promise<Page[]> {
-    // TODO: Add switching based on context for sourcing from other places.
-    return await LocalClient.getLocalPages(consoleName);
-  },
-  async createPage (consoleName: string, page: Page): Promise<Page> {
-    // TODO: Add switching based on context for sourcing from other places.
-    return LocalClient.createLocalPage(consoleName, page);
-  },
-  async updatePage (consoleName: string, pageRoute: string, page: Page): Promise<Page> {
-    // TODO: Add switching based on context for sourcing from other places.
-    return LocalClient.updateLocalPage(consoleName, pageRoute, page);
-  },
-  async deletePage (consoleName: string, pageRoute: string): Promise<Page> {
-    // TODO: Add switching based on context for sourcing from other places.
-    return LocalClient.deleteLocalPage(consoleName, pageRoute);
-  }
-};
-
-export {
-  PageClient,
-  LocalClient
-};
 export default PageClient;

@@ -11,12 +11,13 @@ const WidgetController = {
     const widget = GenericWidget.fromObject(createWidgetBody);
     return WidgetClient.createWidget(consoleName, widget);
   },
-  async putWidget (consoleName: string, widgetRoute: string, updateWidgetBody: WidgetType): Promise<WidgetType> {
+  async putWidget (consoleName: string, widgetId: string, updateWidgetBody: WidgetType): Promise<WidgetType> {
     const widget = GenericWidget.fromObject(updateWidgetBody);
-    return WidgetClient.updateWidget(consoleName, widgetRoute, widget);
+    widget.id = widgetId;
+    return WidgetClient.updateWidget(consoleName, widgetId, widget);
   },
-  async deleteWidget (consoleName: string, widgetRoute: string): Promise<WidgetType> {
-    return WidgetClient.deleteWidget(consoleName, widgetRoute);
+  async deleteWidget (consoleName: string, widgetId: string): Promise<WidgetType> {
+    return WidgetClient.deleteWidget(consoleName, widgetId);
   }
 };
 

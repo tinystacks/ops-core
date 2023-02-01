@@ -47,7 +47,7 @@ class TabPanel extends Widget implements TabPanelType {
     );
   }
 
-  getData(): void {}
+  getData (): void { return; }
 }
 
 export default TabPanel;

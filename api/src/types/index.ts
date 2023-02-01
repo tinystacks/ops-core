@@ -3,7 +3,8 @@ import {
   Console,
   Page,
   Provider,
-  Widget
+  Widget,
+  TinyStacksError
 } from '@tinystacks/ops-model';
 
 type Json = {
@@ -16,11 +17,8 @@ type YamlWidget = {
   [WidgetName: string]: GenericWidgetType;
 }
 
-type YamlPageProperties = Omit<Page, 'widgets'> & {
-  widgets: YamlWidget[];
-}
 type YamlPage = {
-  Page: YamlPageProperties;
+  Page: Page;
 }
 
 type YamlProvider = {
@@ -35,11 +33,16 @@ type YamlConsole = {
   Console: YamlConsoleProperties;
 }
 
+type TinyStacksErrorObject = Omit<TinyStacksError, 'type'> & {
+  type: TinyStacksError.type | string
+};
+
 export {
   Json,
   GenericWidgetType,
   YamlWidget,
   YamlPage,
   YamlProvider,
-  YamlConsole
+  YamlConsole,
+  TinyStacksErrorObject
 };

@@ -1,44 +1,40 @@
-import { Page as PageType, Widget as WidgetType } from '@tinystacks/ops-model';
-import Widget from './widget';
+import { Page as PageType } from '@tinystacks/ops-model';
 import Parseable from './parseable';
-import { GenericWidgetType, YamlPage, YamlWidget } from '../types';
-import GenericWidget from './generic-widget';
+import { YamlPage } from '../types';
 
 class Page extends Parseable implements PageType {
   route: string;
-  widgets: Widget[];
+  widgetIds: string[];
 
   constructor (
     route: string,
-    widgets: Widget[] = []
+    widgetIds: string[] = []
   ) {
     super();
     this.route = route;
-    this.widgets = widgets;
+    this.widgetIds = widgetIds;
   }
   
   static fromYaml (yamlJson: YamlPage): Page {
     const {
       route,
-      widgets: widgetObjects = []
+      widgetIds
     } = yamlJson.Page;
-    const widgets = widgetObjects.map(GenericWidget.fromYaml);
     return new Page(
       route,
-      widgets
+      widgetIds
     );
   }
   
   static toYaml (page: Page): YamlPage {
     const {
       route,
-      widgets: widgetClasses = []
+      widgetIds
     } = page;
-    const widgets: YamlWidget[] = widgetClasses.map(GenericWidget.toYaml);
     return {
       Page: {
         route,
-        widgets
+        widgetIds
       }
     };
   }
@@ -46,12 +42,11 @@ class Page extends Parseable implements PageType {
   static fromObject (object: PageType): Page {
     const {
       route,
-      widgets: widgetObjects = []
+      widgetIds
     } = object;
-    const widgets = widgetObjects.map(GenericWidget.fromObject)
     return new Page(
       route,
-      widgets
+      widgetIds
     );
   }
 }
