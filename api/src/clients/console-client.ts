@@ -10,10 +10,11 @@ import {
 } from 'path';
 import FsUtils from '../utils/fs-utils';
 import { YamlConsole } from '../types';
+import { ParsingService } from '../parsing-service';
 
 // TODO: should we make this a class that implement a ConsoleClient interface?
 const LocalClient = {
-  async getLocalConsole (): Promise<Console> {
+  async getLocalConsole (): Promise<any> {
     const configPath = process.env.CONFIG_PATH;
     if (configPath) {
       const configFilePath = resolvePath(configPath);

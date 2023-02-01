@@ -1,12 +1,12 @@
 import { AwsAssumedRole as AwsAssumedRoleType } from '@tinystacks/ops-model';
 
 class AwsAssumedRole implements AwsAssumedRoleType {
-  roleArn: string;
-  sessionName: string;
+  roleArn?: string;
+  sessionName?: string;
 
   constructor (
-    roleArn: string,
-    sessionName: string
+    roleArn?: string,
+    sessionName?: string
   ) {
     this.roleArn = roleArn;
     this.sessionName = sessionName;

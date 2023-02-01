@@ -3,6 +3,7 @@ import Provider from './provider';
 import Parseable from './parseable';
 import { Console as ConsoleType, Provider as ProviderType } from '@tinystacks/ops-model';
 import { Json, YamlConsole, YamlProvider } from '../types';
+import Widget from './widget';
 
 class Console extends Parseable implements ConsoleType {
   name: string;
@@ -45,9 +46,11 @@ class Console extends Parseable implements ConsoleType {
     const {
       name,
       pages: pageObjects = [],
-      providers: providerObjects = []
+      providers: providerObjects = [],
+      widgets: widgetObjecst = []
     } = console;
     const pages = pageObjects.map(Page.toYaml);
+    const widgets = widgetObjecst; //need to update this
     const providers = providerObjects.map((providerObject: ProviderType & Json) => {
       const { type } = providerObject;
       return {
@@ -58,7 +61,8 @@ class Console extends Parseable implements ConsoleType {
       Console: {
         name,
         pages,
-        providers
+        providers, 
+        widgets
       }
     };
   }

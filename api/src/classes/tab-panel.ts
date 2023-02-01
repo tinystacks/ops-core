@@ -3,7 +3,7 @@ import Widget from './widget';
 import Tab from './tab';
 
 class TabPanel extends Widget implements TabPanelType {
-  tabs: Tab[];
+  tabs?: Tab[];
 
   constructor (
     id: string,

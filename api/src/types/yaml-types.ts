@@ -3,15 +3,15 @@ import {
   Console,
   Page,
   Provider,
-  Widget
+  Widget, 
+  TabPanel
 } from '@tinystacks/ops-model';
 
-type YamlWidget = {
-  [WidgetName: string]: Widget
-}
+type YamlWidget = Widget & TabPanel;
 
 type YamlPageProperties = Omit<Page, 'widgets'> & {
-  widgets: YamlWidget[]
+  id: string,
+  widgetIds?: String[]
 }
 type YamlPage = {
   Page: YamlPageProperties
@@ -20,9 +20,10 @@ type YamlPage = {
 type YamlProvider = {
   [ProviderName: string]: Provider | AwsProfileProvider
 }
-type YamlConsoleProperties = Omit<Console, 'providers' | 'pages'> & {
+type YamlConsoleProperties = Omit<Console, 'providers' | 'pages' | 'widgets'> & {
   providers: YamlProvider[]
   pages: YamlPage[]
+  widgets: YamlWidget[]
 }
 type YamlConsole = {
   Console: YamlConsoleProperties
@@ -32,5 +33,6 @@ export {
   YamlWidget,
   YamlPage,
   YamlProvider,
-  YamlConsole
+  YamlConsole, 
+  YamlPageProperties
 };

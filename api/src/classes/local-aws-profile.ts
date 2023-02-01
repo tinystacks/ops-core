@@ -1,7 +1,7 @@
 import { LocalAwsProfile as LocalAwsProfileType } from '@tinystacks/ops-model';
 
 class LocalAwsProfile implements LocalAwsProfileType {
-  profileName: string;
+  profileName?: string;
 
   constructor (
     profileName: string

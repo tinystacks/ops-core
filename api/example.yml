@@ -9,66 +9,71 @@ Console:
     - Page:
         route: /
         id: main-page
-        widgets:
-          - AwsCloudWatchMetricGraph:
-              id: primaryServiceHealth
-              displayName: Service Health (system memory)
-              awsProviderId: AwsLocalProvider
-              showTimeRangeSelector: false
-              showPeriodSelector: false
-              showStatisticSelector: false
-              metrics:
-                - metricDisplayName: Synth Memory Util
-                  metricName: MemoryUtilized
-                  metricNamespace: ECS/ContainerInsights
-                  dimensions:
-                    - key: ClusterName
-                      value: cdk-synth-cluster
-                    - key: ServiceName
-                      value: tinystacks-service
-              region: us-east-1
-          - TabPanel:
-              id: main-page-tab-panel
-              tabs:
-                - Tab:
-                    id: logs-tab
-                    tabDisplayName: Logs
-                    widgets:
-                      AwsCloudWatchLogViewer:
-                        id: service-logs-container
-                        displayName: Service Logs
-                        awsProviderId: AwsLocalProvider
-                        logGroupId: TinyStacks-CustomerStackManagementService-cdksynthtstaskcdksynthcontainerLogGroup0B5FD78A-6nRF4fBxmCGy
-                        defaultTimeRange:
-                          time: 5
-                          unit: m
-                - Tab:
-                    id: ecs-tab
-                    tabDisplayName: ECS
-                    widgets:
-                      AwsEcsSeviceSummary:
-                        id: synth-ecs-service-deployments
-                        displayName: Service Logs
-                        awsProviderId: AwsLocalProvider
-                        clusterName: cdk-synth-cluster
-                        serviceName: tinystacks-service
-                      AwsEcsServiceDeployments:
-                        id: synth-ecs-service-deployments
-                        displayName: Service Logs
-                        awsProviderId: AwsLocalProvider
-                        clusterName: cdk-synth-cluster
-                        serviceName: tinystacks-service
-                        showTaskDetails: true
-                        showPermissions: true
-                        tabbedView: false
-                      AwsCloudWatchAlarmsStatus:
-                        id: synth-ecs-service-deployments
-                        alarmIds:
-                          - cpu-over
-                          - out-of-mem
-                          - scaling
-                          - latency
-                        awsProviderId: AwsLocalProvider
-                        showTaskDetails: true
-                        showPermissions: true
-                        tabbedView: false
+        widgetIds: 
+          - primaryServiceHealth
+          - main-page-tab-panel
+  widgets:
+    - type: "AwsCloudWatchMetricGraph"
+      id: primaryServiceHealth
+      displayName: Service Health (system memory)
+      awsProviderId: AwsLocalProvider
+      showTimeRangeSelector: false
+      showPeriodSelector: false
+      showStatisticSelector: false
+      metrics:
+        - metricDisplayName: Synth Memory Util
+          metricName: MemoryUtilized
+          metricNamespace: ECS/ContainerInsights
+          dimensions:
+            - key: ClusterName
+              value: cdk-synth-cluster
+            - key: ServiceName
+              value: tinystacks-service
+      region: us-east-1
+    - type: "TabPanel"
+      id: main-page-tab-panel
+      tabs:
+        - id: logs-tab
+          tabDisplayName: Logs
+          widgetIds: 
+            - service-logs-container
+        - id: ecs-tab
+          tabDisplayName: ECS
+          widgetIds: 
+            - synth-ecs-service-deployments-1
+            - synth-ecs-service-deployments-2
+            - synth-ecs-service-deployments-3  
+    - type: "AwsCloudWatchLogViewer"
+      id: service-logs-container
+      displayName: Service Logs
+      awsProviderId: AwsLocalProvider
+      logGroupId: TinyStacks-CustomerStackManagementService-cdksynthtstaskcdksynthcontainerLogGroup0B5FD78A-6nRF4fBxmCGy
+      defaultTimeRange:
+        time: 5
+        unit: m
+    - type: "AwsEcsSeviceSummary"
+      id: synth-ecs-service-deployments-1
+      displayName: Service Logs
+      awsProviderId: AwsLocalProvider
+      clusterName: cdk-synth-cluster
+      serviceName: tinystacks-service
+    - type: "AwsEcsServiceDeployments"
+      id: synth-ecs-service-deployments-2
+      displayName: Service Logs
+      awsProviderId: AwsLocalProvider
+      clusterName: cdk-synth-cluster
+      serviceName: tinystacks-service
+      showTaskDetails: true
+      showPermissions: true
+      tabbedView: false
+    - type: "AwsCloudWatchAlarmsStatus"
+      id: synth-ecs-service-deployments-3
+      alarmIds:
+        - cpu-over
+        - out-of-mem
+        - scaling
+        - latency
+      awsProviderId: AwsLocalProvider
+      showTaskDetails: true
+      showPermissions: true
+      tabbedView: false
