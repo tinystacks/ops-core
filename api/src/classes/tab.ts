@@ -13,12 +13,13 @@ class Tab extends Widget implements TabType {
     widgetIds: string[] = [],
     showDisplayName?: boolean,
     description?: string,
-    showDescription?: string
+    showDescription?: boolean
   ) {
     super(
       id,
       displayName,
       type,
+      undefined,
       showDisplayName,
       description,
       showDescription

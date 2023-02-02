@@ -11,13 +11,14 @@ class TabPanel extends Widget implements TabPanelType {
     type: string,
     showDisplayName?: boolean,
     description?: string,
-    showDescription?: string,
+    showDescription?: boolean,
     tabs: Tab[] = []
   ) {
     super(
       id,
       displayName,
       type,
+      undefined,
       showDisplayName,
       description,
       showDescription
