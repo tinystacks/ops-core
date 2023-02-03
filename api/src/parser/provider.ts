@@ -28,14 +28,14 @@ export class Provider extends ParsingService implements ProviderType {
   parse(yamlProvider: YamlProvider): Provider{ 
     const { 
       id, 
-      type, 
-      credentials
+      type
     } = yamlProvider;
+
     
+    //need to figure out credentials
     return new Provider(
       id, 
-      type, 
-      credentials
+      type
     ); 
   }
 

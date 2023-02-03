@@ -1,6 +1,7 @@
 import yaml from 'js-yaml';
 import isNil from 'lodash.isnil';
 import Console from '../../classes/console';
+import { Console as ConsoleParser } from '../../parser/console';
 import HttpError from 'http-errors';
 import {
   writeFileSync
@@ -22,7 +23,8 @@ const LocalConsoleClient = {
       if (!configFile) throw HttpError.NotFound(`Cannot fetch consoles! Config file ${configPath} not found!`);
       const configJson = yaml.load(configFile.toString()) as YamlConsole;
       // console.debug('configJson: ', JSON.stringify(configJson));
-      if (!isNil(configJson)) return Console.fromYaml(configJson);
+      //if (!isNil(configJson)) return Console.fromYaml(configJson);
+      if (!isNil(configJson)) return ConsoleParser.parse(configJson);
       throw HttpError.InternalServerError('Cannot fetch consoles! The contents of the config file was empty or invalid!');
     }
     throw HttpError.InternalServerError('Cannot fetch consoles! No value was found for CONFIG_PATH!');

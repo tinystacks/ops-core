@@ -6,8 +6,9 @@ export default function () {
   return {
     async GET (_request: Request, response: Response, next: NextFunction) {
       try {
-        const ping = await PingController.getPing();
-        response.status(200).send(ping);
+        //const ping = await PingController.getPing();
+        const console = await ConsoleController.getConsoles();
+        response.status(200).send(console);
       } catch (error) {
         next(error);
       }

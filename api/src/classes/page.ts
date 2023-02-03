@@ -8,7 +8,6 @@ class Page extends Parseable implements PageType {
   id?: string;
 
   constructor (
-    id: string, 
     route: string,
     widgetIds: string[] = [],
     id?: string
@@ -28,13 +27,14 @@ class Page extends Parseable implements PageType {
     const widgetIds = widgets.map((widget: Ref) => {
       const ref = widget.$ref;
       const [_hash, _console, _widgets, widgetId, ...rest] = ref.split('/');
-      if (!ref || !widgetId || rest) { throw new Error('Invalid widget reference! Widgets must be local references i.e. "#/Console/widgets/{WidgetId}"!'); }
+      if (!ref || !widgetId || (Array.isArray(rest) && rest.length > 0)) {
+        throw new Error('Invalid widget reference! Widgets must be local references i.e. "#/Console/widgets/{WidgetId}"!');
+      }
       return widgetId;
     });
     return new Page(
-      id,
       route,
-      widgetIds,
+      widgetIds, 
       id
     );
   }
@@ -55,7 +55,6 @@ class Page extends Parseable implements PageType {
       id
     } = object;
     return new Page(
-      id,
       route,
       widgetIds,
       id

@@ -6,7 +6,7 @@ import { Page as PageClass } from "./page";
 import { Provider as ProviderClass} from "./provider";
 import { Widget as WidgetClass} from "./widget";
 
-class Console extends ParsingService implements ConsoleType {
+export class Console extends ParsingService implements ConsoleType {
   name: string;
   providers: Record<string, Provider>;
   pages: Record<string, Page>;
@@ -37,13 +37,14 @@ class Console extends ParsingService implements ConsoleType {
  
   }
 
-  parse(console: YamlConsoleProperties): Console { 
+  parse(consoleYaml: YamlConsoleProperties): Console { 
+    console.log("console: ", consoleYaml);
     const { 
       name,
       providers, 
       pages,
       widgets
-    } = console;
+    } = consoleYaml;
 
     const pageObjects : Record<string, Page> = {}; 
     Object.keys(pages).forEach(id => { 

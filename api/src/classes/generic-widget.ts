@@ -59,16 +59,24 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
   }
 
   static fromYaml (yamlJson: YamlWidget, id?: string): GenericWidget {
-    const [type, properties]: [string, WidgetType] = Object.entries(yamlJson).at(0);
     return new GenericWidget({
-      ...properties,
-      type,
+      ...yamlJson,
       id
     });
   }
   
   toYaml (): YamlWidget {
-    return this;
+    return {
+      id: this.id,
+      displayName: this.displayName,
+      type: this.type,
+      providerId: this.providerId,
+      showDisplayName: this.showDisplayName,
+      description: this.description,
+      showDescription:this.showDescription, 
+      tabs: {},
+      provider: {$ref: `#/Console/provider/${this.providerId}` }
+    };
   }
 
   getData (): void { return; }

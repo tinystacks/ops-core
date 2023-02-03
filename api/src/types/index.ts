@@ -34,7 +34,7 @@ type YamlPage = Omit<Page, 'widgetIds'> &  {
   widgets: Ref[];
 }
 
-type YamlProvider = Provider & AwsProfileProvider;
+type YamlProvider = Provider | AwsProfileProvider;
 
 type YamlConsoleProperties = Omit<Console, 'providers' | 'pages' | 'widgets'> & {
   providers: {

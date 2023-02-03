@@ -1,8 +1,8 @@
 import { AwsKeys as AwsKeysType } from '@tinystacks/ops-model';
 
 class AwsKeys implements AwsKeysType {
-  AwsAccessKeyId?: string;
-  AwsSecretAccessKey?: string;
+  AwsAccessKeyId: string;
+  AwsSecretAccessKey: string;
   AwsSessionToken?: string;
 
   constructor (

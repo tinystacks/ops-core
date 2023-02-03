@@ -11,7 +11,7 @@ export class Widget extends ParsingService implements WidgetType, TabPanelType {
   description?: string;
   showDescription?: boolean;
   id?: string;
-  tabs?: Tab[];
+  tabs: Record<string, Tab>
 
   constructor (
     type: string, 
@@ -21,7 +21,7 @@ export class Widget extends ParsingService implements WidgetType, TabPanelType {
     description: string,
     showDescription: boolean,
     id: string,
-    tabs: Tab[] = []
+    tabs: Record<string, Tab> = {}
   ) {
     super();
     this.type = type;
