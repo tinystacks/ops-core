@@ -15,7 +15,7 @@ class AwsKeys implements AwsKeysType {
     this.AwsSessionToken = AwsSessionToken;
   }
 
-  static fromObject (object: AwsKeysType): AwsKeys {
+  static fromJson (object: AwsKeysType): AwsKeys {
     const {
       AwsAccessKeyId,
       AwsSecretAccessKey,

@@ -1,14 +1,12 @@
 import HttpError from 'http-errors';
 import { Request, Response, NextFunction } from 'express';
-import { TinyStacksError } from '@tinystacks/ops-model';
+import TinyStacksError from '../errors/tinystacks-error';
 
-export async function errorMiddleware (error: TinyStacksError, request: Request, response: Response, next: NextFunction) {
+export async function errorMiddleware (error: unknown, request: Request, response: Response, next: NextFunction) {
   console.error(error);
-  // Not sure if this check is valid
-  // Probably need to implement TinyStacksError and use instanceOf
-  if (typeof error === typeof TinyStacksError || HttpError.isHttpError(error)) {
-    const { status, message } = error;
-    response.status(status || 500).json({ status, message });
+  if (TinyStacksError.isTinyStacksError(error) || HttpError.isHttpError(error)) {
+    const { status, message } = error as TinyStacksError | HttpError.HttpError;
+    response.status(status).json({ status, message });
   } else {
     const ise = HttpError.InternalServerError('An unexpected error occured!');
     response.status(ise.status).json(ise);

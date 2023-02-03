@@ -1,19 +1,15 @@
 import { Json } from '../types';
 
 abstract class Parseable {
-  /**
-   * Note: Tried using generics here instead of any but it doesn't work.
-   * Typescript expects your generic to extend every possible implementation which is counterproductive. 
-  */ 
-  static fromYaml (_yamlJson: Json): Parseable {
+  static fromYaml (_yamlJson: Json, _id?: string): Parseable {
     throw new Error('Method not implemented.');
   }
-  static toYaml (_object: Parseable): Json {
+  abstract toYaml (): Json;
+  
+  static fromJson (_object: Json): Parseable {
     throw new Error('Method not implemented.');
   }
-  static fromObject (_object: Json): Parseable {
-    throw new Error('Method not implemented.');
-  }
+  abstract toJson (): Json;
 }
 
 export default Parseable;

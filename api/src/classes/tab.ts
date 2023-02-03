@@ -2,8 +2,8 @@ import { Tab as TabType } from '@tinystacks/ops-model';
 import Widget from './widget';
 
 class Tab extends Widget implements TabType {
-  tabDisplayName?: string;
-  widgetIds?: string[];
+  tabDisplayName: string;
+  widgetIds: string[];
 
   constructor (
     id: string,
@@ -13,12 +13,13 @@ class Tab extends Widget implements TabType {
     widgetIds: string[] = [],
     showDisplayName?: boolean,
     description?: string,
-    showDescription?: string
+    showDescription?: boolean
   ) {
     super(
       id,
       displayName,
       type,
+      undefined,
       showDisplayName,
       description,
       showDescription
@@ -27,7 +28,7 @@ class Tab extends Widget implements TabType {
     this.widgetIds = widgetIds;
   }
 
-  static fromObject (object: TabType): Tab {
+  static fromJson (object: TabType): Tab {
     const {
       id,
       displayName,
@@ -49,6 +50,8 @@ class Tab extends Widget implements TabType {
       showDescription
     );
   }
+
+  getData (): void { return; }
 }
 
 export default Tab;

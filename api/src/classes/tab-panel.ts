@@ -11,13 +11,14 @@ class TabPanel extends Widget implements TabPanelType {
     type: string,
     showDisplayName?: boolean,
     description?: string,
-    showDescription?: string,
+    showDescription?: boolean,
     tabs: Tab[] = []
   ) {
     super(
       id,
       displayName,
       type,
+      undefined,
       showDisplayName,
       description,
       showDescription
@@ -25,7 +26,7 @@ class TabPanel extends Widget implements TabPanelType {
     this.tabs = tabs;
   }
 
-  static fromObject (object: TabPanelType): TabPanel {
+  static fromJson (object: TabPanelType): TabPanel {
     const {
       id,
       displayName,
@@ -33,8 +34,9 @@ class TabPanel extends Widget implements TabPanelType {
       showDisplayName,
       description,
       showDescription,
-      tabs
+      tabs: tabObjects = []
     } = object;
+    const tabs = tabObjects.map(Tab.fromJson);
     return new TabPanel(
       id,
       displayName,
@@ -45,6 +47,8 @@ class TabPanel extends Widget implements TabPanelType {
       tabs
     );
   }
+
+  getData (): void { return; }
 }
 
 export default TabPanel;

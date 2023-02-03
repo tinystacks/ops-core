@@ -9,7 +9,7 @@ class LocalAwsProfile implements LocalAwsProfileType {
     this.profileName = profileName;
   }
 
-  static fromObject (object: LocalAwsProfileType): LocalAwsProfile {
+  static fromJson (object: LocalAwsProfileType): LocalAwsProfile {
     const {
       profileName
     } = object;

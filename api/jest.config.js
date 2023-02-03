@@ -2,14 +2,22 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     testPathIgnorePatterns: ['.d.ts', '.js'],
-    coveragePathIgnorePatterns: [
-      'src/errors'
-    ],
     verbose: true,
+    roots: [
+      "<rootDir>/test",
+      "<rootDir>/src"
+    ],
+    collectCoverageFrom: [
+      "src/**/*.ts"
+    ],
+    coveragePathIgnorePatterns: [
+      'src/server.ts',
+      'src/classes/*'
+    ],
     coverageThreshold: {
       global: {
-        branches: 70,
-        functions: 80,
+        branches: 90,
+        functions: 90,
         lines: 90,
         statements: 90
       }

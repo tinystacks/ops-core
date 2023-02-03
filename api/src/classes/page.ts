@@ -1,62 +1,73 @@
-import { Page as PageType, Widget as WidgetType } from '@tinystacks/ops-model';
+import { Page as PageType } from '@tinystacks/ops-model';
 import Parseable from './parseable';
-import { YamlPage, YamlWidget } from '../types';
+import { YamlPage, Ref } from '../types';
 
 class Page extends Parseable implements PageType {
+  route: string;
+  widgetIds: string[];
   id?: string;
-  route?: string;
-  widgetIds?: string[];
 
   constructor (
     id: string, 
     route: string,
-    widgetIds: string[] = []
+    widgetIds: string[] = [],
+    id?: string
   ) {
     super();
     this.id = id;
     this.route = route;
     this.widgetIds = widgetIds;
+    this.id = id;
   }
   
-  static fromYaml (yamlJson: YamlPage): Page {
+  static fromYaml (yamlJson: YamlPage, id?: string): Page {
     const {
-      id,
       route,
-      widgetIds = []
-    } = yamlJson.Page;
+      widgets
+    } = yamlJson;
+    const widgetIds = widgets.map((widget: Ref) => {
+      const ref = widget.$ref;
+      const [_hash, _console, _widgets, widgetId, ...rest] = ref.split('/');
+      if (!ref || !widgetId || rest) { throw new Error('Invalid widget reference! Widgets must be local references i.e. "#/Console/widgets/{WidgetId}"!'); }
+      return widgetId;
+    });
     return new Page(
       id,
       route,
-      widgetIds
+      widgetIds,
+      id
     );
   }
   
-  static toYaml (page: Page): YamlPage {
-    const {
-      id,
-      route,
-      widgetIds = []
-    } = page;
+  toYaml (): YamlPage {
+    // This is cheap and restrictive, we should store the original ref on the widget and use that here.
+    const widgets = this.widgetIds.map(widgetId => ({ $ref: `#/Console/widgets/${widgetId}` }));
     return {
-      Page: {
-        id,
-        route,
-        widgetIds
-      }
+      route: this.route,
+      widgets
     };
   }
 
-  static fromObject (object: PageType): Page {
+  static fromJson (object: PageType): Page {
     const {
-      id,
       route,
-      widgetIds // TODO: How to map widgets for property filtering, etc.? Do we even need to?
+      widgetIds,
+      id
     } = object;
     return new Page(
       id,
       route,
-      widgetIds
+      widgetIds,
+      id
     );
+  }
+
+  toJson (): PageType {
+    return {
+      id: this.id,
+      route: this.route,
+      widgetIds: this.widgetIds
+    };
   }
 }
 

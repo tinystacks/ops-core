@@ -7,15 +7,16 @@ const PageController = {
     return PageClient.getPages(consoleName);
   },
   async postPage (consoleName: string, createPageBody: PageType): Promise<PageType> {
-    const page = Page.fromObject(createPageBody);
+    const page = Page.fromJson(createPageBody);
     return PageClient.createPage(consoleName, page);
   },
-  async putPage (consoleName: string, pageRoute: string, updatePageBody: PageType): Promise<PageType> {
-    const page = Page.fromObject(updatePageBody);
-    return PageClient.updatePage(consoleName, pageRoute, page);
+  async putPage (consoleName: string, pageId: string, updatePageBody: PageType): Promise<PageType> {
+    const page = Page.fromJson(updatePageBody);
+    page.route = pageId;
+    return PageClient.updatePage(consoleName, pageId, page);
   },
-  async deletePage (consoleName: string, pageRoute: string): Promise<PageType> {
-    return PageClient.deletePage(consoleName, pageRoute);
+  async deletePage (consoleName: string, pageId: string): Promise<PageType> {
+    return PageClient.deletePage(consoleName, pageId);
   }
 };
 
