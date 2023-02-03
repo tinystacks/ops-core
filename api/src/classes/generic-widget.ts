@@ -27,14 +27,15 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
     for (const [key, value] of Object.entries(object)) {
       this[key] = value;
     }
+    // this.myPrivateProp = 'abc';
   }
 
-  static fromObject (object: GenericWidgetType): GenericWidget {
+  static fromJson (object: GenericWidgetType): GenericWidget {
     return new GenericWidget(object);
   }
 
-  static toObject (widget: GenericWidget): GenericWidgetType {
-    const anonymous: Json = { ...widget };
+  toJson (): GenericWidgetType {
+    const anonymous: Json = { ...this };
     delete anonymous.getData;
     const {
       id,
@@ -57,19 +58,17 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
     };
   }
 
-  static fromYaml (yamlJson: YamlWidget): GenericWidget {
+  static fromYaml (yamlJson: YamlWidget, id?: string): GenericWidget {
     const [type, properties]: [string, WidgetType] = Object.entries(yamlJson).at(0);
     return new GenericWidget({
       ...properties,
-      type
+      type,
+      id
     });
   }
   
-  static toYaml (widget: GenericWidget): YamlWidget {
-    const { type } = widget;
-    return {
-      [type]: widget
-    };
+  toYaml (): YamlWidget {
+    return this;
   }
 
   getData (): void { return; }

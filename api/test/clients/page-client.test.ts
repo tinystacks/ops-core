@@ -64,42 +64,43 @@ describe('page client tests', () => {
   });
   describe('getPage', () => {
     it('returns page from console matching the route specified', async () => {
-      const mockPage = Page.fromObject({
+      const mockPage = Page.fromJson({
+        id: 'MockRoute',
         route: '/mock-route',
         widgetIds: []
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [
-          mockPage
-        ],
-        providers: [],
-        widgets: []
+        pages: {
+          MockRoute: mockPage
+        },
+        providers: {},
+        widgets: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
-      const result = await PageClient.getPage('mock-console', '/mock-route');
+      const result = await PageClient.getPage('mock-console', 'MockRoute');
 
       expect(result).toEqual(mockPage);
     });
     it('throws not found if page does not exist on the console', async () => {
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
       let thrownError;
       try {
-        await PageClient.getPage('mock-console', '/mock-route');
+        await PageClient.getPage('mock-console', 'MockRoute');
       } catch (error) {
         thrownError = error;
       } finally {
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.NotFound('Page with route /mock-route does not exist in console mock-console!')
+          HttpError.NotFound('Page with id MockRoute does not exist in console mock-console!')
         );
       }
     });
@@ -107,17 +108,17 @@ describe('page client tests', () => {
 
   describe('getPages', () => {
     it('returns pages from console', async () => {
-      const mockPage = Page.fromObject({
+      const mockPage = Page.fromJson({
         route: '/mock-route',
         widgetIds: []
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [
-          mockPage
-        ],
-        providers: [],
-        widgets: []
+        pages: {
+          MockRoute: mockPage
+        },
+        providers: {},
+        widgets: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
@@ -142,21 +143,23 @@ describe('page client tests', () => {
   });
   describe('createPage', () => {
     it('saves page to console and returns saved page', async () => {
-      const mockPage = Page.fromObject({
+      const mockPage = Page.fromJson({
         route: '/mock-route',
         widgetIds: []
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       });
-      const mockSavedConsole = Console.fromObject({
+      const mockSavedConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [mockPage],
-        providers: [],
-        widgets: []
+        pages: {
+          MockRoute: mockPage
+        },
+        providers: {},
+        widgets: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
       mockGetConsole.mockResolvedValueOnce(mockSavedConsole);
@@ -167,18 +170,23 @@ describe('page client tests', () => {
       expect(mockGetConsole).toBeCalledTimes(2);
       expect(mockSaveConsole).toBeCalledTimes(1);
       expect(PageClient.getPage).toBeCalledTimes(1);
-      expect(result).toEqual(mockPage);
+      expect(result).toEqual({
+        ...mockPage,
+        id: 'MockRoute'
+      });
     });
     it('throws Conflict if page already exists on console', async () => {
-      const mockPage = Page.fromObject({
+      const mockPage = Page.fromJson({
         route: '/mock-route',
         widgetIds: []
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [mockPage],
-        providers: [],
-        widgets: []
+        pages: {
+          MockRoute: mockPage
+        },
+        providers: {},
+        widgets: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
       jest.spyOn(PageClient, 'getPage');
@@ -195,63 +203,70 @@ describe('page client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.Conflict('Cannot create new page with route /mock-route because a page with this route already exists on console mock-console!')
+          HttpError.Conflict('Cannot create new page with id MockRoute because a page with this route already exists on console mock-console!')
         );
       }
     });
   });
   describe('updatePage', () => {
     it('saves page to console and returns saved page', async () => {
-      const oldMockPage = Page.fromObject({
+      const oldMockPage = Page.fromJson({
+        id: 'MockRoute',
         route: '/mock-route',
         widgetIds: []
       });
-      const oldMockConsole = Console.fromObject({
+      const oldMockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [
-          oldMockPage
-        ],
-        providers: [],
-        widgets: []
+        pages: {
+          MockRoute: oldMockPage
+        },
+        providers: {},
+        widgets: {}
       });
-      const newMockPage = Page.fromObject({
+      const newMockPage = Page.fromJson({
         route: '/mock-route',
         widgetIds: ['widget-1']
       }); 
-      const newMockConsole = Console.fromObject({
+      const newMockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [newMockPage],
-        providers: [],
-        widgets: []
+        pages: {
+          MockRoute: newMockPage
+        },
+        providers: {},
+        widgets: {}
       });
       mockGetConsole.mockResolvedValueOnce(oldMockConsole);
       mockGetConsole.mockResolvedValueOnce(newMockConsole);
       jest.spyOn(PageClient, 'getPage');
 
-      const result = await PageClient.updatePage('mock-console', '/mock-route', newMockPage);
+      const result = await PageClient.updatePage('mock-console', 'MockRoute', newMockPage);
 
       expect(mockGetConsole).toBeCalledTimes(2);
       expect(mockSaveConsole).toBeCalledTimes(1);
       expect(PageClient.getPage).toBeCalledTimes(1);
-      expect(result).toEqual(newMockPage);
+      expect(result).toEqual({
+        ...newMockPage,
+        id: 'MockRoute'
+      });
     });
     it('throws NotFound if page does not exist on console', async () => {
-      const mockPage = Page.fromObject({
+      const mockPage = Page.fromJson({
+        id: 'MockRoute',
         route: '/mock-route',
         widgetIds: []
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
       jest.spyOn(PageClient, 'getPage');
 
       let thrownError;
       try {
-        await PageClient.updatePage('mock-console', '/mock-route', mockPage);
+        await PageClient.updatePage('mock-console', 'MockRoute', mockPage);
       } catch (error) {
         thrownError = error;
       } finally {
@@ -261,46 +276,47 @@ describe('page client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.NotFound('Cannot update page with route /mock-route because this page does not exist on console mock-console!')
+          HttpError.NotFound('Cannot update page with id MockRoute because this page does not exist on console mock-console!')
         );
       }
     });
   });
   describe('deletePage', () => {
     it('deletes page from console and returns deleted page', async () => {
-      const mockPage = Page.fromObject({
+      const mockPage = Page.fromJson({
+        id: 'MockRoute',
         route: '/mock-route',
         widgetIds: []
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [
-          mockPage
-        ],
-        providers: [],
-        widgets: []
+        pages: {
+          MockRoute: mockPage
+        },
+        providers: {},
+        widgets: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
-      const result = await PageClient.deletePage('mock-console', '/mock-route');
+      const result = await PageClient.deletePage('mock-console', 'MockRoute');
 
       expect(mockGetConsole).toBeCalledTimes(1);
       expect(mockSaveConsole).toBeCalledTimes(1);
       expect(result).toEqual(mockPage);
     });
     it('throws NotFound if page does not exist on console', async () => {
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
       jest.spyOn(PageClient, 'getPage');
 
       let thrownError;
       try {
-        await PageClient.deletePage('mock-console', '/mock-route');
+        await PageClient.deletePage('mock-console', 'MockRoute');
       } catch (error) {
         thrownError = error;
       } finally {
@@ -310,7 +326,7 @@ describe('page client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.NotFound('Cannot delete page with route /mock-route because this page does not exist on console mock-console!')
+          HttpError.NotFound('Cannot delete page with id MockRoute because this page does not exist on console mock-console!')
         );
       }
     });

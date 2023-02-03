@@ -15,7 +15,7 @@ class AwsProfileProvider extends Provider implements AwsProfileProviderType {
     this.credentials = credentials;
   }
 
-  static fromObject (object: AwsProfileProviderType): AwsProfileProvider {
+  static fromJson (object: AwsProfileProviderType): AwsProfileProvider {
     const {
       id,
       credentials

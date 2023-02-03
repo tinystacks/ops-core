@@ -22,7 +22,7 @@ class TinyStacksError implements TinyStacksErrorType {
     this.type = type;
   }
 
-  static fromObject (errorObject: TinyStacksErrorObject): TinyStacksError {
+  static fromJson (errorObject: TinyStacksErrorObject): TinyStacksError {
     const {
       message,
       status,

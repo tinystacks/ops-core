@@ -1,53 +1,69 @@
 import { Page as PageType } from '@tinystacks/ops-model';
 import Parseable from './parseable';
-import { YamlPage } from '../types';
+import { YamlPage, Ref } from '../types';
 
 class Page extends Parseable implements PageType {
   route: string;
   widgetIds: string[];
+  id?: string;
 
   constructor (
     route: string,
-    widgetIds: string[] = []
+    widgetIds: string[] = [],
+    id?: string
   ) {
     super();
     this.route = route;
     this.widgetIds = widgetIds;
+    this.id = id;
   }
   
-  static fromYaml (yamlJson: YamlPage): Page {
+  static fromYaml (yamlJson: YamlPage, id?: string): Page {
     const {
       route,
-      widgetIds
-    } = yamlJson.Page;
+      widgets
+    } = yamlJson;
+    const widgetIds = widgets.map((widget: Ref) => {
+      const ref = widget.$ref;
+      const [_hash, _console, _widgets, widgetId, ...rest] = ref.split('/');
+      if (!ref || !widgetId || rest) { throw new Error('Invalid widget reference! Widgets must be local references i.e. "#/Console/widgets/{WidgetId}"!'); }
+      return widgetId;
+    });
     return new Page(
       route,
-      widgetIds
+      widgetIds,
+      id
     );
   }
   
-  static toYaml (page: Page): YamlPage {
-    const {
-      route,
-      widgetIds
-    } = page;
+  toYaml (): YamlPage {
+    // This is cheap and restrictive, we should store the original ref on the widget and use that here.
+    const widgets = this.widgetIds.map(widgetId => ({ $ref: `#/Console/widgets/${widgetId}` }));
     return {
-      Page: {
-        route,
-        widgetIds
-      }
+      route: this.route,
+      widgets
     };
   }
 
-  static fromObject (object: PageType): Page {
+  static fromJson (object: PageType): Page {
     const {
       route,
-      widgetIds
+      widgetIds,
+      id
     } = object;
     return new Page(
       route,
-      widgetIds
+      widgetIds,
+      id
     );
+  }
+
+  toJson (): PageType {
+    return {
+      id: this.id,
+      route: this.route,
+      widgetIds: this.widgetIds
+    };
   }
 }
 

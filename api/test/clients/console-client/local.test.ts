@@ -73,9 +73,9 @@ describe('local console client tests', () => {
       const mockConfigPath = './mock.yml';
       const mockConsole: ConsoleType = {
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       };
       process.env.CONFIG_PATH = mockConfigPath;
       mockResolve.mockReturnValueOnce(mockConfigPath);
@@ -119,11 +119,11 @@ describe('local console client tests', () => {
   });
   describe('saveLocalConsole', () => {
     it('throws InternalServerError if CONFIG_PATH is not set', async () => {
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       });
       let thrownError;
       try {
@@ -139,11 +139,11 @@ describe('local console client tests', () => {
     });
     it('writes to file and returns saved Console on success', async () => {
       const mockConfigPath = './mock.yml';
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       });
       process.env.CONFIG_PATH = mockConfigPath;
       mockResolve.mockReturnValueOnce(mockConfigPath);
@@ -156,7 +156,7 @@ describe('local console client tests', () => {
       expect(mockResolve).toBeCalled();
       expect(mockResolve).toBeCalledWith(mockConfigPath);
       expect(mockDump).toBeCalled();
-      expect(mockDump).toBeCalledWith(Console.toYaml(mockConsole));
+      expect(mockDump).toBeCalledWith(mockConsole.toYaml());
       expect(mockWriteFileSync).toBeCalled();
       expect(mockWriteFileSync).toBeCalledWith(mockConfigPath, 'Console: ');
       expect(LocalConsoleClient.getLocalConsole).toBeCalled();
@@ -164,11 +164,11 @@ describe('local console client tests', () => {
     });
     it('logs and re-throws errors', async () => {
       const mockConfigPath = './mock.yml';
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       });
       const mockError = new Error();
       process.env.CONFIG_PATH = mockConfigPath;
@@ -208,11 +208,11 @@ describe('local console client tests', () => {
     });
     it('overwrites config file with empty string and returns previous Console state on success', async () => {
       const mockConfigPath = './mock.yml';
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       });
       process.env.CONFIG_PATH = mockConfigPath;
       mockResolve.mockReturnValueOnce(mockConfigPath);
@@ -229,11 +229,11 @@ describe('local console client tests', () => {
     });
     it('logs and re-throws errors', async () => {
       const mockConfigPath = './mock.yml';
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        pages: [],
-        providers: [],
-        widgets: []
+        pages: {},
+        providers: {},
+        widgets: {}
       });
       const mockError = new Error();
       process.env.CONFIG_PATH = mockConfigPath;

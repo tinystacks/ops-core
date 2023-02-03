@@ -45,7 +45,7 @@ describe('error middleware tests', () => {
   });
   
   it('logs error and responds with status and message if the error is a TinyStacksError', async () => {
-    const mockError: TinyStacksErrorType = TinyStacksError.fromObject({
+    const mockError: TinyStacksErrorType = TinyStacksError.fromJson({
       name: 'TinyStacksError',
       status: 418,
       message: 'mock-error',

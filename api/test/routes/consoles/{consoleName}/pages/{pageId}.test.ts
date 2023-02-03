@@ -11,7 +11,7 @@ jest.mock('../../../../../src/controllers/page-controller.ts', () => ({
 
 jest.mock('express');
 
-import PageRoutes from '../../../../../src/routes/consoles/{consoleName}/pages/{pageRoute}';
+import PageRoutes from '../../../../../src/routes/consoles/{consoleName}/pages/{pageId}';
 import { Request, Response } from 'express';
 
 let mockRequest = {} as Request;
@@ -20,14 +20,14 @@ const mockRequestBody = {
 };
 const mockRequestParams = {
   consoleName: 'mock-console',
-  pageRoute: '/mock'
+  pageId: 'mock'
 };
 const mockResponse = {
   status: mockStatus,
   send: mockSend
 } as unknown as Response;
 
-describe('/pages/{pageRoute} tests', () => {
+describe('/pages/{pageId} tests', () => {
   beforeEach(() => {
     mockRequest = {} as Request;
     mockStatus.mockReturnValue(mockResponse);
@@ -48,7 +48,7 @@ describe('/pages/{pageRoute} tests', () => {
       await PageRoutes().PUT(mockRequest, mockResponse, mockNext);
 
       expect(mockPutPage).toBeCalled();
-      expect(mockPutPage).toBeCalledWith(mockRequestParams.consoleName, mockRequestParams.pageRoute, mockRequestBody);
+      expect(mockPutPage).toBeCalledWith(mockRequestParams.consoleName, mockRequestParams.pageId, mockRequestBody);
       expect(mockStatus).toBeCalled();
       expect(mockStatus).toBeCalledWith(200);
       expect(mockSend).toBeCalled();
@@ -63,7 +63,7 @@ describe('/pages/{pageRoute} tests', () => {
       await PageRoutes().PUT(mockRequest, mockResponse, mockNext);
 
       expect(mockPutPage).toBeCalled();
-      expect(mockPutPage).toBeCalledWith(mockRequestParams.consoleName, mockRequestParams.pageRoute, mockRequestBody);
+      expect(mockPutPage).toBeCalledWith(mockRequestParams.consoleName, mockRequestParams.pageId, mockRequestBody);
       expect(mockStatus).not.toBeCalled();
       expect(mockSend).not.toBeCalled();
       expect(mockNext).toBeCalled();
@@ -78,7 +78,7 @@ describe('/pages/{pageRoute} tests', () => {
       await PageRoutes().DELETE(mockRequest, mockResponse, mockNext);
 
       expect(mockDeletePage).toBeCalled();
-      expect(mockDeletePage).toBeCalledWith(mockRequestParams.consoleName, mockRequestParams.pageRoute);
+      expect(mockDeletePage).toBeCalledWith(mockRequestParams.consoleName, mockRequestParams.pageId);
       expect(mockStatus).toBeCalled();
       expect(mockStatus).toBeCalledWith(200);
       expect(mockSend).toBeCalled();
@@ -92,7 +92,7 @@ describe('/pages/{pageRoute} tests', () => {
       await PageRoutes().DELETE(mockRequest, mockResponse, mockNext);
 
       expect(mockDeletePage).toBeCalled();
-      expect(mockDeletePage).toBeCalledWith(mockRequestParams.consoleName, mockRequestParams.pageRoute);
+      expect(mockDeletePage).toBeCalledWith(mockRequestParams.consoleName, mockRequestParams.pageId);
       expect(mockStatus).not.toBeCalled();
       expect(mockSend).not.toBeCalled();
       expect(mockNext).toBeCalled();

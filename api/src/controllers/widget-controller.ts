@@ -8,11 +8,11 @@ const WidgetController = {
     return WidgetClient.getWidget(consoleName, widgetId);
   },
   async postWidget (consoleName: string, createWidgetBody: WidgetType): Promise<WidgetType> {
-    const widget = GenericWidget.fromObject(createWidgetBody);
+    const widget = GenericWidget.fromJson(createWidgetBody);
     return WidgetClient.createWidget(consoleName, widget);
   },
   async putWidget (consoleName: string, widgetId: string, updateWidgetBody: WidgetType): Promise<WidgetType> {
-    const widget = GenericWidget.fromObject(updateWidgetBody);
+    const widget = GenericWidget.fromJson(updateWidgetBody);
     widget.id = widgetId;
     return WidgetClient.updateWidget(consoleName, widgetId, widget);
   },

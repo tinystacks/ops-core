@@ -25,9 +25,9 @@ describe('console controller tests', () => {
   it('postConsole', async () => {
     const requestBody: Console = {
       name: 'mock-console',
-      pages: [],
-      providers: [],
-      widgets: []
+      pages: {},
+      providers: {},
+      widgets: {}
     };
     await ConsoleController.postConsole(requestBody);
     expect(mockSaveConsole).toBeCalled();
@@ -36,9 +36,9 @@ describe('console controller tests', () => {
   it('putConsole', async () => {
     const requestBody: Console = {
       name: 'mock-console',
-      pages: [],
-      providers: [],
-      widgets: []
+      pages: {},
+      providers: {},
+      widgets: {}
     };
     await ConsoleController.putConsole('mock-console-2', requestBody);
     expect(mockSaveConsole).toBeCalled();

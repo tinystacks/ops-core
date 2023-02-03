@@ -8,26 +8,37 @@ import {
 } from '@tinystacks/ops-model';
 
 type Json = {
-  [key: string]: any
-};
+  [key: string]: any;
+}
+
+type FlatMap = {
+  [key: string]: string;
+}
+
+type Ref = {
+  $ref: string;
+}
 
 type GenericWidgetType = Widget & Json;
 
-type YamlWidget = {
-  [WidgetName: string]: GenericWidgetType;
+type YamlWidget = GenericWidgetType;
+
+type YamlPage = Omit<Page, 'widgetIds'> &  {
+  widgets: Ref[];
 }
 
-type YamlPage = {
-  Page: Page;
-}
+type YamlProvider = Provider | AwsProfileProvider;
 
-type YamlProvider = {
-  [ProviderName: string]: Provider | AwsProfileProvider;
-}
 type YamlConsoleProperties = Omit<Console, 'providers' | 'pages' | 'widgets'> & {
-  providers: YamlProvider[];
-  pages: YamlPage[];
-  widgets: YamlWidget[];
+  providers: {
+    [id: string]: YamlProvider
+  };
+  pages: {
+    [id: string]: YamlPage
+  };
+  widgets: {
+    [id: string]: YamlWidget
+  };
 }
 type YamlConsole = {
   Console: YamlConsoleProperties;
@@ -35,10 +46,12 @@ type YamlConsole = {
 
 type TinyStacksErrorObject = Omit<TinyStacksError, 'type'> & {
   type: TinyStacksError.type | string
-};
+}
 
 export {
   Json,
+  FlatMap,
+  Ref,
   GenericWidgetType,
   YamlWidget,
   YamlPage,

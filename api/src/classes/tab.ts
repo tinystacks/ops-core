@@ -28,7 +28,7 @@ class Tab extends Widget implements TabType {
     this.widgetIds = widgetIds;
   }
 
-  static fromObject (object: TabType): Tab {
+  static fromJson (object: TabType): Tab {
     const {
       id,
       displayName,

@@ -26,7 +26,7 @@ class TabPanel extends Widget implements TabPanelType {
     this.tabs = tabs;
   }
 
-  static fromObject (object: TabPanelType): TabPanel {
+  static fromJson (object: TabPanelType): TabPanel {
     const {
       id,
       displayName,
@@ -36,7 +36,7 @@ class TabPanel extends Widget implements TabPanelType {
       showDescription,
       tabs: tabObjects = []
     } = object;
-    const tabs = tabObjects.map(Tab.fromObject);
+    const tabs = tabObjects.map(Tab.fromJson);
     return new TabPanel(
       id,
       displayName,

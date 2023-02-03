@@ -2,6 +2,8 @@ import isNil from 'lodash.isnil';
 import Widget from '../classes/widget';
 import HttpError from 'http-errors';
 import ConsoleClient from './console-client';
+import upperFirst from 'lodash.upperfirst';
+import camelCase from 'lodash.camelcase';
 
 // TODO: should we make this a class that implement a WidgetClient interface?
 const WidgetClient = {
@@ -16,9 +18,7 @@ const WidgetClient = {
   async getWidget (consoleName: string, widgetId: string): Promise<Widget> {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
-      const widget = console.widgets.find(w => w.id === widgetId);
-      global.console.debug('widgetId: ', widgetId);
-      global.console.debug('console: ', console);
+      const widget = console.widgets[widgetId];
       if (isNil(widget)) throw HttpError.NotFound(`Widget with id ${widgetId} does not exist on console ${consoleName}!`);
       widget.getData();
       return widget;
@@ -29,7 +29,9 @@ const WidgetClient = {
   async createWidget (consoleName: string, widget: Widget): Promise<Widget> {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
-      const existingWidget = console.widgets?.find(p => p.id === widget.id);
+      const widgetId = widget.id || upperFirst(camelCase(widget.displayName));
+      widget.id = widgetId;
+      const existingWidget = console.widgets[widgetId];
       if (existingWidget) throw HttpError.Conflict(`Cannot create new widget with id ${widget.id} because a widget with this id already exists on console ${consoleName}!`);
       console.addWidget(widget);
       await ConsoleClient.saveConsole(console.name, console);
@@ -41,11 +43,11 @@ const WidgetClient = {
   async updateWidget (consoleName: string, widgetId: string, widget: Widget): Promise<Widget> {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
-      const existingWidgetIndex = console.widgets?.findIndex(w => w.id === widgetId);
-      if (existingWidgetIndex === -1) throw HttpError.NotFound(`Cannot update widget with id ${widgetId} because this widget does not exist on console ${consoleName}!`);
+      const existingWidget = console.widgets[widgetId];
+      if (isNil(existingWidget)) throw HttpError.NotFound(`Cannot update widget with id ${widgetId} because this widget does not exist on console ${consoleName}!`);
       // No trickery allowed.
       widget.id = widgetId;
-      console.updateWidget(existingWidgetIndex, widget);
+      console.updateWidget(widget);
       await ConsoleClient.saveConsole(console.name, console);
       return this.getWidget(consoleName, widget.id);
     } catch (error) {
@@ -55,7 +57,7 @@ const WidgetClient = {
   async deleteWidget (consoleName: string, widgetId: string): Promise<Widget> {
     try {
       const console = await ConsoleClient.getConsole(consoleName);
-      const existingWidget = console.widgets?.find(w => w.id === widgetId);
+      const existingWidget = console.widgets[widgetId];
       if (isNil(existingWidget)) throw HttpError.NotFound(`Cannot delete widget with id ${widgetId} because this widget does not exist on console ${consoleName}!`);
       console.deleteWidget(widgetId);
       await ConsoleClient.saveConsole(console.name, console);

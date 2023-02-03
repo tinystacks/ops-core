@@ -11,7 +11,7 @@ jest.mock('../../../src/clients/console-client/local.ts', () => ({
 import Console from '../../../src/classes/console';
 import ConsoleClient from '../../../src/clients/console-client';
 
-const mockConsole = Console.fromObject({
+const mockConsole = Console.fromJson({
   name: 'mock-console',
   pages: [],
   providers: [],

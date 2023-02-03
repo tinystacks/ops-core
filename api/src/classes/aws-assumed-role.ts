@@ -1,25 +1,30 @@
-import { AwsAssumedRole as AwsAssumedRoleType } from '@tinystacks/ops-model';
+import { AwsAssumedRole as AwsAssumedRoleType, AwsKeys, LocalAwsProfile } from '@tinystacks/ops-model';
 
 class AwsAssumedRole implements AwsAssumedRoleType {
   roleArn: string;
   sessionName: string;
+  primaryAwsProfileProvider: AwsKeys | AwsAssumedRoleType | LocalAwsProfile;
 
   constructor (
     roleArn: string,
-    sessionName: string
+    sessionName: string,
+    primaryAwsProfileProvider: AwsKeys | AwsAssumedRoleType | LocalAwsProfile
   ) {
     this.roleArn = roleArn;
     this.sessionName = sessionName;
+    this.primaryAwsProfileProvider = primaryAwsProfileProvider;
   }
 
-  static fromObject (object: AwsAssumedRoleType): AwsAssumedRole {
+  static fromJson (object: AwsAssumedRoleType): AwsAssumedRole {
     const {
       roleArn,
-      sessionName
+      sessionName,
+      primaryAwsProfileProvider
     } = object;
     return new AwsAssumedRole(
       roleArn,
-      sessionName
+      sessionName,
+      primaryAwsProfileProvider
     );
   }
 }

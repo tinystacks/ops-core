@@ -28,6 +28,10 @@ abstract class Widget implements WidgetType {
     this.description = description;
     this.showDescription = showDescription; 
   }
+
+  static fromJson (_object: WidgetType) {
+    throw new Error('Method not implemented.');
+  }
 }
 
 export default Widget;

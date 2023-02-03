@@ -64,18 +64,18 @@ describe('widget client tests', () => {
   });
   describe('getWidget', () => {
     it('returns widget from console matching the id specified', async () => {
-      const mockWidget = GenericWidget.fromObject({
+      const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
         type: 'MockWidget'
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [
-          mockWidget
-        ],
-        providers: [],
-        pages: []
+        widgets: {
+          [mockWidget.id]: mockWidget
+        },
+        providers: {},
+        pages: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
@@ -84,11 +84,11 @@ describe('widget client tests', () => {
       expect(result).toEqual(mockWidget);
     });
     it('throws not found if widget does not exist on the console', async () => {
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [],
-        providers: [],
-        pages: []
+        widgets: {},
+        providers: {},
+        pages: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
@@ -108,18 +108,18 @@ describe('widget client tests', () => {
 
   describe('getWidgets', () => {
     it('returns widgets from console', async () => {
-      const mockWidget = GenericWidget.fromObject({
+      const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
         type: 'MockWidget'
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [
-          mockWidget
-        ],
-        providers: [],
-        pages: []
+        widgets: {
+          [mockWidget.id]: mockWidget
+        },
+        providers: {},
+        pages: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
@@ -144,22 +144,24 @@ describe('widget client tests', () => {
   });
   describe('createWidget', () => {
     it('saves widget to console and returns saved widget', async () => {
-      const mockWidget = GenericWidget.fromObject({
+      const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
         type: 'MockWidget'
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [],
-        providers: [],
-        pages: []
+        widgets: {},
+        providers: {},
+        pages: {}
       });
-      const mockSavedConsole = Console.fromObject({
+      const mockSavedConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [mockWidget],
-        providers: [],
-        pages: []
+        widgets: {
+          [mockWidget.id]: mockWidget
+        },
+        providers: {},
+        pages: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
       mockGetConsole.mockResolvedValueOnce(mockSavedConsole);
@@ -173,16 +175,18 @@ describe('widget client tests', () => {
       expect(result).toEqual(mockWidget);
     });
     it('throws Conflict if widget already exists on console', async () => {
-      const mockWidget = GenericWidget.fromObject({
+      const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
         type: 'MockWidget'
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [mockWidget],
-        providers: [],
-        pages: []
+        widgets: {
+          [mockWidget.id]: mockWidget
+        },
+        providers: {},
+        pages: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
       jest.spyOn(WidgetClient, 'getWidget');
@@ -206,29 +210,31 @@ describe('widget client tests', () => {
   });
   describe('updateWidget', () => {
     it('saves widget to console and returns saved widget', async () => {
-      const oldMockWidget = GenericWidget.fromObject({
+      const oldMockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
         type: 'MockWidget'
       });
-      const oldMockConsole = Console.fromObject({
+      const oldMockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [
-          oldMockWidget
-        ],
-        providers: [],
-        pages: []
+        widgets: {
+          [oldMockWidget.id]: oldMockWidget
+        },
+        providers: {},
+        pages: {}
       });
-      const newMockWidget = GenericWidget.fromObject({
+      const newMockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget 2',
         type: 'MockWidget'
       });
-      const newMockConsole = Console.fromObject({
+      const newMockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [newMockWidget],
-        providers: [],
-        pages: []
+        widgets: {
+          [newMockWidget.id]: newMockWidget
+        },
+        providers: {},
+        pages: {}
       });
       mockGetConsole.mockResolvedValueOnce(oldMockConsole);
       mockGetConsole.mockResolvedValueOnce(newMockConsole);
@@ -242,16 +248,16 @@ describe('widget client tests', () => {
       expect(result).toEqual(newMockWidget);
     });
     it('throws NotFound if widget does not exist on console', async () => {
-      const mockWidget = GenericWidget.fromObject({
+      const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
         type: 'MockWidget'
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [],
-        providers: [],
-        pages: []
+        widgets: {},
+        providers: {},
+        pages: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
       jest.spyOn(WidgetClient, 'getWidget');
@@ -275,18 +281,18 @@ describe('widget client tests', () => {
   });
   describe('deleteWidget', () => {
     it('deletes widget from console and returns deleted widget', async () => {
-      const mockWidget = GenericWidget.fromObject({
+      const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
         type: 'MockWidget'
       });
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [
-          mockWidget
-        ],
-        providers: [],
-        pages: []
+        widgets: {
+          [mockWidget.id]: mockWidget
+        },
+        providers: {},
+        pages: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
 
@@ -297,11 +303,11 @@ describe('widget client tests', () => {
       expect(result).toEqual(mockWidget);
     });
     it('throws NotFound if widget does not exist on console', async () => {
-      const mockConsole = Console.fromObject({
+      const mockConsole = Console.fromJson({
         name: 'mock-console',
-        widgets: [],
-        providers: [],
-        pages: []
+        widgets: {},
+        providers: {},
+        pages: {}
       });
       mockGetConsole.mockResolvedValueOnce(mockConsole);
       jest.spyOn(WidgetClient, 'getWidget');

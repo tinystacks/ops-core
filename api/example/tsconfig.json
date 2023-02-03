@@ -5,7 +5,7 @@
     "declaration": true,
     "strict": true,
     "noImplicitAny": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noUnusedLocals": false,
