@@ -1,4 +1,4 @@
-import { YamlPage } from "../types/yaml-types";
+import { YamlPage } from "../types";
 import { validatePropertyExists } from "./parser-utils";
 import { ParsingService } from "./parsing-service";
 import { Page as PageType } from '@tinystacks/ops-model';

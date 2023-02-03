@@ -1,4 +1,4 @@
-import { YamlProvider } from "../types/yaml-types";
+import { YamlProvider } from "../types";
 import { validatePropertyExists } from "./parser-utils";
 import { ParsingService } from "./parsing-service";
 import { AwsAssumedRole, AwsKeys, LocalAwsProfile, Provider as ProviderType } from '@tinystacks/ops-model';

@@ -1,3 +1,4 @@
+/*
 import { Widget } from '@tinystacks/ops-model';
 import { get, isNil } from 'lodash';
 import { YamlConsole, YamlPage, YamlPageProperties, YamlWidget } from './types';
@@ -98,4 +99,4 @@ export class ParsingService {
 
   }
 }
-
+*/

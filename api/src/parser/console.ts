@@ -1,4 +1,4 @@
-import { YamlConsoleProperties } from "../types/yaml-types";
+import { YamlConsoleProperties } from "../types";
 import { validatePropertyExists } from "./parser-utils";
 import { ParsingService } from "./parsing-service";
 import { Console as ConsoleType, Page, Provider, Widget } from '@tinystacks/ops-model';

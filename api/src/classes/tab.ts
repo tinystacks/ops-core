@@ -1,4 +1,4 @@
-import { Tab as TabType } from '@tinystacks/ops-model';
+import { Tab as TabType, Widget } from '@tinystacks/ops-model';
 import Widget from './widget';
 
 class Tab extends Widget implements TabType {
@@ -52,6 +52,8 @@ class Tab extends Widget implements TabType {
   }
 
   getData (): void { return; }
+
+  toJson(): Widget { return; }
 }
 
 export default Tab;
