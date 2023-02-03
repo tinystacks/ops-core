@@ -1,9 +1,14 @@
-import { TabPanel as TabPanelType } from '@tinystacks/ops-model';
+import {
+  TabPanel as TabPanelType,
+  Tab as TabType
+} from '@tinystacks/ops-model';
 import Widget from './widget';
 import Tab from './tab';
 
 class TabPanel extends Widget implements TabPanelType {
-  tabs: Tab[];
+  tabs: {
+    [id: string]: Tab
+  };
 
   constructor (
     id: string,
@@ -12,7 +17,9 @@ class TabPanel extends Widget implements TabPanelType {
     showDisplayName?: boolean,
     description?: string,
     showDescription?: boolean,
-    tabs: Tab[] = []
+    tabs: {
+      [id: string]: Tab
+    } = {}
   ) {
     super(
       id,
@@ -34,9 +41,12 @@ class TabPanel extends Widget implements TabPanelType {
       showDisplayName,
       description,
       showDescription,
-      tabs: tabObjects = []
+      tabs: tabsObject = {}
     } = object;
-    const tabs = tabObjects.map(Tab.fromJson);
+    const tabs = Object.entries(tabsObject).reduce<{ [id: string]: Tab }>((acc, [id, tabObject]) => {
+      acc[id] = Tab.fromJson(tabObject);
+      return acc;
+    }, {});
     return new TabPanel(
       id,
       displayName,
@@ -46,6 +56,33 @@ class TabPanel extends Widget implements TabPanelType {
       showDescription,
       tabs
     );
+  }
+
+  toJson (): TabPanelType {
+    const tabs = Object.entries(this.tabs).reduce<{ [id: string]: TabType }>((acc, [id, tab]) => {
+      acc[id] = tab.toJson();
+      return acc;
+    }, {});
+
+    const {
+      id,
+      displayName,
+      type,
+      showDisplayName,
+      description,
+      showDescription,
+      providerId
+    } = this;
+    return {
+      id,
+      displayName,
+      type,
+      showDisplayName,
+      description,
+      showDescription,
+      providerId,
+      tabs
+    };
   }
 
   getData (): void { return; }

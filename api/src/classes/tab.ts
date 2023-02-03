@@ -51,6 +51,31 @@ class Tab extends Widget implements TabType {
     );
   }
 
+  toJson (): TabType {
+    const {
+      id,
+      displayName,
+      type,
+      tabDisplayName,
+      widgetIds,
+      showDisplayName,
+      description,
+      showDescription,
+      providerId
+    } = this;
+    return {
+      id,
+      displayName,
+      type,
+      tabDisplayName,
+      widgetIds,
+      showDisplayName,
+      description,
+      showDescription,
+      providerId
+    };
+  }
+
   getData (): void { return; }
 }
 

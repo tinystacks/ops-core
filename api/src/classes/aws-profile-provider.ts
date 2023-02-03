@@ -5,13 +5,14 @@ import LocalAwsProfile from './local-aws-profile';
 import Provider from './provider';
 
 class AwsProfileProvider extends Provider implements AwsProfileProviderType {
+  static type = 'AwsProfileProvider';
   credentials: AwsAssumedRole | AwsKeys | LocalAwsProfile;
 
   constructor (
     id: string,
     credentials: AwsAssumedRole | AwsKeys | LocalAwsProfile
   ) {
-    super(id);
+    super(id, AwsProfileProvider.type);
     this.credentials = credentials;
   }
 
