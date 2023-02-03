@@ -13,9 +13,9 @@ import ConsoleClient from '../../../src/clients/console-client';
 
 const mockConsole = Console.fromJson({
   name: 'mock-console',
-  pages: [],
-  providers: [],
-  widgets: []
+  pages: {},
+  providers: {},
+  widgets: {}
 });
 
 describe('console client tests', () => {

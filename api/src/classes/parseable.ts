@@ -5,6 +5,7 @@ abstract class Parseable {
     throw new Error('Method not implemented.');
   }
   abstract toYaml (): Json;
+  
   static fromJson (_object: Json): Parseable {
     throw new Error('Method not implemented.');
   }

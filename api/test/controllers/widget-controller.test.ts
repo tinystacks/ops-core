@@ -29,7 +29,8 @@ describe('widget controller tests', () => {
     const requestBody: Widget = {
       id: 'mock-widget',
       displayName: 'Mock Widget',
-      type: 'mock-widget'
+      type: 'mock-widget',
+      providerId: 'MockProvider'
     };
     await WidgetController.postWidget('mock-console', requestBody);
     expect(mockCreateWidget).toBeCalled();
@@ -39,7 +40,8 @@ describe('widget controller tests', () => {
     const requestBody: Widget = {
       id: 'mock-widget',
       displayName: 'Mock Widget',
-      type: 'mock-widget'
+      type: 'mock-widget',
+      providerId: 'MockProvider'
     };
     await WidgetController.putWidget('mock-console', 'mock-widget-2', requestBody);
     expect(mockUpdateWidget).toBeCalled();

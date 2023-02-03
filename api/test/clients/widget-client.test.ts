@@ -67,7 +67,8 @@ describe('widget client tests', () => {
       const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
-        type: 'MockWidget'
+        type: 'MockWidget',
+        providerId: 'MockProvider'
       });
       const mockConsole = Console.fromJson({
         name: 'mock-console',
@@ -111,7 +112,8 @@ describe('widget client tests', () => {
       const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
-        type: 'MockWidget'
+        type: 'MockWidget',
+        providerId: 'MockProvider'
       });
       const mockConsole = Console.fromJson({
         name: 'mock-console',
@@ -145,9 +147,9 @@ describe('widget client tests', () => {
   describe('createWidget', () => {
     it('saves widget to console and returns saved widget', async () => {
       const mockWidget = GenericWidget.fromJson({
-        id: 'mock-id',
         displayName: 'Mock Widget',
-        type: 'MockWidget'
+        type: 'MockWidget',
+        providerId: 'MockProvider'
       });
       const mockConsole = Console.fromJson({
         name: 'mock-console',
@@ -158,7 +160,10 @@ describe('widget client tests', () => {
       const mockSavedConsole = Console.fromJson({
         name: 'mock-console',
         widgets: {
-          [mockWidget.id]: mockWidget
+          'MockWidget': {
+            ...mockWidget,
+            id: 'MockWidget'
+          }
         },
         providers: {},
         pages: {}
@@ -171,14 +176,19 @@ describe('widget client tests', () => {
 
       expect(mockGetConsole).toBeCalledTimes(2);
       expect(mockSaveConsole).toBeCalledTimes(1);
+      expect(mockSaveConsole).toBeCalledWith('mock-console', mockSavedConsole);
       expect(WidgetClient.getWidget).toBeCalledTimes(1);
-      expect(result).toEqual(mockWidget);
+      expect(result).toEqual({
+        ...mockWidget,
+        id: 'MockWidget'
+      });
     });
     it('throws Conflict if widget already exists on console', async () => {
       const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
-        type: 'MockWidget'
+        type: 'MockWidget',
+        providerId: 'MockProvider'
       });
       const mockConsole = Console.fromJson({
         name: 'mock-console',
@@ -213,7 +223,8 @@ describe('widget client tests', () => {
       const oldMockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
-        type: 'MockWidget'
+        type: 'MockWidget',
+        providerId: 'MockProvider'
       });
       const oldMockConsole = Console.fromJson({
         name: 'mock-console',
@@ -226,7 +237,8 @@ describe('widget client tests', () => {
       const newMockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget 2',
-        type: 'MockWidget'
+        type: 'MockWidget',
+        providerId: 'MockProvider'
       });
       const newMockConsole = Console.fromJson({
         name: 'mock-console',
@@ -251,7 +263,8 @@ describe('widget client tests', () => {
       const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
-        type: 'MockWidget'
+        type: 'MockWidget',
+        providerId: 'MockProvider'
       });
       const mockConsole = Console.fromJson({
         name: 'mock-console',
@@ -284,7 +297,8 @@ describe('widget client tests', () => {
       const mockWidget = GenericWidget.fromJson({
         id: 'mock-id',
         displayName: 'Mock Widget',
-        type: 'MockWidget'
+        type: 'MockWidget',
+        providerId: 'MockProvider'
       });
       const mockConsole = Console.fromJson({
         name: 'mock-console',

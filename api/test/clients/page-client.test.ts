@@ -156,7 +156,10 @@ describe('page client tests', () => {
       const mockSavedConsole = Console.fromJson({
         name: 'mock-console',
         pages: {
-          MockRoute: mockPage
+          MockRoute: { 
+            ...mockPage,
+            id: 'MockRoute'
+          }
         },
         providers: {},
         widgets: {}
@@ -169,6 +172,7 @@ describe('page client tests', () => {
 
       expect(mockGetConsole).toBeCalledTimes(2);
       expect(mockSaveConsole).toBeCalledTimes(1);
+      expect(mockSaveConsole).toBeCalledWith('mock-console', mockSavedConsole);
       expect(PageClient.getPage).toBeCalledTimes(1);
       expect(result).toEqual({
         ...mockPage,
@@ -203,7 +207,7 @@ describe('page client tests', () => {
 
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
-          HttpError.Conflict('Cannot create new page with id MockRoute because a page with this route already exists on console mock-console!')
+          HttpError.Conflict('Cannot create new page with id MockRoute because a page with this id already exists on console mock-console!')
         );
       }
     });
@@ -224,6 +228,7 @@ describe('page client tests', () => {
         widgets: {}
       });
       const newMockPage = Page.fromJson({
+        id: 'MockRoute',
         route: '/mock-route',
         widgetIds: ['widget-1']
       }); 
@@ -244,10 +249,7 @@ describe('page client tests', () => {
       expect(mockGetConsole).toBeCalledTimes(2);
       expect(mockSaveConsole).toBeCalledTimes(1);
       expect(PageClient.getPage).toBeCalledTimes(1);
-      expect(result).toEqual({
-        ...newMockPage,
-        id: 'MockRoute'
-      });
+      expect(result).toEqual(newMockPage);
     });
     it('throws NotFound if page does not exist on console', async () => {
       const mockPage = Page.fromJson({

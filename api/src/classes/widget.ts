@@ -5,17 +5,17 @@ abstract class Widget implements WidgetType {
   id: string;
   displayName: string;
   type: string;
+  providerId: string;
   provider?: Provider;
   showDisplayName?: boolean;
   description?: string;
   showDescription?: boolean;
-  abstract getData (): void;
 
   constructor (
     id: string,
     displayName: string,
     type: string,
-    provider?: Provider,
+    providerId: string,
     showDisplayName?: boolean,
     description?: string,
     showDescription?: boolean
@@ -23,7 +23,7 @@ abstract class Widget implements WidgetType {
     this.id = id;
     this.displayName = displayName;
     this.type = type;
-    this.provider = provider;
+    this.providerId = providerId;
     this.showDisplayName = showDisplayName;
     this.description = description;
     this.showDescription = showDescription; 
@@ -32,6 +32,10 @@ abstract class Widget implements WidgetType {
   static fromJson (_object: WidgetType) {
     throw new Error('Method not implemented.');
   }
+
+  abstract toJson (): WidgetType;
+
+  abstract getData (): void;
 }
 
 export default Widget;

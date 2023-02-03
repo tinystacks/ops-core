@@ -10,7 +10,7 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
       id,
       displayName,
       type,
-      provider,
+      providerId,
       showDisplayName,
       description,
       showDescription
@@ -19,7 +19,7 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
       id,
       displayName,
       type,
-      provider,
+      providerId,
       showDisplayName,
       description,
       showDescription
@@ -41,7 +41,7 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
       id,
       displayName,
       type,
-      provider,
+      providerId,
       showDisplayName,
       description,
       showDescription
@@ -51,7 +51,7 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
       id,
       displayName,
       type,
-      provider,
+      providerId,
       showDisplayName,
       description,
       showDescription
