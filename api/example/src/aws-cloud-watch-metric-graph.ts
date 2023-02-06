@@ -1,6 +1,5 @@
 import { Widget as WidgetType } from "@tinystacks/ops-model";
 import Widget from "../../src/classes/widget";
-import AwsProfileProvider from "../../src/classes/aws-profile-provider";
 import { CloudWatch } from "@aws-sdk/client-cloudwatch";
 import dayjs, { ManipulateType } from "dayjs";
 
@@ -44,8 +43,7 @@ type RelativeTime = {
   unit: TimeUnitEnum;
 }
 
-type AwsCloudWatchMetricGraphType = Omit<WidgetType, 'provider'> & {
-  provider: AwsProfileProvider;
+type AwsCloudWatchMetricGraphType = WidgetType & {
   statistic?: string;
   showTimeRangeSelector?: boolean;
   showStatisticSelector?: boolean;
@@ -56,7 +54,6 @@ type AwsCloudWatchMetricGraphType = Omit<WidgetType, 'provider'> & {
 
 class AwsCloudWatchMetricGraph extends Widget implements AwsCloudWatchMetricGraphType {
   static type = 'AwsCloudWatchMetricGraph';
-  provider: AwsProfileProvider;
   statistic: string;
   showTimeRangeSelector: boolean;
   showStatisticSelector: boolean;
@@ -67,7 +64,7 @@ class AwsCloudWatchMetricGraph extends Widget implements AwsCloudWatchMetricGrap
   constructor (
     id: string,
     displayName: string,
-    provider: AwsProfileProvider,
+    providerId: string,
     showDisplayName?: boolean,
     description?: string,
     showDescription?: boolean,
@@ -85,12 +82,11 @@ class AwsCloudWatchMetricGraph extends Widget implements AwsCloudWatchMetricGrap
       id,
       displayName,
       AwsCloudWatchMetricGraph.type,
-      provider,
+      providerId,
       showDisplayName,
       description,
       showDescription
     );
-    this.provider = provider;
     this.statistic = statistic;
     this.showTimeRangeSelector = showTimeRangeSelector;
     this.showStatisticSelector = showStatisticSelector;
@@ -98,12 +94,13 @@ class AwsCloudWatchMetricGraph extends Widget implements AwsCloudWatchMetricGrap
     this.metrics = metrics;
     this.timeRange = timeRange;
   }
+  additionalProperties?: any;
 
   static fromJson(object: AwsCloudWatchMetricGraphType): AwsCloudWatchMetricGraph {
     const {
       id,
       displayName,
-      provider,
+      providerId,
       showDisplayName,
       description,
       showDescription,
@@ -115,9 +112,9 @@ class AwsCloudWatchMetricGraph extends Widget implements AwsCloudWatchMetricGrap
       timeRange
     } = object;
     return new AwsCloudWatchMetricGraph(
-      id,
+      id!,
       displayName,
-      provider,
+      providerId,
       showDisplayName,
       description,
       showDescription,
@@ -128,6 +125,24 @@ class AwsCloudWatchMetricGraph extends Widget implements AwsCloudWatchMetricGrap
       metrics,
       timeRange
     );
+  }
+
+  toJson(): AwsCloudWatchMetricGraphType {
+    return {
+      id: this.id,
+      type: this.type,
+      displayName: this.displayName,
+      providerId: this.providerId,
+      showDisplayName: this.showDisplayName,
+      description: this.description,
+      showDescription: this.showDescription,
+      statistic: this.statistic,
+      showTimeRangeSelector: this.showTimeRangeSelector,
+      showStatisticSelector: this.showStatisticSelector,
+      showPeriodSelector: this.showPeriodSelector,
+      metrics: this.metrics,
+      timeRange: this.timeRange
+    };
   }
 
   async getData(): Promise<void> {

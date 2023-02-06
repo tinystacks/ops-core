@@ -20,6 +20,8 @@ const WidgetClient = {
       const console = await ConsoleClient.getConsole(consoleName);
       const widget = console.widgets[widgetId];
       if (isNil(widget)) throw HttpError.NotFound(`Widget with id ${widgetId} does not exist on console ${consoleName}!`);
+      const provider = console.providers[widget.providerId];
+      widget.provider = provider;
       widget.getData();
       return widget;
     } catch (error) {
