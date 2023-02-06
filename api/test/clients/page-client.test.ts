@@ -179,7 +179,7 @@ describe('page client tests', () => {
         id: 'MockRoute'
       });
     });
-    it('throws Conflict if page already exists on console', async () => {
+    it('throws Conflict if page with id already exists on console', async () => {
       const mockPage = Page.fromJson({
         route: '/mock-route',
         widgetIds: []
@@ -208,6 +208,38 @@ describe('page client tests', () => {
         expect(thrownError).toBeDefined();
         expect(thrownError).toEqual(
           HttpError.Conflict('Cannot create new page with id MockRoute because a page with this id already exists on console mock-console!')
+        );
+      }
+    });
+    it('throws Conflict if page with route already exists on console', async () => {
+      const mockPage = Page.fromJson({
+        route: '/mock-route',
+        widgetIds: []
+      });
+      const mockConsole = Console.fromJson({
+        name: 'mock-console',
+        pages: {
+          MainPage: mockPage
+        },
+        providers: {},
+        widgets: {}
+      });
+      mockGetConsole.mockResolvedValueOnce(mockConsole);
+      jest.spyOn(PageClient, 'getPage');
+
+      let thrownError;
+      try {
+        await PageClient.createPage('mock-console', mockPage);
+      } catch (error) {
+        thrownError = error;
+      } finally {
+        expect(mockGetConsole).toBeCalledTimes(1);
+        expect(mockSaveConsole).not.toBeCalled();
+        expect(PageClient.getPage).not.toBeCalled();
+
+        expect(thrownError).toBeDefined();
+        expect(thrownError).toEqual(
+          HttpError.Conflict('Cannot create new page with route /mock-route because a page with this route already exists on console mock-console!')
         );
       }
     });
