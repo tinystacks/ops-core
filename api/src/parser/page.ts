@@ -20,12 +20,12 @@ export class Page extends ParsingService implements PageType {
     this.widgetIds = widgetIds;
   }
   
-  validate(yamlPage: YamlPage): void {
+  static validate(yamlPage: YamlPage): void {
     validatePropertyExists(yamlPage, 'widgetIds', "Page");
     validatePropertyExists(yamlPage, 'route', "Page"); 
   }
 
-  parse(yamlPage: YamlPage): Page{ 
+  static parse(yamlPage: YamlPage): Page{ 
 
     const { 
       id,
@@ -34,7 +34,7 @@ export class Page extends ParsingService implements PageType {
     } = yamlPage; 
 
     const widgetIds = widgets.map(item => { 
-      const [__, _, id ] = item.$ref.split("/");
+      const [_, __, ___, id ] = item.$ref.split("/");
       return id;
     })
 

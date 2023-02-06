@@ -25,7 +25,7 @@ export class Console extends ParsingService implements ConsoleType {
     this.widgets = widgets;
   }
   
-  validate(console: YamlConsoleProperties): void {
+  static validate(console: YamlConsoleProperties): void {
 
     validatePropertyExists(console, 'name', "Console");
     validatePropertyExists(console, 'providers', "Console"); //validate non empty
@@ -37,8 +37,8 @@ export class Console extends ParsingService implements ConsoleType {
  
   }
 
-  parse(consoleYaml: YamlConsoleProperties): Console { 
-    console.log("console: ", consoleYaml);
+  static parse(consoleYaml: YamlConsoleProperties): Console { 
+    //console.log("console: ", consoleYaml);
     const { 
       name,
       providers, 
@@ -47,6 +47,7 @@ export class Console extends ParsingService implements ConsoleType {
     } = consoleYaml;
 
     const pageObjects : Record<string, Page> = {}; 
+    //console.log("pages: ", pages);
     Object.keys(pages).forEach(id => { 
       pageObjects[id] = PageClass.parse(pages[id]);
     });

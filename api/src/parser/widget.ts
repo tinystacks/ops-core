@@ -34,13 +34,13 @@ export class Widget extends ParsingService implements WidgetType, TabPanelType {
     this.tabs = tabs;
   }
   
-  validate(yamlWidget: YamlWidget): void {
+  static validate(yamlWidget: YamlWidget): void {
     validatePropertyExists(yamlWidget, 'type', "Widget");
     validatePropertyExists(yamlWidget, 'displayName', "Widget");
     validatePropertyExists(yamlWidget, 'provider', "Widget");
   }
 
-  parse(yamlWidget: YamlWidget): Widget{ 
+  static parse(yamlWidget: YamlWidget): Widget{ 
     const { 
       type,
       displayName, 
@@ -51,7 +51,9 @@ export class Widget extends ParsingService implements WidgetType, TabPanelType {
       tabs
     } = yamlWidget;
 
-    const [__, _, providerId ] = yamlWidget.provider.$ref.split("/");
+     console.log("yamlWidget: ", yamlWidget);
+
+    const [_, __, ___, providerId ] = yamlWidget.provider.$ref.split("/");
     
     return new Widget( 
       type,

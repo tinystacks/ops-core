@@ -21,11 +21,11 @@ export class Provider extends ParsingService implements ProviderType {
 
   }
   
-  validate(yamlProvider: YamlProvider): void {
+  static validate(yamlProvider: YamlProvider): void {
     validatePropertyExists(yamlProvider, 'type', "Provider"); 
   }
 
-  parse(yamlProvider: YamlProvider): Provider{ 
+  static parse(yamlProvider: YamlProvider): Provider{ 
     const { 
       id, 
       type
