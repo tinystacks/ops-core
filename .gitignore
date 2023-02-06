@@ -1,0 +1,7 @@
+dist
+dist-test
+node_modules
+coverage
+.env
+model
+local-deps
