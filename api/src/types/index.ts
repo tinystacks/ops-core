@@ -5,6 +5,7 @@ import {
   Provider,
   Widget,
   TinyStacksError,
+  Tab,
   TabPanel
 } from '@tinystacks/ops-model';
 
@@ -24,7 +25,15 @@ type Ref = {
 
 type GenericWidgetType = Widget & Json;
 
-type YamlWidget  = Omit< Widget, 'providerId'> & TabPanel & {
+type YamlTab = Omit<Tab, 'widgetIds'> & YamlWidget & {
+  widgets: Ref[];
+}
+
+type YamlTabPanel = Omit<TabPanel, 'tabs'> & { 
+  tabs: Record<string, YamlTab>
+}
+
+type YamlWidget  = Omit< Widget, 'providerId'> & YamlTabPanel & {
   provider: Ref;
 };
 
@@ -64,6 +73,7 @@ export {
   YamlPage,
   YamlProvider,
   YamlConsole,
+  YamlTab,
   YamlConsoleProperties,
   TinyStacksErrorObject
 };

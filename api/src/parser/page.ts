@@ -21,7 +21,7 @@ export class Page extends ParsingService implements PageType {
   }
   
   static validate(yamlPage: YamlPage): void {
-    validatePropertyExists(yamlPage, 'widgetIds', "Page");
+    validatePropertyExists(yamlPage, 'widgets', "Page");
     validatePropertyExists(yamlPage, 'route', "Page"); 
   }
 

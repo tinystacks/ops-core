@@ -61,6 +61,7 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
   static fromYaml (yamlJson: YamlWidget, id?: string): GenericWidget {
     return new GenericWidget({
       ...yamlJson,
+      providerId:'', //update this later
       id
     });
   }
@@ -69,8 +70,8 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
     return {
       id: this.id,
       displayName: this.displayName,
-      type: this.type,
       providerId: this.providerId,
+      type: this.type,
       showDisplayName: this.showDisplayName,
       description: this.description,
       showDescription:this.showDescription, 
