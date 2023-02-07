@@ -39,9 +39,6 @@ export class Tab extends ParsingService implements TabType {
 
   static validate(yamlWidget: YamlWidget): void {
     validatePropertyExists(yamlWidget, 'tabDisplayName', "Tab");
-    //validatePropertyExists(yamlWidget, 'type', "Tab");
-    //validatePropertyExists(yamlWidget, 'displayName', "Tab");
-    //validatePropertyExists(yamlWidget, 'provider', "Tab");
     validatePropertyExists(yamlWidget, 'widgets', "Tab");
   }
 
