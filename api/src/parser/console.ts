@@ -1,12 +1,12 @@
 import { Ref, YamlConsoleProperties, YamlProvider, YamlWidget } from "../types";
 import { validatePropertyExists } from "./parser-utils";
-import { ParsingService } from "./parsing-service";
+import { Parser } from "./parser";
 import { Console as ConsoleType, Page, Provider, Widget } from '@tinystacks/ops-model';
 import { Page as PageClass } from "./page";
 import { Provider as ProviderClass} from "./provider";
 import { Widget as WidgetClass} from "./widget";
 
-export class Console extends ParsingService implements ConsoleType {
+export class Console extends Parser implements ConsoleType {
   name: string;
   providers: Record<string, Provider>;
   pages: Record<string, Page>;

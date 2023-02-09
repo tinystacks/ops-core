@@ -1,9 +1,9 @@
-import { ParsingService } from "./parsing-service";
+import { Parser } from "./parser";
 import { YamlTab, YamlWidget } from "../types";
 import { validatePropertyExists } from "./parser-utils";
 import { Tab as TabType } from '@tinystacks/ops-model';
 
-export class Tab extends ParsingService implements TabType {
+export class Tab extends Parser implements TabType {
   type: string;
   displayName: string;
   providerId: string;

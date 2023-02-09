@@ -1,11 +1,11 @@
-import { ParsingService } from "./parsing-service";
+import { Parser } from "./parser";
 import { YamlWidget } from "../types";
 import { validatePropertyExists } from "./parser-utils";
 import { Tab, Widget as WidgetType, TabPanel as TabPanelType } from '@tinystacks/ops-model';
 import { Tab as TabClass } from './tab';
 import isNil from "lodash.isnil";
 
-export class Widget extends ParsingService implements WidgetType, TabPanelType {
+export class Widget extends Parser implements WidgetType, TabPanelType {
   type: string;
   displayName: string;
   providerId: string;

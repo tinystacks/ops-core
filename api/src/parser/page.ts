@@ -1,9 +1,9 @@
 import { YamlPage } from "../types";
 import { validatePropertyExists } from "./parser-utils";
-import { ParsingService } from "./parsing-service";
+import { Parser } from "./parser";
 import { Page as PageType } from '@tinystacks/ops-model';
 
-export class Page extends ParsingService implements PageType {
+export class Page extends Parser implements PageType {
 
   id: string;
   route: string;
