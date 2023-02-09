@@ -9,8 +9,6 @@ import {
   TabPanel
 } from '@tinystacks/ops-model';
 
-//these types should map to what they example.yml looks like
-
 type Json = {
   [key: string]: any;
 }
@@ -36,8 +34,6 @@ type YamlTabPanel = Omit<TabPanel, 'tabs'> & {
 type YamlWidget  = Omit< Widget, 'providerId'> & YamlTabPanel & {
   provider: Ref;
 };
-
-//type YamlWidget = GenericWidgetType;
 
 type YamlPage = Omit<Page, 'widgetIds'> &  {
   widgets: Ref[];

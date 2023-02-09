@@ -13,7 +13,6 @@ class Page extends Parseable implements PageType {
     id?: string
   ) {
     super();
-    this.id = id;
     this.route = route;
     this.widgetIds = widgetIds;
     this.id = id;
