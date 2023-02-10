@@ -25,24 +25,20 @@ export class Provider extends Parser implements ProviderType {
     validatePropertyExists(yamlProvider, 'type', "Provider"); 
   }
 
-  static parse(yamlProvider: YamlProvider): Provider{ 
-    const { 
-      id, 
-      type
-    } = yamlProvider;
-
-    //need to figure out credentials
-    return new Provider(
-      id, 
-      type
-    ); 
+  static parse(yamlProvider: YamlProvider, dependencySource?: string): Provider{ 
+    try { 
+      const providerType = require(dependencySource)[yamlProvider.type];
+      const provider = providerType.fromJson(yamlProvider);
+      return provider; 
+    } catch(e){ 
+      throw Error(`Error trying to load module ${dependencySource} for type ${yamlProvider.type}`);
+    }
   }
 
   static fromJson (object: ProviderType): Provider {
     const { 
       id, 
-      type, 
-      //credentials
+      type
     } = object;
 
     return new Provider(
