@@ -1,5 +1,5 @@
-import { FlatMap, Ref, YamlConsoleProperties, YamlProvider, YamlWidget } from "../types";
-import { validatePropertyExists } from "./parser-utils";
+import { FlatMap, Ref, YamlConsoleProperties } from "../types";
+import { validatePropertyExists, validateProviderReferences, validateWidgetReferences } from "./parser-utils";
 import { Parser } from "./parser";
 import { Console as ConsoleType, Page, Provider, Widget } from '@tinystacks/ops-model';
 import { Page as PageClass } from "./page";
@@ -135,27 +135,6 @@ export class Console extends Parser implements ConsoleType {
       providers: this.providers,
       pages: this.pages,
       widgets: this.widgets
-    }
-  }
-
-}
-
-function validateWidgetReferences(widgets: { [id: string]: YamlWidget} , widgetReferences: Ref[]){ 
-  for(let i = 0; i < widgetReferences.length; ++i){ 
-    const [_, __, ___, widgetId] = widgetReferences[i].$ref.split("/"); 
-    const found = widgets[widgetId];
-    if(!found){ 
-      throw Error(`Widget reference ${widgetReferences[i]} is not defined`);
-    }
-  }
-}
-
-function validateProviderReferences(providers: { [id: string]: YamlProvider}, providerReferences: Ref[]){ 
-  for(let i = 0; i < providerReferences.length; ++i){ 
-    const [_, __, ___, providerId] = providerReferences[i].$ref.split("/"); 
-    const found = providers[providerId];
-    if(!found){ 
-      throw Error(`Provider reference ${providerReferences[i]} is not defined`);
     }
   }
 
