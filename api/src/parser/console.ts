@@ -34,6 +34,7 @@ export class Console extends Parser implements ConsoleType {
     validatePropertyExists(console, 'providers', "Console");
     validatePropertyExists(console, 'pages', "Console");
     validatePropertyExists(console, 'widgets', "Console");
+    validatePropertyExists(console, 'dependencies', "Console");
 
     const allWidgetIds: Ref[] = [];
     const allProviders: Ref[] = [];
@@ -50,11 +51,10 @@ export class Console extends Parser implements ConsoleType {
       }
     });
 
-
-
     validateWidgetReferences(console.widgets, allWidgetIds);
     validateProviderReferences(console.providers, allProviders);
 
+    //TO-DO -- validations for widget and provider dependencies
     //validateWidgetDependenciesPresent
     //validateProviderDependenciesPresent
  
@@ -141,8 +141,6 @@ export class Console extends Parser implements ConsoleType {
 }
 
 function validateWidgetReferences(widgets: { [id: string]: YamlWidget} , widgetReferences: Ref[]){ 
-  console.log("widgets: ", widgets);
-  console.log("references: ", widgetReferences);
   for(let i = 0; i < widgetReferences.length; ++i){ 
     const [_, __, ___, widgetId] = widgetReferences[i].$ref.split("/"); 
     const found = widgets[widgetId];

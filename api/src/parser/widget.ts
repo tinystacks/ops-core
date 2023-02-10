@@ -5,17 +5,6 @@ import { Tab, Widget as WidgetType, TabPanel as TabPanelType } from '@tinystacks
 import { Tab as TabClass } from './tab';
 import isNil from "lodash.isnil";
 
-    //figure out widget type 
-    //follow dependecies to get that widget type 
-    //using that widget type, create a new plugin widget and return that
-    //return widget type that caleb defined
-
-    //type.fromJson will create a new object from the widgets type
-
-    // validate all widget and provider types have dependecies defined
-    // live as part of the widgets or providers
-
-
 export class Widget extends Parser implements WidgetType, TabPanelType {
   type: string;
   displayName: string;
@@ -65,7 +54,7 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
     }
 
     try { 
-      const widgetType = require(dependencySource)['AwsCloudWatchMetricGraph'];
+      const widgetType = require(dependencySource)[yamlWidget.type];
       const widgetObject = {
         ...yamlWidget, 
         providerId, 
@@ -76,8 +65,6 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
     } catch(e){ 
       throw Error(`Error trying to load module ${dependencySource} for type ${yamlWidget.type}`);
     }
-
-      //return widget object
   }
 
   static fromJson (object: WidgetType): Widget {
