@@ -50,6 +50,7 @@ export class Console extends Parser implements ConsoleType {
         })
       }
     });
+  
 
     validateWidgetReferences(console.widgets, allWidgetIds);
     validateProviderReferences(console.providers, allProviders);

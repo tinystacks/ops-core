@@ -14,7 +14,7 @@ export function validateWidgetReferences(widgets: { [id: string]: YamlWidget} , 
     const [_, __, ___, widgetId] = widgetReferences[i].$ref.split("/"); 
     const found = widgets[widgetId];
     if(!found){ 
-      throw Error(`Widget reference ${widgetReferences[i]} is not defined`);
+      throw Error(`Widget reference ${widgetReferences[i].$ref} is not defined`);
     }
   }
 }
@@ -24,7 +24,7 @@ export function validateProviderReferences(providers: { [id: string]: YamlProvid
     const [_, __, ___, providerId] = providerReferences[i].$ref.split("/"); 
     const found = providers[providerId];
     if(!found){ 
-      throw Error(`Provider reference ${providerReferences[i]} is not defined`);
+      throw Error(`Provider reference ${providerReferences[i].$ref} is not defined`);
     }
   }
 }
