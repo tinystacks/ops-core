@@ -45,4 +45,28 @@ export class Page extends Parser implements PageType {
     )
   }
 
+  static fromJson (object: PageType): Page {
+    const { 
+      id,
+      route,
+      widgetIds
+    } = object; 
+
+    return new Page(
+      id, 
+      route, 
+      widgetIds
+    )
+  }
+
+  toJson(): PageType { 
+
+    return { 
+      id: this.id, 
+      route: this.route, 
+      widgetIds: this.widgetIds
+    }
+    
+  }
+
 }

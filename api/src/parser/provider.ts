@@ -31,12 +31,33 @@ export class Provider extends Parser implements ProviderType {
       type
     } = yamlProvider;
 
-    
     //need to figure out credentials
     return new Provider(
       id, 
       type
     ); 
+  }
+
+  static fromJson (object: ProviderType): Provider {
+    const { 
+      id, 
+      type, 
+      //credentials
+    } = object;
+
+    return new Provider(
+      id, 
+      type
+    ); 
+  }
+  
+  toJson(): ProviderType { 
+
+    return { 
+      id: this.id, 
+      type: this.type
+    }
+    
   }
 
 }

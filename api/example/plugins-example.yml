@@ -1,0 +1,37 @@
+Console:
+  name: TinyStacks example
+  providers:
+    AwsLocalProvider:
+      type: AwsProfileProvider
+      credentials:
+        profileName: ts-dev
+  pages:
+    MainPage:
+      route: /
+      widgets: 
+        - $ref: '#/Console/widgets/PrimaryServiceHealth'
+        - $ref: '#/Console/widgets/MainPageTabPanel'
+  widgets:
+    PrimaryServiceHealth:
+      type: "AwsCloudWatchMetricGraph"
+      displayName: Service Health (system memory)
+      provider: 
+        $ref: '#/Console/providers/AwsLocalProvider'
+      showTimeRangeSelector: false
+      showPeriodSelector: false
+      showStatisticSelector: false
+      metrics:
+        - metricDisplayName: Synth Memory Util
+          metricName: MemoryUtilized
+          metricNamespace: ECS/ContainerInsights
+          dimensions:
+            - key: ClusterName
+              value: cdk-synth-cluster
+            - key: ServiceName
+              value: tinystacks-service
+      region: us-east-1
+  dependencies: 
+    AwsCloudWatchMetricGraph: "ops-aws-core-plugins/dist/aws-widgets/aws-cloud-watch-metric-graph"
+    AwsProfileProvider: "@tinystacks/aws-ops-providers"
+
+  

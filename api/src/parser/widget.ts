@@ -5,6 +5,17 @@ import { Tab, Widget as WidgetType, TabPanel as TabPanelType } from '@tinystacks
 import { Tab as TabClass } from './tab';
 import isNil from "lodash.isnil";
 
+    //figure out widget type 
+    //follow dependecies to get that widget type 
+    //using that widget type, create a new plugin widget and return that
+    //return widget type that caleb defined
+
+    //type.fromJson will create a new object from the widgets type
+
+    // validate all widget and provider types have dependecies defined
+    // live as part of the widgets or providers
+
+
 export class Widget extends Parser implements WidgetType, TabPanelType {
   type: string;
   displayName: string;
@@ -42,17 +53,8 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
     validatePropertyExists(yamlWidget, 'provider', "Widget");
   }
 
-  static parse(yamlWidget: YamlWidget): Widget {
-    const {
-      type,
-      displayName,
-      showDisplayName,
-      description,
-      showDescription,
-      id,
-      tabs
-    } = yamlWidget;
-
+  static parse(yamlWidget: YamlWidget, dependencySource?: string): Widget {
+    const tabs = yamlWidget.tabs;
     const [_, __, ___, providerId] = yamlWidget.provider.$ref.split("/");
     const tabObjects: Record<string, Tab> = {};
     if (!isNil(tabs)) {
@@ -62,6 +64,33 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
       });
     }
 
+    try { 
+      const widgetType = require(dependencySource)['AwsCloudWatchMetricGraph'];
+      const widgetObject = {
+        ...yamlWidget, 
+        providerId, 
+        tabs
+      };
+      const widget = widgetType.fromJson(widgetObject);
+      return widget; 
+    } catch(e){ 
+      throw Error(`Error trying to load module ${dependencySource} for type ${yamlWidget.type}`);
+    }
+
+      //return widget object
+  }
+
+  static fromJson (object: WidgetType): Widget {
+    const {
+      type,
+      displayName,
+      providerId,
+      showDisplayName,
+      description,
+      showDescription,
+      id
+    } = object;
+
     return new Widget(
       type,
       displayName,
@@ -69,9 +98,22 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
       showDisplayName,
       description,
       showDescription,
-      id,
-      tabObjects
+      id
     );
+  }
+
+  toJson(): WidgetType { 
+
+    return { 
+      id: this.id,
+      type: this.type, 
+      displayName: this.displayName,
+      providerId: this.providerId,
+      showDisplayName: this.showDisplayName,
+      description: this.description,
+      showDescription: this.showDescription,
+    }
+    
   }
 
 }

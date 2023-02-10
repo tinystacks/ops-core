@@ -72,4 +72,19 @@ export class Tab extends Parser implements TabType {
       widgetIds
     )
   }
+
+  toJson(): TabType { 
+
+    return { 
+      type: this.type,
+      displayName: this.displayName,
+      providerId: this.providerId,
+      widgetIds: this.widgetIds,
+      tabDisplayName: this.tabDisplayName,
+      showDisplayName: this.showDisplayName,
+      description: this.description,
+      showDescription: this.showDescription,
+      id: this.id
+    }
+  }
 }
