@@ -59,8 +59,10 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
   }
 
   static fromYaml (yamlJson: YamlWidget, id?: string): GenericWidget {
+    const [_, __, ___, providerId] = yamlJson.provider.$ref.split("/");
     return new GenericWidget({
       ...yamlJson,
+      providerId,
       id
     });
   }
@@ -69,7 +71,6 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
     return {
       id: this.id,
       displayName: this.displayName,
-      providerId: this.providerId,
       type: this.type,
       showDisplayName: this.showDisplayName,
       description: this.description,

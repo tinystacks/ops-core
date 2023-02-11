@@ -10,7 +10,6 @@ Console:
       route: /
       widgets: 
         - $ref: '#/Console/widgets/PrimaryServiceHealth'
-        - $ref: '#/Console/widgets/MainPageTabPanel'
   widgets:
     PrimaryServiceHealth:
       type: "AwsCloudWatchMetricGraph"
@@ -32,6 +31,6 @@ Console:
       region: us-east-1
   dependencies: 
     AwsCloudWatchMetricGraph: "ops-aws-core-plugins/dist/aws-widgets/aws-cloud-watch-metric-graph"
-    AwsProfileProvider: "@tinystacks/aws-ops-providers"
+    AwsProfileProvider: "ops-aws-core-plugins/dist/aws-provider/aws-cloud-watch-metric-graph"
 
   

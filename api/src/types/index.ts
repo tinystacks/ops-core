@@ -27,7 +27,7 @@ type YamlTab = Omit<Tab, 'widgetIds'> & YamlWidget & {
   widgets: Ref[];
 }
 
-type YamlTabPanel = Omit<TabPanel, 'tabs'> & { 
+type YamlTabPanel = Omit<TabPanel, 'tabs' | 'providerId'> & { 
   tabs: Record<string, YamlTab>
 }
 
