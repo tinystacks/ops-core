@@ -12,7 +12,7 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
   showDisplayName?: boolean;
   description?: string;
   showDescription?: boolean;
-  id?: string;
+  id: string;
   tabs: Record<string, Tab>
 
   constructor(
@@ -42,7 +42,7 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
     validatePropertyExists(yamlWidget, 'provider', "Widget");
   }
 
-  static parse(yamlWidget: YamlWidget, dependencySource?: string): Widget {
+  static parse(yamlWidget: YamlWidget, id?: string, dependencySource?: string): Widget {
     const tabs = yamlWidget.tabs;
     const [_, __, ___, providerId] = yamlWidget.provider.$ref.split("/");
     const tabObjects: Record<string, Tab> = {};
@@ -58,6 +58,7 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
       const widgetObject = {
         ...yamlWidget, 
         providerId, 
+        id,
         tabs
       };
       const widget = widgetType.fromJson(widgetObject);

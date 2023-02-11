@@ -85,7 +85,7 @@ export class Console extends Parser implements ConsoleType {
     const widgetObjects: Record<string, Widget> = {}; 
     Object.keys(widgets).forEach(id => { 
       WidgetClass.validate(widgets[id]);
-      widgetObjects[id] = WidgetClass.parse(widgets[id], dependencies[widgets[id].type]);
+      widgetObjects[id] = WidgetClass.parse(widgets[id], id, dependencies[widgets[id].type]);
     });
 
     return new Console(
