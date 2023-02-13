@@ -1,7 +1,15 @@
 {
-  "name": "ops-api",
-  "version": "0.0.0",
+  "name": "@tinystacks/ops-core",
+  "version": "0.0.1",
   "main": "dist/server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinystacks/ops-core.git"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "node_modules/.bin/tsc",
     "clean": "rm -rf ./dist",
