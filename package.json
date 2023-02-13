@@ -2,6 +2,14 @@
   "name": "ops-api",
   "version": "0.0.0",
   "main": "dist/server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinystacks/ops-model.git"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "node_modules/.bin/tsc",
     "clean": "rm -rf ./dist",
