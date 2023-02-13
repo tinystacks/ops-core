@@ -1,12 +1,12 @@
 import {
-  AwsProfileProvider,
+  AwsCredentialsProvider,
   Console,
   Page,
-  Provider,
   Widget,
   TinyStacksError,
   Tab,
-  TabPanel
+  TabPanel, 
+  Provider
 } from '@tinystacks/ops-model';
 
 type Json = {
@@ -39,7 +39,7 @@ type YamlPage = Omit<Page, 'widgetIds'> &  {
   widgets: Ref[];
 }
 
-type YamlProvider = Provider | AwsProfileProvider;
+type YamlProvider = Provider | AwsCredentialsProvider;
 
 type YamlConsoleProperties = Omit<Console, 'providers' | 'pages' | 'widgets'> & {
   providers: {

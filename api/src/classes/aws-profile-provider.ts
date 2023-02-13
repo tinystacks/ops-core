@@ -1,4 +1,4 @@
-import { AwsProfileProvider as AwsProfileProviderType } from '@tinystacks/ops-model';
+import { AwsCredentialsProvider as AwsProfileProviderType } from '@tinystacks/ops-model';
 import AwsAssumedRole from './aws-assumed-role';
 import AwsKeys from './aws-keys';
 import LocalAwsProfile from './local-aws-profile';
