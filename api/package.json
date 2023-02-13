@@ -45,6 +45,7 @@
     "http-errors": "^2.0.0",
     "js-yaml": "^4.1.0",
     "json-refs": "^3.0.15",
+    "lodash": "^4.17.21",
     "lodash.isnil": "^4.0.0",
     "swagger-ui-express": "^4.6.0",
     "yamljs": "^0.3.0"
