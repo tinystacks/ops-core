@@ -1,7 +1,7 @@
 {
   "name": "@tinystacks/ops-core",
-  "version": "0.0.1",
-  "main": "dist/server.js",
+  "version": "0.0.2",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tinystacks/ops-core.git"
