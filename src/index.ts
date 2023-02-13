@@ -1,2 +1,2 @@
 export * from './parser/console';
-export * from './parser/parser';
+export * from './parser/parser'; 
