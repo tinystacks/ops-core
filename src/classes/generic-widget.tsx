@@ -1,7 +1,7 @@
 import Widget from './widget';
-import { Widget as WidgetType } from '@tinystacks/ops-model';
 import { GenericWidgetType, Json, YamlWidget } from '../types';
 import Parseable from './parseable';
+import React from 'react';
 
 class GenericWidget extends Widget implements GenericWidgetType, Parseable {
   [key: string]: any;
@@ -81,6 +81,8 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
   }
 
   getData (): void { return; }
+
+  render (): JSX.Element { return <>TODO</>; }
 }
 
 export default GenericWidget;

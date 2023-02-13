@@ -1,5 +1,6 @@
 import { Tab as TabType } from '@tinystacks/ops-model';
 import Widget from './widget';
+import React from 'react';
 
 class Tab extends Widget implements TabType {
   tabDisplayName: string;
@@ -19,7 +20,7 @@ class Tab extends Widget implements TabType {
       id,
       displayName,
       type,
-      undefined,
+      '',
       showDisplayName,
       description,
       showDescription
@@ -77,6 +78,8 @@ class Tab extends Widget implements TabType {
   }
 
   getData (): void { return; }
+
+  render (): JSX.Element { return <>TODO</>; }
 }
 
 export default Tab;

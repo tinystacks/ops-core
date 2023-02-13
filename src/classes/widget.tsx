@@ -1,5 +1,6 @@
-import { Widget as WidgetType } from '@tinystacks/ops-model';
+import React from 'react';
 import Provider from './provider';
+import { Widget as WidgetType } from '@tinystacks/ops-model';
 
 abstract class Widget implements WidgetType {
   id: string;
@@ -47,6 +48,8 @@ abstract class Widget implements WidgetType {
    * The provider will be attached at this point.
    */
   abstract getData (): void;
+ 
+  abstract render (): JSX.Element;
 }
 
 export default Widget;
