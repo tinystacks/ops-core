@@ -1,6 +1,6 @@
 import { Provider as ProviderType } from '@tinystacks/ops-model';
 
-abstract class Provider implements ProviderType {
+export abstract class Provider implements ProviderType {
   id?: string;
   type: string;
 
@@ -9,5 +9,3 @@ abstract class Provider implements ProviderType {
     this.type = type;
   }
 }
-
-export default Provider;

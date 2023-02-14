@@ -2,7 +2,7 @@ import { AwsCredentialsProvider as AwsProfileProviderType } from '@tinystacks/op
 import AwsAssumedRole from './aws-assumed-role';
 import AwsKeys from './aws-keys';
 import LocalAwsProfile from './local-aws-profile';
-import Provider from './provider';
+import { Provider } from './provider';
 
 class AwsProfileProvider extends Provider implements AwsProfileProviderType {
   static type = 'AwsProfileProvider';

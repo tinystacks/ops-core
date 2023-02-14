@@ -1,5 +1,5 @@
 import Page from './page';
-import Provider from './provider';
+import { Provider } from './provider';
 import Parseable from './parseable';
 import {
   Console as ConsoleType,
