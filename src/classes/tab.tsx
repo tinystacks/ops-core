@@ -1,5 +1,5 @@
 import { Tab as TabType } from '@tinystacks/ops-model';
-import Widget from './widget';
+import { Widget } from './widget';
 import React from 'react';
 
 class Tab extends Widget implements TabType {

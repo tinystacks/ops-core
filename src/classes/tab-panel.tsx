@@ -2,7 +2,7 @@ import {
   TabPanel as TabPanelType,
   Tab as TabType
 } from '@tinystacks/ops-model';
-import Widget from './widget';
+import { Widget } from './widget';
 import Tab from './tab';
 import react from 'react';
 

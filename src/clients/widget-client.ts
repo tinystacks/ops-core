@@ -1,9 +1,9 @@
 import isNil from 'lodash.isnil';
-import Widget from '../classes/widget';
+import { Widget } from '../classes/widget';
 import HttpError from 'http-errors';
 import ConsoleClient from './console-client';
 import upperFirst from 'lodash.upperfirst';
- import camelCase from 'lodash.camelcase';
+import camelCase from 'lodash.camelcase';
 
 // TODO: should we make this a class that implement a WidgetClient interface?
 const WidgetClient = {

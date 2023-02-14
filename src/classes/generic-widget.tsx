@@ -1,4 +1,4 @@
-import Widget from './widget';
+import { Widget } from './widget';
 import { GenericWidgetType, Json, YamlWidget } from '../types';
 import Parseable from './parseable';
 import React from 'react';

@@ -8,7 +8,7 @@ import {
   Widget as WidgetType
 } from '@tinystacks/ops-model';
 import { FlatMap, Json, YamlConsole, YamlPage, YamlProvider, YamlWidget } from '../types';
-import Widget from './widget';
+import { Widget } from './widget';
 import GenericWidget from './generic-widget';
 
 class Console extends Parseable implements ConsoleType {

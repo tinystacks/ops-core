@@ -2,7 +2,7 @@ import React from 'react';
 import Provider from './provider';
 import { Widget as WidgetType } from '@tinystacks/ops-model';
 
-abstract class Widget implements WidgetType {
+export abstract class Widget implements WidgetType {
   id: string;
   displayName: string;
   type: string;
@@ -51,5 +51,3 @@ abstract class Widget implements WidgetType {
  
   abstract render (): JSX.Element;
 }
-
-export default Widget;
