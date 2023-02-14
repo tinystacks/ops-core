@@ -1,9 +1,9 @@
 import { Widget } from './widget';
 import { GenericWidgetType, Json, YamlWidget } from '../types';
-import Parseable from './parseable';
+import { Parseable } from './parseable';
 import React from 'react';
 
-class GenericWidget extends Widget implements GenericWidgetType, Parseable {
+export class GenericWidget extends Widget implements GenericWidgetType, Parseable {
   [key: string]: any;
   constructor (object: GenericWidgetType) {
     const {
@@ -84,5 +84,3 @@ class GenericWidget extends Widget implements GenericWidgetType, Parseable {
 
   render (): JSX.Element { return <>TODO</>; }
 }
-
-export default GenericWidget;

@@ -1,6 +1,6 @@
 import { Json } from '../types';
 
-abstract class Parseable {
+export abstract class Parseable {
   static fromYaml (_yamlJson: Json, _id?: string): Parseable {
     throw new Error('Method not implemented.');
   }
@@ -11,5 +11,3 @@ abstract class Parseable {
   }
   abstract toJson (): Json;
 }
-
-export default Parseable;

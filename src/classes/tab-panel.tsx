@@ -3,10 +3,10 @@ import {
   Tab as TabType
 } from '@tinystacks/ops-model';
 import { Widget } from './widget';
-import Tab from './tab';
-import react from 'react';
+import { Tab } from './tab';
+import React from 'react';
 
-class TabPanel extends Widget implements TabPanelType {
+export class TabPanel extends Widget implements TabPanelType {
   tabs: {
     [id: string]: Tab
   };
@@ -89,5 +89,3 @@ class TabPanel extends Widget implements TabPanelType {
   getData (): void { return; }
   render (): JSX.Element { return <>TODO</>; }
 }
-
-export default TabPanel;
