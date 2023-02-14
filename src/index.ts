@@ -8,3 +8,5 @@ export * from './classes/tab-panel';
 export * from './classes/tab';
 export * from './classes/widget';
 export * from './classes/provider';
+export * from './classes/console'; 
+export * from './classes/page';
