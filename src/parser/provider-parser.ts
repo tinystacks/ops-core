@@ -1,9 +1,9 @@
-import { YamlProvider } from "../types";
-import { validatePropertyExists } from "./parser-utils";
-import { Parser } from "./parser";
+import { YamlProvider } from '../types';
+import { validatePropertyExists } from './parser-utils';
+import { Parser } from './parser';
 import { AwsAssumedRole, AwsKeys, LocalAwsProfile, Provider as ProviderType } from '@tinystacks/ops-model';
 
-export class Provider extends Parser implements ProviderType {
+export class ProviderParser extends Parser implements ProviderType {
 
   id: string;
   type: string;
@@ -21,11 +21,11 @@ export class Provider extends Parser implements ProviderType {
 
   }
   
-  static validate(yamlProvider: YamlProvider): void {
-    validatePropertyExists(yamlProvider, 'type', "Provider"); 
+  static validate (yamlProvider: YamlProvider): void {
+    validatePropertyExists(yamlProvider, 'type', 'Provider'); 
   }
 
-  static parse(yamlProvider: YamlProvider, dependencySource?: string): Provider{ 
+  static parse (yamlProvider: YamlProvider, dependencySource?: string): ProviderType { 
     try { 
       const providerType = require(dependencySource)[yamlProvider.type];
       const provider = providerType.fromJson(yamlProvider);
@@ -35,25 +35,23 @@ export class Provider extends Parser implements ProviderType {
     }
   }
 
-  static fromJson (object: ProviderType): Provider {
+  static fromJson (object: ProviderType): ProviderParser {
     const { 
       id, 
       type
     } = object;
 
-    return new Provider(
+    return new ProviderParser(
       id, 
       type
     ); 
   }
   
-  toJson(): ProviderType { 
-
+  toJson (): ProviderType { 
     return { 
       id: this.id, 
       type: this.type
-    }
-    
+    };
   }
 
 }

@@ -1,11 +1,11 @@
-import { Parser } from "./parser";
-import { YamlWidget } from "../types";
-import { validatePropertyExists } from "./parser-utils";
-import { Tab, Widget as WidgetType, TabPanel as TabPanelType } from '@tinystacks/ops-model';
-import { Tab as TabClass } from './tab';
-import isNil from "lodash.isnil";
+import { Parser } from './parser';
+import { YamlWidget } from '../types';
+import { validatePropertyExists } from './parser-utils';
+import { Widget as WidgetType } from '@tinystacks/ops-model';
+import { Widget } from '../classes/widget';
+import { GenericWidget } from '../classes/generic-widget';
 
-export class Widget extends Parser implements WidgetType, TabPanelType {
+export class WidgetParser extends Parser implements WidgetType {
   type: string;
   displayName: string;
   providerId: string;
@@ -13,17 +13,17 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
   description?: string;
   showDescription?: boolean;
   id: string;
-  tabs: Record<string, Tab>
 
-  constructor(
+
+  constructor (
     type: string,
     displayName: string,
     providerId: string,
     showDisplayName: boolean,
     description: string,
     showDescription: boolean,
-    id: string,
-    tabs?: Record<string, Tab> 
+    id: string
+
   ) {
     super();
     this.type = type;
@@ -33,33 +33,23 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
     this.description = description;
     this.showDescription = showDescription;
     this.id = id;
-    this.tabs = tabs;
+
   }
 
-  static validate(yamlWidget: YamlWidget): void {
-    validatePropertyExists(yamlWidget, 'type', "Widget");
-    validatePropertyExists(yamlWidget, 'displayName', "Widget");
-    validatePropertyExists(yamlWidget, 'provider', "Widget");
+  static validate (yamlWidget: YamlWidget): void {
+    validatePropertyExists(yamlWidget, 'type', 'Widget');
+    validatePropertyExists(yamlWidget, 'displayName', 'Widget');
+    validatePropertyExists(yamlWidget, 'provider', 'Widget');
   }
 
-  static parse(yamlWidget: YamlWidget, id?: string, dependencySource?: string): Widget {
-    const tabs = yamlWidget.tabs;
-    const [_, __, ___, providerId] = yamlWidget.provider.$ref.split("/");
-    const tabObjects: Record<string, Tab> = {};
-    if (!isNil(tabs)) {
-      Object.keys(tabs).forEach(id => {
-        TabClass.validate(tabs[id]);
-        tabObjects[id] = TabClass.parse(tabs[id]);
-      });
-    }
-
+  static parse (yamlWidget: YamlWidget, id?: string, dependencySource?: string): Widget {
+    const [_, __, ___, providerId] = yamlWidget.provider.$ref.split('/');
     try { 
       const widgetType = require(dependencySource)[yamlWidget.type];
       const widgetObject = {
         ...yamlWidget, 
         providerId, 
-        id,
-        tabs
+        id
       };
       const widget = widgetType.fromJson(widgetObject);
       return widget; 
@@ -79,7 +69,7 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
       id
     } = object;
 
-    return new Widget(
+    return new GenericWidget({
       type,
       displayName,
       providerId,
@@ -87,10 +77,10 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
       description,
       showDescription,
       id
-    );
+    });
   }
 
-  toJson(): WidgetType { 
+  toJson (): WidgetType { 
 
     return { 
       id: this.id,
@@ -99,8 +89,8 @@ export class Widget extends Parser implements WidgetType, TabPanelType {
       providerId: this.providerId,
       showDisplayName: this.showDisplayName,
       description: this.description,
-      showDescription: this.showDescription,
-    }
+      showDescription: this.showDescription
+    };
     
   }
 

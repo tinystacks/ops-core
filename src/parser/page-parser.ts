@@ -1,9 +1,9 @@
-import { YamlPage } from "../types";
-import { validatePropertyExists } from "./parser-utils";
-import { Parser } from "./parser";
+import { YamlPage } from '../types';
+import { validatePropertyExists } from './parser-utils';
+import { Parser } from './parser';
 import { Page as PageType } from '@tinystacks/ops-model';
 
-export class Page extends Parser implements PageType {
+export class PageParser extends Parser implements PageType {
 
   id: string;
   route: string;
@@ -20,12 +20,12 @@ export class Page extends Parser implements PageType {
     this.widgetIds = widgetIds;
   }
   
-  static validate(yamlPage: YamlPage): void {
-    validatePropertyExists(yamlPage, 'widgets', "Page");
-    validatePropertyExists(yamlPage, 'route', "Page"); 
+  static validate (yamlPage: YamlPage): void {
+    validatePropertyExists(yamlPage, 'widgets', 'Page');
+    validatePropertyExists(yamlPage, 'route', 'Page'); 
   }
 
-  static parse(yamlPage: YamlPage): Page{ 
+  static parse (yamlPage: YamlPage): PageType { 
 
     const { 
       id,
@@ -33,40 +33,39 @@ export class Page extends Parser implements PageType {
       widgets
     } = yamlPage; 
 
-    const widgetIds = widgets.map(item => { 
-      const [_, __, ___, id ] = item.$ref.split("/");
+    const widgetIds = widgets.map((item) => { 
+      const [_, __, ___, id ] = item.$ref.split('/');
       return id;
-    })
+    });
 
-    return new Page(
+    return {
       id, 
       route, 
       widgetIds
-    )
+    };
   }
 
-  static fromJson (object: PageType): Page {
+  static fromJson (object: PageType): PageParser {
     const { 
       id,
       route,
       widgetIds
     } = object; 
 
-    return new Page(
+    return new PageParser (
       id, 
       route, 
       widgetIds
-    )
+    );
   }
 
-  toJson(): PageType { 
+  toJson (): PageType { 
 
     return { 
       id: this.id, 
       route: this.route, 
       widgetIds: this.widgetIds
-    }
-    
+    };
   }
 
 }
