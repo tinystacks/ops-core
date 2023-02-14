@@ -3,7 +3,7 @@ import { validatePropertyExists } from './parser-utils';
 import { Parser } from './parser';
 import { Page as PageType } from '@tinystacks/ops-model';
 
-export class PageParser extends Parser implements PageType {
+export class PageParser extends Parser {
 
   id: string;
   route: string;
@@ -26,16 +26,15 @@ export class PageParser extends Parser implements PageType {
   }
 
   static parse (yamlPage: YamlPage): PageType { 
-
-    const { 
+    const {
       id,
       route,
       widgets
     } = yamlPage; 
 
     const widgetIds = widgets.map((item) => { 
-      const [_, __, ___, id ] = item.$ref.split('/');
-      return id;
+      const [_, __, ___, refId ] = item.$ref.split('/');
+      return refId ;
     });
 
     return {
@@ -44,28 +43,4 @@ export class PageParser extends Parser implements PageType {
       widgetIds
     };
   }
-
-  static fromJson (object: PageType): PageParser {
-    const { 
-      id,
-      route,
-      widgetIds
-    } = object; 
-
-    return new PageParser (
-      id, 
-      route, 
-      widgetIds
-    );
-  }
-
-  toJson (): PageType { 
-
-    return { 
-      id: this.id, 
-      route: this.route, 
-      widgetIds: this.widgetIds
-    };
-  }
-
 }
