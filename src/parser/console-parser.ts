@@ -44,12 +44,12 @@ export class ConsoleParser extends Parser implements ConsoleType {
 
     const providerObjects: Record<string, Provider> = {}; 
     Object.keys(providers).forEach((id) => { 
-      providerObjects[id] = ProviderParser.parse(providers[id], dependencies[providers[id].type]);
+      providerObjects[id] = ProviderParser.parse(providers[id]);
     });
 
     const widgetObjects: Record<string, Widget> = {}; 
     Object.keys(widgets).forEach((id) => {
-      widgetObjects[id] = WidgetParser.parse(widgets[id], id,  dependencies[widgets[id].type]);
+      widgetObjects[id] = WidgetParser.parse(widgets[id], id);
     });
 
     return new ConsoleParser(

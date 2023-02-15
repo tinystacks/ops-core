@@ -5,13 +5,13 @@ import { AwsAssumedRole, AwsKeys, LocalAwsProfile, Provider as ProviderType } fr
 
 export class ProviderParser extends Parser implements ProviderType {
 
-  id: string;
+  id?: string;
   type: string;
   credentials?: (AwsKeys | AwsAssumedRole | LocalAwsProfile);
 
   constructor (
-    id: string, 
     type: string,
+    id?: string, 
     credentials?: (AwsKeys | AwsAssumedRole | LocalAwsProfile)
   ) {
     super();
@@ -21,18 +21,18 @@ export class ProviderParser extends Parser implements ProviderType {
 
   }
 
-  static parse (yamlProvider: YamlProvider, dependencySource?: string): ProviderType { 
-    try { 
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const providerType = require(dependencySource)[yamlProvider.type];
-      const provider = providerType.fromJson(yamlProvider);
-      return provider; 
-    } catch(e){ 
-      throw Error(`Error trying to load module ${dependencySource} for type ${yamlProvider.type}`);
-    }
+  static parse (yamlProvider: YamlProvider, id?: string): ProviderParser { 
+    const { 
+      type
+    } = yamlProvider;
+
+    //need to figure out credentials
+    return new ProviderParser(
+      type,
+      id
+    ); 
   }
 
-  //done
   static fromJson (object: ProviderType, dependencySource?: string): ProviderParser {
     
     validatePropertyExists(object, 'type', 'Provider'); 

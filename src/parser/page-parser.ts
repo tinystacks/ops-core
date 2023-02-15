@@ -19,10 +19,9 @@ export class PageParser extends Parser implements PageType {
     this.widgetIds = widgetIds;
   }
 
-  static parse (yamlPage: YamlPage): PageType { 
+  static parse (yamlPage: YamlPage, id?:string): PageParser { 
 
-    const { 
-      id,
+    const {
       route,
       widgets
     } = yamlPage; 
@@ -32,14 +31,13 @@ export class PageParser extends Parser implements PageType {
       return widgetId;
     });
 
-    return {
-      id, 
+    return new PageParser(
       route, 
-      widgetIds
-    };
+      widgetIds, 
+      id
+    );
   }
 
-  //this one is done!
   static fromJson (object: PageType): PageParser {
     const { 
       id,

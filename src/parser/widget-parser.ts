@@ -12,17 +12,17 @@ export class WidgetParser extends Parser implements WidgetType {
   showDisplayName?: boolean;
   description?: string;
   showDescription?: boolean;
-  id: string;
+  id?: string;
 
 
   constructor (
     type: string,
     displayName: string,
     providerId: string,
-    showDisplayName: boolean,
-    description: string,
-    showDescription: boolean,
-    id: string
+    showDisplayName?: boolean,
+    description?: string,
+    showDescription?: boolean,
+    id?: string
 
   ) {
     super();
@@ -36,24 +36,28 @@ export class WidgetParser extends Parser implements WidgetType {
 
   }
 
-  static parse (yamlWidget: YamlWidget, id?: string, dependencySource?: string): Widget {
+  static parse (yamlWidget: YamlWidget, id?: string): WidgetParser {
+    const {
+      type,
+      displayName,
+      showDisplayName,
+      description,
+      showDescription
+    } = yamlWidget;
+
     const [_, __, ___, providerId] = yamlWidget.provider.$ref.split('/');
-    try { 
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const widgetType = require(dependencySource)[yamlWidget.type];
-      const widgetObject = {
-        ...yamlWidget, 
-        providerId, 
-        id
-      };
-      const widget = widgetType.fromJson(widgetObject);
-      return widget; 
-    } catch(e){ 
-      throw Error(`Error trying to load module ${dependencySource} for type ${yamlWidget.type}`);
-    }
+
+    return new WidgetParser(
+      type,
+      displayName,
+      providerId,
+      showDisplayName,
+      description,
+      showDescription,
+      id
+    );
   }
 
-  //done
   static fromJson (object: Json, dependencySource? :string): Widget {
 
     validatePropertyExists(object, 'type', 'Widget');
