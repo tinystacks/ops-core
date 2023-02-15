@@ -105,4 +105,9 @@ export class ConsoleParser extends Parser implements ConsoleType {
     };
   }
 
+  deepParse(consoleYaml: YamlConsoleProperties): ConsoleType {
+    const parsedYaml = ConsoleParser.parse(consoleYaml);
+    return ConsoleParser.fromJson(parsedYaml);
+  }
+
 }
