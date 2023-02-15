@@ -1,4 +1,3 @@
-import React from 'react';
 import { Provider } from './provider';
 import { Widget as WidgetType } from '@tinystacks/ops-model';
 

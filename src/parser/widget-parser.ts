@@ -3,7 +3,7 @@ import { YamlWidget } from '../types';
 import { validatePropertyExists } from './parser-utils';
 import { Widget as WidgetType } from '@tinystacks/ops-model';
 import { Widget } from '../classes/widget';
-import { GenericWidget } from '../classes/generic-widget';
+import { Json } from '../types';
 
 export class WidgetParser extends Parser implements WidgetType {
   type: string;
@@ -36,15 +36,10 @@ export class WidgetParser extends Parser implements WidgetType {
 
   }
 
-  static validate (yamlWidget: YamlWidget): void {
-    validatePropertyExists(yamlWidget, 'type', 'Widget');
-    validatePropertyExists(yamlWidget, 'displayName', 'Widget');
-    validatePropertyExists(yamlWidget, 'provider', 'Widget');
-  }
-
   static parse (yamlWidget: YamlWidget, id?: string, dependencySource?: string): Widget {
     const [_, __, ___, providerId] = yamlWidget.provider.$ref.split('/');
     try { 
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const widgetType = require(dependencySource)[yamlWidget.type];
       const widgetObject = {
         ...yamlWidget, 
@@ -58,26 +53,21 @@ export class WidgetParser extends Parser implements WidgetType {
     }
   }
 
-  static fromJson (object: WidgetType): Widget {
-    const {
-      type,
-      displayName,
-      providerId,
-      showDisplayName,
-      description,
-      showDescription,
-      id
-    } = object;
+  //done
+  static fromJson (object: Json, dependencySource? :string): Widget {
 
-    return new GenericWidget({
-      type,
-      displayName,
-      providerId,
-      showDisplayName,
-      description,
-      showDescription,
-      id
-    });
+    validatePropertyExists(object, 'type', 'Widget');
+    validatePropertyExists(object, 'displayName', 'Widget');
+    validatePropertyExists(object, 'provider', 'Widget');
+
+    try { 
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const widgetType = require(dependencySource)[object.type];
+      const widget = widgetType.fromJson(object);
+      return widget; 
+    } catch(e){ 
+      throw Error(`Error trying to load module ${dependencySource} for type ${object.type}`);
+    }
   }
 
   toJson (): WidgetType { 

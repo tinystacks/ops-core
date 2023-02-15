@@ -1,5 +1,5 @@
-import { FlatMap, Ref, YamlConsoleProperties } from '../types';
-import { validatePropertyExists, validateProviderReferences, validateWidgetReferences } from './parser-utils';
+import { FlatMap, YamlConsoleProperties } from '../types';
+import { validateConsole } from './parser-utils';
 import { Parser } from './parser';
 import { Console as ConsoleType, Page, Provider, Widget } from '@tinystacks/ops-model';
 import { PageParser } from './page-parser';
@@ -11,7 +11,7 @@ export class ConsoleParser extends Parser implements ConsoleType {
   providers: Record<string, Provider>;
   pages: Record<string, Page>;
   widgets: Record<string, Widget>;
-  dependencies: FlatMap;
+  dependencies?: FlatMap;
 
   constructor (
     name: string,
@@ -27,39 +27,6 @@ export class ConsoleParser extends Parser implements ConsoleType {
     this.widgets = widgets;
     this.dependencies = dependencies;
   }
-  
-  static validate (console: YamlConsoleProperties): void {
-
-    validatePropertyExists(console, 'name', 'Console');
-    validatePropertyExists(console, 'providers', 'Console');
-    validatePropertyExists(console, 'pages', 'Console');
-    validatePropertyExists(console, 'widgets', 'Console');
-    validatePropertyExists(console, 'dependencies', 'Console');
-
-    const allWidgetIds: Ref[] = [];
-    const allProviders: Ref[] = [];
-    Object.keys(console.pages).forEach((id) => { 
-      allWidgetIds.push(...console.pages[id].widgets);
-    }); 
-
-    Object.keys(console.widgets).forEach((id) => { 
-      allProviders.push(console.widgets[id].provider);
-      if(console.widgets[id].tabs){ 
-        Object.keys(console.widgets[id].tabs).forEach((tabId) => { 
-          allWidgetIds.push(...console.widgets[id].tabs[tabId].widgets);
-        });
-      }
-    });
-  
-
-    validateWidgetReferences(console.widgets, allWidgetIds);
-    validateProviderReferences(console.providers, allProviders);
-
-    //TO-DO -- validations for widget and provider dependencies
-    //validateWidgetDependenciesPresent
-    //validateProviderDependenciesPresent
- 
-  }
 
   static parse (consoleYaml: YamlConsoleProperties): ConsoleParser { 
     const { 
@@ -72,19 +39,16 @@ export class ConsoleParser extends Parser implements ConsoleType {
 
     const pageObjects : Record<string, Page> = {}; 
     Object.keys(pages).forEach((id) => { 
-      PageParser.validate(pages[id]);
       pageObjects[id] = PageParser.parse(pages[id]);
     });
 
     const providerObjects: Record<string, Provider> = {}; 
     Object.keys(providers).forEach((id) => { 
-      ProviderParser.validate(providers[id]);
       providerObjects[id] = ProviderParser.parse(providers[id], dependencies[providers[id].type]);
     });
 
     const widgetObjects: Record<string, Widget> = {}; 
-    Object.keys(widgets).forEach((id) => { 
-      WidgetParser.validate(widgets[id]);
+    Object.keys(widgets).forEach((id) => {
       widgetObjects[id] = WidgetParser.parse(widgets[id], id,  dependencies[widgets[id].type]);
     });
 
@@ -106,8 +70,8 @@ export class ConsoleParser extends Parser implements ConsoleType {
       dependencies
     } = object;
     
+    validateConsole(object);
 
-    // CONFUSION : SHOULD'T ALL THESE CALL *Parser.parse... instead of .fromJson...?
     const pages = Object.entries(pagesObject).reduce<{ [id: string]: Page }>((acc, [id, page]) => {
       acc[id] = PageParser.fromJson(page);
       return acc;

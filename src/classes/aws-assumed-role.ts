@@ -12,7 +12,7 @@ class AwsAssumedRole implements AwsAssumedRoleType {
     sessionName: string,
     region: string,
     primaryCredentials: (AwsKeys | AwsAssumedRole | LocalAwsProfile),
-    duration?: number,
+    duration?: number
   ) {
     this.roleArn = roleArn;
     this.sessionName = sessionName;
