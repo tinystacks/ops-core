@@ -1,5 +1,5 @@
-import { FlatMap, Ref, YamlConsoleProperties } from '../types';
-import { validatePropertyExists, validateProviderReferences, validateWidgetReferences } from './parser-utils';
+import { FlatMap, YamlConsoleProperties, YamlPage, YamlProvider, YamlWidget } from '../types';
+import { validateConsole } from './parser-utils';
 import { Parser } from './parser';
 import { Console as ConsoleType, Page, Provider, Widget } from '@tinystacks/ops-model';
 import { PageParser } from './page-parser';
@@ -8,16 +8,16 @@ import { WidgetParser } from './widget-parser';
 
 export class ConsoleParser extends Parser implements ConsoleType {
   name: string;
-  providers: Record<string, Provider>;
-  pages: Record<string, Page>;
-  widgets: Record<string, Widget>;
-  dependencies: FlatMap;
+  providers: Record<string, ProviderParser>;
+  pages: Record<string, PageParser>;
+  widgets: Record<string, WidgetParser>;
+  dependencies?: FlatMap;
 
   constructor (
     name: string,
-    providers: Record<string, Provider>,
-    pages: Record<string, Page>,
-    widgets: Record<string, Widget>, 
+    providers: Record<string, ProviderParser>,
+    pages: Record<string, PageParser>,
+    widgets: Record<string, WidgetParser>, 
     dependencies?: FlatMap
   ) {
     super();
@@ -27,41 +27,8 @@ export class ConsoleParser extends Parser implements ConsoleType {
     this.widgets = widgets;
     this.dependencies = dependencies;
   }
-  
-  static validate (console: YamlConsoleProperties): void {
 
-    validatePropertyExists(console, 'name', 'Console');
-    validatePropertyExists(console, 'providers', 'Console');
-    validatePropertyExists(console, 'pages', 'Console');
-    validatePropertyExists(console, 'widgets', 'Console');
-    validatePropertyExists(console, 'dependencies', 'Console');
-
-    const allWidgetIds: Ref[] = [];
-    const allProviders: Ref[] = [];
-    Object.keys(console.pages).forEach((id) => { 
-      allWidgetIds.push(...console.pages[id].widgets);
-    }); 
-
-    Object.keys(console.widgets).forEach((id) => { 
-      allProviders.push(console.widgets[id].provider);
-      if(console.widgets[id].tabs){ 
-        Object.keys(console.widgets[id].tabs).forEach((tabId) => { 
-          allWidgetIds.push(...console.widgets[id].tabs[tabId].widgets);
-        });
-      }
-    });
-  
-
-    validateWidgetReferences(console.widgets, allWidgetIds);
-    validateProviderReferences(console.providers, allProviders);
-
-    //TO-DO -- validations for widget and provider dependencies
-    //validateWidgetDependenciesPresent
-    //validateProviderDependenciesPresent
- 
-  }
-
-  static parse (consoleYaml: YamlConsoleProperties): ConsoleParser { 
+  static parse (consoleYaml: YamlConsoleProperties): ConsoleType { 
     const { 
       name,
       providers, 
@@ -72,29 +39,26 @@ export class ConsoleParser extends Parser implements ConsoleType {
 
     const pageObjects : Record<string, Page> = {}; 
     Object.keys(pages).forEach((id) => { 
-      PageParser.validate(pages[id]);
       pageObjects[id] = PageParser.parse(pages[id]);
     });
 
     const providerObjects: Record<string, Provider> = {}; 
     Object.keys(providers).forEach((id) => { 
-      ProviderParser.validate(providers[id]);
-      providerObjects[id] = ProviderParser.parse(providers[id], dependencies[providers[id].type]);
+      providerObjects[id] = ProviderParser.parse(providers[id]);
     });
 
     const widgetObjects: Record<string, Widget> = {}; 
-    Object.keys(widgets).forEach((id) => { 
-      WidgetParser.validate(widgets[id]);
-      widgetObjects[id] = WidgetParser.parse(widgets[id], id,  dependencies[widgets[id].type]);
+    Object.keys(widgets).forEach((id) => {
+      widgetObjects[id] = WidgetParser.parse(widgets[id], id);
     });
 
-    return new ConsoleParser(
+    return {
       name, 
-      providerObjects,
-      pageObjects,
-      widgetObjects, 
+      providers: providerObjects,
+      pages: pageObjects,
+      widgets: widgetObjects, 
       dependencies
-    );
+    };
   }
 
   static fromJson (object: ConsoleType): ConsoleParser {
@@ -106,20 +70,20 @@ export class ConsoleParser extends Parser implements ConsoleType {
       dependencies
     } = object;
     
+    validateConsole(object);
 
-    // CONFUSION : SHOULD'T ALL THESE CALL *Parser.parse... instead of .fromJson...?
-    const pages = Object.entries(pagesObject).reduce<{ [id: string]: Page }>((acc, [id, page]) => {
+    const pages = Object.entries(pagesObject).reduce<{ [id: string]: PageParser }>((acc, [id, page]) => {
       acc[id] = PageParser.fromJson(page);
       return acc;
     }, {});
     
-    const providers = Object.entries(providersObject).reduce<{ [id: string]: Provider }>((acc, [id, provider]) => {
-      acc[id] = ProviderParser.fromJson(provider);
+    const providers = Object.entries(providersObject).reduce<{ [id: string]: ProviderParser }>((acc, [id, provider]) => {
+      acc[id] = ProviderParser.fromJson(provider, dependencies[providers[id].type]);
       return acc;
     }, {});
     
-    const widgets = Object.entries(widgetsObject).reduce<{ [id: string]: Widget }>((acc, [id, widgetObject]) => {
-      acc[id] = WidgetParser.fromJson(widgetObject);
+    const widgets = Object.entries(widgetsObject).reduce<{ [id: string]: WidgetParser }>((acc, [id, widgetObject]) => {
+      acc[id] = WidgetParser.fromJson(widgetObject, dependencies[widgets[id].type]);
       return acc;
     }, {});
 
@@ -133,11 +97,96 @@ export class ConsoleParser extends Parser implements ConsoleType {
   }
 
   toJson (): ConsoleType { 
-    return { 
+
+    const pages = Object.entries(this.pages).reduce<{ [id: string]: Page }>((acc, [id, page]) => {
+      acc[id] = page.toJson();
+      return acc;
+    }, {});
+    
+    const providers = Object.entries(this.providers).reduce<{ [id: string]: Provider }>((acc, [id, provider]) => {
+      acc[id] = provider.toJson();
+      return acc;
+    }, {});
+    
+    const widgets = Object.entries(this.widgets).reduce<{ [id: string]: Widget }>((acc, [id, widget]) => {
+      acc[id] = WidgetParser.fromJson(widget).toJson();
+      return acc;
+    }, {});
+    return {
       name: this.name,
-      providers: this.providers,
-      pages: this.pages,
-      widgets: this.widgets
+      pages,
+      providers,
+      widgets,
+      dependencies: this.dependencies
+    };
+  }
+
+  deepParse (consoleYaml: YamlConsoleProperties): ConsoleParser {
+    const parsedYaml: ConsoleType = ConsoleParser.parse(consoleYaml);
+    return ConsoleParser.fromJson(parsedYaml);
+  }
+
+  addPage (page: Page, id: string): void {
+    this.pages = this.pages || {};
+    this.pages[page.id || id] = PageParser.fromJson(page);
+  }
+
+  updatePage (page: Page, id:string): void {
+    this.pages = this.pages || {};
+    this.pages[page.id || id] = PageParser.fromJson(page);
+  }
+  
+  deletePage (id: string): void {
+    this.pages = this.pages || {};
+    delete this.pages[id];
+  }
+  
+  addWidget (widget: Widget, id: string): void {
+    this.widgets = this.widgets || {};
+    this.widgets[widget.id || id] = WidgetParser.fromJson(widget);
+  }
+
+  updateWidget (widget: Widget, id: string): void {
+    this.widgets = this.widgets || {};
+    this.widgets[widget.id || id] = WidgetParser.fromJson(widget);;
+  }
+  
+  deleteWidget (id: string): void {
+    this.widgets = this.widgets || {};
+    delete this.widgets[id];
+  }
+
+  static toYaml (Console: ConsoleType): YamlConsoleProperties {
+    const { 
+      name,
+      pages,
+      providers, 
+      widgets, 
+      dependencies
+    } = Console;
+
+    const pageObjects = Object.entries(pages).reduce<{ [id: string]: YamlPage }>((acc, [id, page]) => {
+      acc[id] = PageParser.toYaml(page);
+      return acc;
+    }, {});
+    
+    const providerObjects = Object.entries(providers).reduce<{ [id: string]: YamlProvider }>((acc, [id, provider]) => {
+      acc[id] = provider;
+      return acc;
+    }, {});
+    
+    const widgetObjects = Object.entries(widgets).reduce<{ [id: string]: YamlWidget }>((acc, [id, widget]) => {
+      // TODO: Replace this with the plugin classes
+      const widgetJson = WidgetParser.fromJson(widget); 
+      acc[id] = WidgetParser.toYaml(widgetJson);
+      return acc;
+    }, {});
+    return {
+      name,
+      pages: pageObjects,
+      providers: providerObjects,
+      widgets: widgetObjects,
+      dependencies: dependencies
     };
   }
 

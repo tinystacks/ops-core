@@ -5,13 +5,13 @@ import { AwsAssumedRole, AwsKeys, LocalAwsProfile, Provider as ProviderType } fr
 
 export class ProviderParser extends Parser implements ProviderType {
 
-  id: string;
+  id?: string;
   type: string;
   credentials?: (AwsKeys | AwsAssumedRole | LocalAwsProfile);
 
   constructor (
-    id: string, 
     type: string,
+    id?: string, 
     credentials?: (AwsKeys | AwsAssumedRole | LocalAwsProfile)
   ) {
     super();
@@ -20,31 +20,30 @@ export class ProviderParser extends Parser implements ProviderType {
     this.credentials = credentials;
 
   }
-  
-  static validate (yamlProvider: YamlProvider): void {
-    validatePropertyExists(yamlProvider, 'type', 'Provider'); 
+
+  static parse (yamlProvider: YamlProvider, id?: string): ProviderType { 
+    const { 
+      type
+    } = yamlProvider;
+
+    //need to figure out credentials
+    return {
+      type,
+      id
+    };
   }
 
-  static parse (yamlProvider: YamlProvider, dependencySource?: string): ProviderType { 
+  static fromJson (object: ProviderType, dependencySource?: string): ProviderParser {
+    
+    validatePropertyExists(object, 'type', 'Provider'); 
     try { 
-      const providerType = require(dependencySource)[yamlProvider.type];
-      const provider = providerType.fromJson(yamlProvider);
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const providerType = require(dependencySource)[object.type];
+      const provider = providerType.fromJson(object);
       return provider; 
     } catch(e){ 
-      throw Error(`Error trying to load module ${dependencySource} for type ${yamlProvider.type}`);
+      throw Error(`Error trying to load module ${dependencySource} for type ${object.type}`);
     }
-  }
-
-  static fromJson (object: ProviderType): ProviderParser {
-    const { 
-      id, 
-      type
-    } = object;
-
-    return new ProviderParser(
-      id, 
-      type
-    ); 
   }
   
   toJson (): ProviderType { 

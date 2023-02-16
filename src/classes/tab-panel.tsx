@@ -44,8 +44,8 @@ export class TabPanel extends Widget implements TabPanelType {
       showDescription,
       tabs: tabsObject = {}
     } = object;
-    const tabs = Object.entries(tabsObject).reduce<{ [id: string]: Tab }>((acc, [id, tabObject]) => {
-      acc[id] = Tab.fromJson(tabObject);
+    const tabs = Object.entries(tabsObject).reduce<{ [id: string]: Tab }>((acc, [tabId, tabObject]) => {
+      acc[tabId] = Tab.fromJson(tabObject);
       return acc;
     }, {});
     return new TabPanel(

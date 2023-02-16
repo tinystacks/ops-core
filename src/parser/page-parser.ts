@@ -4,44 +4,38 @@ import { Parser } from './parser';
 import { Page as PageType } from '@tinystacks/ops-model';
 
 export class PageParser extends Parser implements PageType {
-
-  id: string;
+  id?: string;
   route: string;
   widgetIds: string[];
 
   constructor (
-    id: string, 
     route: string,
-    widgetIds: string[] = []
+    widgetIds: string[] = [], 
+    id?: string
   ) {
     super();
     this.id = id;
     this.route = route;
     this.widgetIds = widgetIds;
   }
-  
-  static validate (yamlPage: YamlPage): void {
-    validatePropertyExists(yamlPage, 'widgets', 'Page');
-    validatePropertyExists(yamlPage, 'route', 'Page'); 
-  }
 
-  static parse (yamlPage: YamlPage): PageType { 
+  static parse (yamlPage: YamlPage, id?:string): PageType { 
 
-    const { 
-      id,
+    const {
       route,
       widgets
     } = yamlPage; 
 
     const widgetIds = widgets.map((item) => { 
-      const [_, __, ___, id ] = item.$ref.split('/');
-      return id;
+      const [_, __, ___, widgetId ] = item.$ref.split('/');
+      return widgetId;
     });
 
+  
     return {
-      id, 
       route, 
-      widgetIds
+      widgetIds, 
+      id
     };
   }
 
@@ -52,10 +46,13 @@ export class PageParser extends Parser implements PageType {
       widgetIds
     } = object; 
 
+    validatePropertyExists(object, 'widgets', 'Page');
+    validatePropertyExists(object, 'route', 'Page'); 
+
     return new PageParser (
-      id, 
       route, 
-      widgetIds
+      widgetIds, 
+      id
     );
   }
 
@@ -65,6 +62,21 @@ export class PageParser extends Parser implements PageType {
       id: this.id, 
       route: this.route, 
       widgetIds: this.widgetIds
+    };
+  }
+
+  toYaml (page: PageType): YamlPage {
+    const { 
+      route, 
+      widgetIds,
+      id
+    } = page;
+    // This is cheap and restrictive, we should store the original ref on the widget and use that here.
+    const widgets = widgetIds.map(widgetId => ({ $ref: `#/Console/widgets/${widgetId}` }));
+    return {
+      route,
+      widgets,
+      id 
     };
   }
 
