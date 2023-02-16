@@ -39,12 +39,12 @@ export class ConsoleParser extends Parser implements ConsoleType {
 
     const pageObjects : Record<string, Page> = {}; 
     Object.keys(pages).forEach((id) => { 
-      pageObjects[id] = PageParser.parse(pages[id]);
+      pageObjects[id] = PageParser.parse(pages[id], id);
     });
 
     const providerObjects: Record<string, Provider> = {}; 
     Object.keys(providers).forEach((id) => { 
-      providerObjects[id] = ProviderParser.parse(providers[id]);
+      providerObjects[id] = ProviderParser.parse(providers[id], id);
     });
 
     const widgetObjects: Record<string, Widget> = {}; 
@@ -64,34 +64,34 @@ export class ConsoleParser extends Parser implements ConsoleType {
   static fromJson (object: ConsoleType): ConsoleParser {
     const {
       name,
-      pages: pagesObject = {},
-      providers: providersObject = {},
-      widgets: widgetsObject = {}, 
+      pages,
+      providers,
+      widgets, 
       dependencies
     } = object;
     
     validateConsole(object);
 
-    const pages = Object.entries(pagesObject).reduce<{ [id: string]: PageParser }>((acc, [id, page]) => {
+    const pageObjects = Object.entries(pages).reduce<{ [id: string]: PageParser }>((acc, [id, page]) => {
       acc[id] = PageParser.fromJson(page);
       return acc;
     }, {});
     
-    const providers = Object.entries(providersObject).reduce<{ [id: string]: ProviderParser }>((acc, [id, provider]) => {
+    const providersObject = Object.entries(providers).reduce<{ [id: string]: ProviderParser }>((acc, [id, provider]) => {
       acc[id] = ProviderParser.fromJson(provider, dependencies[providers[id].type]);
       return acc;
     }, {});
     
-    const widgets = Object.entries(widgetsObject).reduce<{ [id: string]: WidgetParser }>((acc, [id, widgetObject]) => {
+    const widgetObjects = Object.entries(widgets).reduce<{ [id: string]: WidgetParser }>((acc, [id, widgetObject]) => {
       acc[id] = WidgetParser.fromJson(widgetObject, dependencies[widgets[id].type]);
       return acc;
     }, {});
 
     return new ConsoleParser(
       name,
-      providers,
-      pages,
-      widgets, 
+      providersObject ,
+      pageObjects,
+      widgetObjects, 
       dependencies
     );
   }

@@ -46,7 +46,7 @@ export class PageParser extends Parser implements PageType {
       widgetIds
     } = object; 
 
-    validatePropertyExists(object, 'widgets', 'Page');
+    validatePropertyExists(object, 'widgetIds', 'Page');
     validatePropertyExists(object, 'route', 'Page'); 
 
     return new PageParser (
