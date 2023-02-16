@@ -1,5 +1,5 @@
 import { Parser } from './parser';
-import { YamlWidget } from '../types';
+import { YamlPage, YamlWidget } from '../types';
 import { validatePropertyExists } from './parser-utils';
 import { Widget as WidgetType } from '@tinystacks/ops-model';
 import { Widget } from '../classes/widget';
@@ -86,8 +86,21 @@ export class WidgetParser extends Parser implements WidgetType {
       showDisplayName: this.showDisplayName,
       description: this.description,
       showDescription: this.showDescription
-    };
-    
+    };    
   }
 
+  static toYaml (widget: WidgetType & Record<string, any>): YamlWidget {
+
+    return {
+      id: widget.id,
+      displayName: widget.displayName,
+      type: widget.type,
+      showDisplayName: widget.showDisplayName,
+      description: widget.description,
+      showDescription:widget.showDescription, 
+      tabs: {},
+      provider: { $ref: `#/Console/provider/${widget.providerId}`, 
+        ...widget }
+    };
+  }
 }

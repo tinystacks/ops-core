@@ -1,4 +1,4 @@
-import { FlatMap, YamlConsoleProperties } from '../types';
+import { FlatMap, YamlConsoleProperties, YamlPage, YamlProvider, YamlWidget } from '../types';
 import { validateConsole } from './parser-utils';
 import { Parser } from './parser';
 import { Console as ConsoleType, Page, Provider, Widget } from '@tinystacks/ops-model';
@@ -138,6 +138,40 @@ export class ConsoleParser extends Parser implements ConsoleType {
   deleteWidget (id: string): void {
     this.widgets = this.widgets || {};
     delete this.widgets[id];
+  }
+
+  static toYaml (Console: ConsoleType): YamlConsoleProperties {
+    const { 
+      name,
+      pages,
+      providers, 
+      widgets, 
+      dependencies
+    } = Console;
+
+    const pageObjects = Object.entries(pages).reduce<{ [id: string]: YamlPage }>((acc, [id, page]) => {
+      acc[id] = PageParser.toYaml(page);
+      return acc;
+    }, {});
+    
+    const providerObjects = Object.entries(providers).reduce<{ [id: string]: YamlProvider }>((acc, [id, provider]) => {
+      acc[id] = provider;
+      return acc;
+    }, {});
+    
+    const widgetObjects = Object.entries(widgets).reduce<{ [id: string]: YamlWidget }>((acc, [id, widget]) => {
+      // TODO: Replace this with the plugin classes
+      const widgetJson = WidgetParser.fromJson(widget); 
+      acc[id] = WidgetParser.toYaml(widgetJson);
+      return acc;
+    }, {});
+    return {
+      name,
+      pages: pageObjects,
+      providers: providerObjects,
+      widgets: widgetObjects,
+      dependencies: dependencies
+    };
   }
 
 }

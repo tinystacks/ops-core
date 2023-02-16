@@ -8,4 +8,8 @@ export abstract class Parser {
     throw new Error('Method not implemented.');
   }
   abstract toJson (): Json;
+
+  static toYaml (_object: Json): any { 
+    throw new Error('Method not implemented.');
+  }
 }

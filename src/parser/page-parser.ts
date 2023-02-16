@@ -64,5 +64,20 @@ export class PageParser extends Parser implements PageType {
       widgetIds: this.widgetIds
     };
   }
-  
+
+  toYaml (page: PageType): YamlPage {
+    const { 
+      route, 
+      widgetIds,
+      id
+    } = page;
+    // This is cheap and restrictive, we should store the original ref on the widget and use that here.
+    const widgets = widgetIds.map(widgetId => ({ $ref: `#/Console/widgets/${widgetId}` }));
+    return {
+      route,
+      widgets,
+      id 
+    };
+  }
+
 }
