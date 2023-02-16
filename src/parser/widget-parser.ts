@@ -36,7 +36,7 @@ export class WidgetParser extends Parser implements WidgetType {
 
   }
 
-  static parse (yamlWidget: YamlWidget, id?: string): WidgetParser {
+  static parse (yamlWidget: YamlWidget, id?: string): WidgetType & Record<string, any> {
     const {
       type,
       displayName,
@@ -47,7 +47,7 @@ export class WidgetParser extends Parser implements WidgetType {
 
     const [_, __, ___, providerId] = yamlWidget.provider.$ref.split('/');
 
-    return new WidgetParser(
+    const widget  = new WidgetParser(
       type,
       displayName,
       providerId,
@@ -56,6 +56,8 @@ export class WidgetParser extends Parser implements WidgetType {
       showDescription,
       id
     );
+
+    return { ...widget, ...yamlWidget };
   }
 
   static fromJson (object: Json, dependencySource? :string): Widget {

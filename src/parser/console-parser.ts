@@ -28,7 +28,7 @@ export class ConsoleParser extends Parser implements ConsoleType {
     this.dependencies = dependencies;
   }
 
-  static parse (consoleYaml: YamlConsoleProperties): ConsoleParser { 
+  static parse (consoleYaml: YamlConsoleProperties): ConsoleType { 
     const { 
       name,
       providers, 
@@ -52,13 +52,13 @@ export class ConsoleParser extends Parser implements ConsoleType {
       widgetObjects[id] = WidgetParser.parse(widgets[id], id);
     });
 
-    return new ConsoleParser(
+    return {
       name, 
-      providerObjects,
-      pageObjects,
-      widgetObjects, 
+      providers: providerObjects,
+      pages: pageObjects,
+      widgets: widgetObjects, 
       dependencies
-    );
+    };
   }
 
   static fromJson (object: ConsoleType): ConsoleParser {
@@ -78,12 +78,12 @@ export class ConsoleParser extends Parser implements ConsoleType {
     }, {});
     
     const providers = Object.entries(providersObject).reduce<{ [id: string]: Provider }>((acc, [id, provider]) => {
-      acc[id] = ProviderParser.fromJson(provider);
+      acc[id] = ProviderParser.fromJson(provider, dependencies[providers[id].type]);
       return acc;
     }, {});
     
     const widgets = Object.entries(widgetsObject).reduce<{ [id: string]: Widget }>((acc, [id, widgetObject]) => {
-      acc[id] = WidgetParser.fromJson(widgetObject);
+      acc[id] = WidgetParser.fromJson(widgetObject, dependencies[widgets[id].type]);
       return acc;
     }, {});
 
@@ -105,9 +105,39 @@ export class ConsoleParser extends Parser implements ConsoleType {
     };
   }
 
-  deepParse(consoleYaml: YamlConsoleProperties): ConsoleType {
-    const parsedYaml = ConsoleParser.parse(consoleYaml);
+  deepParse (consoleYaml: YamlConsoleProperties): ConsoleParser {
+    const parsedYaml: ConsoleType = ConsoleParser.parse(consoleYaml);
     return ConsoleParser.fromJson(parsedYaml);
+  }
+
+  addPage (page: Page, id: string): void {
+    this.pages = this.pages || {};
+    this.pages[page.id || id] = page;
+  }
+
+  updatePage (page: Page, id:string): void {
+    this.pages = this.pages || {};
+    this.pages[page.id || id] = page;
+  }
+  
+  deletePage (id: string): void {
+    this.pages = this.pages || {};
+    delete this.pages[id];
+  }
+  
+  addWidget (widget: Widget, id: string): void {
+    this.widgets = this.widgets || {};
+    this.widgets[widget.id || id] = widget;
+  }
+
+  updateWidget (widget: Widget, id: string): void {
+    this.widgets = this.widgets || {};
+    this.widgets[widget.id || id] = widget;
+  }
+  
+  deleteWidget (id: string): void {
+    this.widgets = this.widgets || {};
+    delete this.widgets[id];
   }
 
 }

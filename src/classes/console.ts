@@ -11,12 +11,12 @@ import { FlatMap, Json, YamlConsole, YamlPage, YamlProvider, YamlWidget } from '
 import { Widget } from './widget';
 import { GenericWidget } from './generic-widget';
 
-class Console extends Parseable implements ConsoleType {
+export class Console extends Parseable implements ConsoleType {
   name: string;
   pages: { [id: string]: Page };
   providers: { [id: string]: Provider };
   widgets: { [id: string]: Widget };
-  dependencies: FlatMap;
+  dependencies?: FlatMap;
 
   constructor (
     name: string,
@@ -149,14 +149,14 @@ class Console extends Parseable implements ConsoleType {
     };
   }
 
-  addPage (page: Page): void {
+  addPage (page: Page, id: string): void {
     this.pages = this.pages || {};
-    this.pages[page.id] = page;
+    this.pages[page.id || id] = page;
   }
 
-  updatePage (page: Page): void {
+  updatePage (page: Page, id:string): void {
     this.pages = this.pages || {};
-    this.pages[page.id] = page;
+    this.pages[page.id || id] = page;
   }
   
   deletePage (id: string): void {
@@ -179,5 +179,3 @@ class Console extends Parseable implements ConsoleType {
     delete this.widgets[id];
   }
 }
-
-export default Console;
