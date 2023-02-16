@@ -11,3 +11,4 @@ export * from './classes/tab';
 export * from './classes/widget';
 export * from './classes/provider';
 export * from './classes/page';
+export * from './types/index';
