@@ -2,7 +2,7 @@ import { Widget } from './widget';
 import { GenericWidgetType, Json, YamlWidget } from '../types';
 import { Parseable } from './parseable';
 // import React from 'react';
-import {h, Fragment} from 'preact';
+import { h, Fragment } from 'preact';
 export class GenericWidget extends Widget implements GenericWidgetType, Parseable {
   [key: string]: any;
   constructor (object: GenericWidgetType) {
