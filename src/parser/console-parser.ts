@@ -8,16 +8,16 @@ import { WidgetParser } from './widget-parser';
 
 export class ConsoleParser extends Parser implements ConsoleType {
   name: string;
-  providers: Record<string, Provider>;
-  pages: Record<string, Page>;
-  widgets: Record<string, Widget>;
+  providers: Record<string, ProviderParser>;
+  pages: Record<string, PageParser>;
+  widgets: Record<string, WidgetParser>;
   dependencies?: FlatMap;
 
   constructor (
     name: string,
-    providers: Record<string, Provider>,
-    pages: Record<string, Page>,
-    widgets: Record<string, Widget>, 
+    providers: Record<string, ProviderParser>,
+    pages: Record<string, PageParser>,
+    widgets: Record<string, WidgetParser>, 
     dependencies?: FlatMap
   ) {
     super();
@@ -72,17 +72,17 @@ export class ConsoleParser extends Parser implements ConsoleType {
     
     validateConsole(object);
 
-    const pages = Object.entries(pagesObject).reduce<{ [id: string]: Page }>((acc, [id, page]) => {
+    const pages = Object.entries(pagesObject).reduce<{ [id: string]: PageParser }>((acc, [id, page]) => {
       acc[id] = PageParser.fromJson(page);
       return acc;
     }, {});
     
-    const providers = Object.entries(providersObject).reduce<{ [id: string]: Provider }>((acc, [id, provider]) => {
+    const providers = Object.entries(providersObject).reduce<{ [id: string]: ProviderParser }>((acc, [id, provider]) => {
       acc[id] = ProviderParser.fromJson(provider, dependencies[providers[id].type]);
       return acc;
     }, {});
     
-    const widgets = Object.entries(widgetsObject).reduce<{ [id: string]: Widget }>((acc, [id, widgetObject]) => {
+    const widgets = Object.entries(widgetsObject).reduce<{ [id: string]: WidgetParser }>((acc, [id, widgetObject]) => {
       acc[id] = WidgetParser.fromJson(widgetObject, dependencies[widgets[id].type]);
       return acc;
     }, {});
@@ -112,12 +112,12 @@ export class ConsoleParser extends Parser implements ConsoleType {
 
   addPage (page: Page, id: string): void {
     this.pages = this.pages || {};
-    this.pages[page.id || id] = page;
+    this.pages[page.id || id] = PageParser.fromJson(page);
   }
 
   updatePage (page: Page, id:string): void {
     this.pages = this.pages || {};
-    this.pages[page.id || id] = page;
+    this.pages[page.id || id] = PageParser.fromJson(page);
   }
   
   deletePage (id: string): void {
@@ -127,12 +127,12 @@ export class ConsoleParser extends Parser implements ConsoleType {
   
   addWidget (widget: Widget, id: string): void {
     this.widgets = this.widgets || {};
-    this.widgets[widget.id || id] = widget;
+    this.widgets[widget.id || id] = WidgetParser.fromJson(widget);
   }
 
   updateWidget (widget: Widget, id: string): void {
     this.widgets = this.widgets || {};
-    this.widgets[widget.id || id] = widget;
+    this.widgets[widget.id || id] = WidgetParser.fromJson(widget);;
   }
   
   deleteWidget (id: string): void {

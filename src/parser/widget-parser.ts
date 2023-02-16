@@ -103,4 +103,6 @@ export class WidgetParser extends Parser implements WidgetType {
         ...widget }
     };
   }
+
+  getData (): void { return; }
 }
