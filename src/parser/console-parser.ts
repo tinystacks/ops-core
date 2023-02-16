@@ -148,7 +148,7 @@ export class ConsoleParser extends Parser implements ConsoleType {
 
   updateWidget (widget: Widget, id: string): void {
     this.widgets = this.widgets || {};
-    this.widgets[widget.id || id] = WidgetParser.fromJson(widget);;
+    this.widgets[widget.id || id] = WidgetParser.fromJson(widget);
   }
   
   deleteWidget (id: string): void {
