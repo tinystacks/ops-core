@@ -64,7 +64,7 @@ export class WidgetParser extends Parser implements WidgetType {
 
     validatePropertyExists(object, 'type', 'Widget');
     validatePropertyExists(object, 'displayName', 'Widget');
-    validatePropertyExists(object, 'provider', 'Widget');
+    validatePropertyExists(object, 'providerId', 'Widget');
 
     try { 
       // eslint-disable-next-line @typescript-eslint/no-var-requires
