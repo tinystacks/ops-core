@@ -4,7 +4,7 @@ import {
 } from '@tinystacks/ops-model';
 import { Widget } from './widget';
 import { Tab } from './tab';
-import React from 'react';
+import { h, Fragment } from 'preact';
 
 export class TabPanel extends Widget implements TabPanelType {
   tabs: {

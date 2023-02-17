@@ -20,7 +20,12 @@
     "esModuleInterop": true,
     "typeRoots": ["./node_modules/@types"],
     "outDir": "./dist",
-    "jsx": "preserve"
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
+    "allowJs": true
   },
   "include": ["./src"]
 }
