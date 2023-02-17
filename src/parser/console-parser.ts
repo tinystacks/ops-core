@@ -82,8 +82,8 @@ export class ConsoleParser extends Parser implements ConsoleType {
       return acc;
     }, {});
     
-    const widgetObjects = Object.entries(widgets).reduce<{ [id: string]: WidgetParser }>((acc, [id, widgetObject]) => {
-      acc[id] = WidgetParser.fromJson(widgetObject, dependencies[widgets[id].type]);
+    const widgetObjects = Object.entries(widgets).reduce<{ [id: string]: WidgetParser }>((acc, [id, widget]) => {
+      acc[id] = WidgetParser.fromJson(widget, dependencies[widgets[id].type]);
       return acc;
     }, {});
 
