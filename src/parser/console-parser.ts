@@ -109,7 +109,7 @@ export class ConsoleParser extends Parser implements ConsoleType {
     }, {});
     
     const widgets = Object.entries(this.widgets).reduce<{ [id: string]: Widget }>((acc, [id, widget]) => {
-      acc[id] = WidgetParser.fromJson(widget).toJson();
+      acc[id] = widget.toJson();
       return acc;
     }, {});
     return {
@@ -148,7 +148,7 @@ export class ConsoleParser extends Parser implements ConsoleType {
 
   updateWidget (widget: Widget, id: string): void {
     this.widgets = this.widgets || {};
-    this.widgets[widget.id || id] = WidgetParser.fromJson(widget);;
+    this.widgets[widget.id || id] = WidgetParser.fromJson(widget);
   }
   
   deleteWidget (id: string): void {

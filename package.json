@@ -7,14 +7,15 @@
     "url": "git+https://github.com/tinystacks/ops-core.git"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
     "build": "node_modules/.bin/tsc",
     "clean": "rm -rf ./dist",
     "clean-build": "npm run clean && npm ci && npm run build",
     "dev": "bash ./dev.sh",
+    "prerelease": "npm version prerelease --preid=local --no-git-tag-version",
+    "publish-local": "npm run prerelease; npm publish --tag local --@tinystacks:registry=http://local-npm-registry:4873",
     "lint": "./node_modules/.bin/eslint ./src",
     "lint-fix": "./node_modules/.bin/eslint --fix ./src",
     "lint-tests": "./node_modules/.bin/eslint --config .eslintrc.test.json ./test",
@@ -46,7 +47,6 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@tinystacks/ops-aws-core-plugins": "^1.0.0",
     "@tinystacks/ops-model": "^1.0.1",
     "@types/react": "^18.0.28",
     "body-parser": "^1.20.1",

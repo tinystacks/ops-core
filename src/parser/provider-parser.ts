@@ -22,13 +22,9 @@ export class ProviderParser extends Parser implements ProviderType {
   }
 
   static parse (yamlProvider: YamlProvider, id?: string): ProviderType { 
-    const { 
-      type
-    } = yamlProvider;
-
     //need to figure out credentials
     return {
-      type,
+      ...yamlProvider,
       id
     };
   }
