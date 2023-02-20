@@ -1,9 +1,10 @@
 import { Parser } from './parser';
-import { YamlPage, YamlWidget } from '../types';
+import { YamlWidget } from '../types';
 import { validatePropertyExists } from './parser-utils';
 import { Widget as WidgetType } from '@tinystacks/ops-model';
 import { Widget } from '../classes/widget';
 import { Json } from '../types';
+import React from 'react';
 
 export class WidgetParser extends Parser implements WidgetType {
   type: string;
@@ -105,4 +106,6 @@ export class WidgetParser extends Parser implements WidgetType {
   }
 
   getData (): void { return; }
+
+  render (): JSX.Element { return React.createElement('div', null, ''); }
 }

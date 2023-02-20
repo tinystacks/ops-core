@@ -1,6 +1,6 @@
 {
   "name": "@tinystacks/ops-core",
-  "version": "0.0.30",
+  "version": "1.0.4-react",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "node_modules/.bin/tsc",
-    "clean": "rm -rf ./dist",
+    "clean": "rm -rf ./dist; rm -rf node_modules; rm package-lock.json",
     "clean-build": "npm run clean && npm ci && npm run build",
     "dev": "bash ./dev.sh",
     "prerelease": "npm version prerelease --preid=local --no-git-tag-version",
@@ -25,6 +25,8 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
     "@types/express": "^4.17.16",
     "@types/http-errors": "^2.0.1",
     "@types/jest": "^29.4.0",
@@ -36,6 +38,7 @@
     "@types/yamljs": "^0.2.31",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
+    "babel-cli": "^6.26.0",
     "depcheck": "^1.4.3",
     "eslint": "^8.32.0",
     "eslint-plugin-import": "^2.27.5",
@@ -47,6 +50,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.20.13",
     "@tinystacks/ops-model": "^1.0.1",
     "@types/react": "^18.0.28",
     "body-parser": "^1.20.1",
@@ -57,7 +61,6 @@
     "js-yaml": "^4.1.0",
     "json-refs": "^3.0.15",
     "lodash.isnil": "^4.0.0",
-    "preact": "^10.12.1",
     "swagger-ui-express": "^4.6.0",
     "yamljs": "^0.3.0"
   }
