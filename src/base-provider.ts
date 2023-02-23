@@ -1,4 +1,4 @@
-import { validatePropertyExists } from './parser-utils';
+import { validatePropertyExists } from './parser-utils.js';
 import { Provider } from '@tinystacks/ops-model';
 
 export abstract class BaseProvider implements Provider {

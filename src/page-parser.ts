@@ -1,4 +1,4 @@
-import { validatePropertyExists } from './parser-utils';
+import { validatePropertyExists } from './parser-utils.js';
 import { Page, YamlPage } from '@tinystacks/ops-model';
 
 export class PageParser implements Page {

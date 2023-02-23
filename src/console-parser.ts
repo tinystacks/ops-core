@@ -1,10 +1,10 @@
-import { validateConsole } from './parser-utils';
+import { validateConsole } from './parser-utils.js';
 import {
   Console, Page, Provider, Widget, YamlConsole, YamlWidget, YamlProvider
 } from '@tinystacks/ops-model';
-import { PageParser } from './page-parser';
-import { BaseProvider } from './base-provider';
-import { BaseWidget } from './base-widget';
+import { PageParser } from './page-parser.js';
+import { BaseProvider } from './base-provider.js';
+import { BaseWidget } from './base-widget.js';
 
 type ExportRefs = { [ref: string]: string }[];
 type ExportYamlWidget = Omit<YamlWidget, 'providers' | 'children'> & {

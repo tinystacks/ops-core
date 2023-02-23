@@ -1,6 +1,6 @@
-import { validatePropertyExists } from './parser-utils';
+import { validatePropertyExists } from './parser-utils.js';
 import { Widget } from '@tinystacks/ops-model';
-import { BaseProvider } from './base-provider';
+import { BaseProvider } from './base-provider.js';
 
 // TODO: leave a note that this is a hydrated widget that we actually use in the backend/frontend to do work
 // YamlWidget: just for reading and writing config + intellisense
@@ -28,21 +28,18 @@ export abstract class BaseWidget implements Widget {
     validatePropertyExists(object, 'id', 'Widget');
     validatePropertyExists(object, 'type', 'Widget');
     validatePropertyExists(object, 'displayName', 'Widget');
+    return BaseWidget.dynamicRequire(object, dependencySource);
+  }
 
-    return import(dependencySource)
-      .then(source => source[object.type].fromJson(object))
-      .catch((e) => {
-        console.error(e);
-        throw Error(`Error trying to load module ${dependencySource} for type ${object.type}`);
-      });
-
-    // try { 
-    //   const WidgetType: any = (await import(dependencySource))[object.type];
-    //   const widget = await WidgetType.fromJson(object);
-    //   return widget; 
-    // } catch(e){ 
-    //   throw Error(`Error trying to load module ${dependencySource} for type ${object.type}`);
-    // }
+  private static async dynamicRequire (object: Widget, dependencySource?:string): Promise<BaseWidget> {
+    try {
+      const WidgetType: any = (await import(dependencySource))[object.type];
+      const widget = await WidgetType.fromJson(object);
+      return widget; 
+    } catch(e){ 
+      console.error(e);
+      throw Error(`Error trying to load module ${dependencySource} for type ${object.type}`);
+    }
   }
 
   toJson (): Widget { 
