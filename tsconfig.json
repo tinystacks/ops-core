@@ -6,6 +6,7 @@
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": false,
+    "importHelpers": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noUnusedLocals": false,
@@ -23,7 +24,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "jsx": "preserve",
-    "allowJs": true
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": { 
+      "ops-core/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": ["./src"]
 }

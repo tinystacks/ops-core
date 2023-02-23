@@ -1,4 +1,5 @@
-import { get, isNil } from 'lodash';
+import get from 'lodash.get';
+import isNil from 'lodash.isnil';
 import { Console as ConsoleType, Provider, Widget } from '@tinystacks/ops-model';
 
 export function validatePropertyExists (obj: any, propertyName: string, objectType: string){ 
@@ -41,8 +42,7 @@ export function validateConsole (console: ConsoleType): void{
   }); 
 
   Object.keys(console.widgets).forEach((id) => { 
-    allProviders.push(console.widgets[id].providerId);
-    //what about widget types with tabs?
+    (console.widgets[id].providerIds || []).forEach((providerId: string) => allProviders.push(providerId));
   });
 
 
