@@ -205,20 +205,24 @@ export class ConsoleParser implements Console {
     };
   }
 
-  static parseWidget (yamlWidget: YamlWidget, id: string): Widget & Record<string, any> {
-    // TALK ABOUT THIS WHAT'S GOING ON HERE??
-    const providers = (yamlWidget.providers || []).map((provider: any) => provider.$ref.split('/')[3]);
-    return { ...yamlWidget, providers, id };
+  static parseWidget (yamlWidget: YamlWidget, id: string): Widget {
+    // TODO: Multifile
+    const providerIds = (yamlWidget.providers || []).map((provider: any) => provider.$ref.split('/')[3]);
+    // TODO: Multifile
+    const childrenIds = (yamlWidget.children || []).map((child: any) => child.$ref.split('/')[3]);
+    return { ...yamlWidget, providerIds, childrenIds, id };
   }
 
-  static widgetToYaml (widget: Widget & Record<string, any>): ExportYamlWidget {
+  static widgetToYaml (widget: Widget): ExportYamlWidget {
     return {
       id: widget.id,
       displayName: widget.displayName,
       description: widget.description,
       type: widget.type,
       displayOptions: widget.displayOptions,
+      // TODO: Multifile
       providers: widget.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` })),
+      // TODO: Multifile
       children: widget.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }))
     };
   }

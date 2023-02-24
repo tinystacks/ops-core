@@ -12,14 +12,16 @@ export abstract class BaseWidget implements Widget {
   displayName: string;
   displayOptions?: Widget['displayOptions'];
   providerIds?: string[];
+  childrenIds?: string[];
   description?: string;
 
   constructor (widgetProps: Widget) {
-    const { id, type, displayName, providerIds, displayOptions, description } = widgetProps;
+    const { id, type, displayName, providerIds, childrenIds, displayOptions, description } = widgetProps;
     this.id = id;
     this.type = type;
     this.displayName = displayName;
     this.providerIds = providerIds;
+    this.childrenIds = childrenIds;
     this.description = description;
     this.displayOptions = displayOptions;
   }
@@ -48,11 +50,12 @@ export abstract class BaseWidget implements Widget {
       type: this.type, 
       displayName: this.displayName,
       providerIds: this.providerIds,
+      childrenIds: this.childrenIds,
       description: this.description,
       displayOptions: this.displayOptions
     };    
   }
 
   abstract getData (providers?: BaseProvider[], overrides?: any): void | Promise<void>;
-  abstract render (children?: BaseWidget[]): JSX.Element;
+  abstract render (children?: (Widget & { renderedElement: JSX.Element })[]): JSX.Element;
 }
