@@ -1,6 +1,6 @@
 {
   "name": "@tinystacks/ops-core",
-  "version": "0.0.1-release",
+  "version": "0.0.3-release",
   "main": "dist/index.js",
   "type": "module",
   "repository": {

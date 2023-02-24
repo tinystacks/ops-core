@@ -33,7 +33,7 @@ export abstract class BaseWidget implements Widget {
     return BaseWidget.dynamicRequire(object, dependencySource);
   }
 
-  private static async dynamicRequire (object: Widget, dependencySource?:string): Promise<BaseWidget> {
+  private static async dynamicRequire (object: Widget, dependencySource?: string): Promise<BaseWidget> {
     try {
       const WidgetType: any = (await import(dependencySource))[object.type];
       const widget = await WidgetType.fromJson(object);

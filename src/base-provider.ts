@@ -5,21 +5,23 @@ export abstract class BaseProvider implements Provider {
   id: string;
   type: string;
 
-  constructor (
-    type: string,
-    id: string
-  ) {
-    this.id = id;
-    this.type = type;
+  constructor (props: Provider) {
+    this.id = props.id;
+    this.type = props.type;
   }
 
-  static async fromJson<T extends BaseProvider> (object: Provider, dependencySource?: string): Promise<T> {
+  static fromJson (object: Provider, dependencySource?: string): Promise<BaseProvider> | BaseProvider {
     validatePropertyExists(object, 'type', 'Provider'); 
-    try { 
+    return this.dynamicRequire(object, dependencySource);
+  }
+
+  private static async dynamicRequire (object: Provider, dependencySource?:string): Promise<BaseProvider> {
+    try {
       const providerType = (await import(dependencySource))[object.type];
       const provider = await providerType.fromJson(object);
       return provider; 
     } catch(e){ 
+      console.error(e);
       throw Error(`Error trying to load module ${dependencySource} for type ${object.type}`);
     }
   }
