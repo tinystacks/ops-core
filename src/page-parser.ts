@@ -1,25 +1,22 @@
-import { YamlPage } from '../types';
-import { validatePropertyExists } from './parser-utils';
-import { Parser } from './parser';
-import { Page as PageType } from '@tinystacks/ops-model';
+import { validatePropertyExists } from './parser-utils.js';
+import { Page, YamlPage } from '@tinystacks/ops-model';
 
-export class PageParser extends Parser implements PageType {
-  id?: string;
+export class PageParser implements Page {
+  id: string;
   route: string;
   widgetIds: string[];
 
   constructor (
     route: string,
     widgetIds: string[] = [], 
-    id?: string
+    id: string
   ) {
-    super();
     this.id = id;
     this.route = route;
     this.widgetIds = widgetIds;
   }
 
-  static parse (yamlPage: YamlPage, id?:string): PageType { 
+  static parse (yamlPage: YamlPage, id?:string): Page { 
 
     const {
       route,
@@ -39,7 +36,7 @@ export class PageParser extends Parser implements PageType {
     };
   }
 
-  static fromJson (object: PageType): PageParser {
+  static fromJson (object: Page): PageParser {
     const { 
       id,
       route,
@@ -56,7 +53,7 @@ export class PageParser extends Parser implements PageType {
     );
   }
 
-  toJson (): PageType { 
+  toJson (): Page { 
 
     return { 
       id: this.id, 
@@ -65,13 +62,13 @@ export class PageParser extends Parser implements PageType {
     };
   }
 
-  toYaml (page: PageType): YamlPage {
+  static toYaml (page: Page) {
     const { 
       route, 
       widgetIds,
       id
     } = page;
-    // This is cheap and restrictive, we should store the original ref on the widget and use that here.
+    // TODO: This is cheap and restrictive, we should store the original ref on the widget and use that here.
     const widgets = widgetIds.map(widgetId => ({ $ref: `#/Console/widgets/${widgetId}` }));
     return {
       route,
