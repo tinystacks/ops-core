@@ -151,12 +151,14 @@ export class ConsoleParser implements Console {
   
   async addWidget (widget: Widget, id: string) {
     this.widgets = this.widgets || {};
-    this.widgets[widget.id || id] = await BaseWidget.fromJson(widget);
+    const dependencySource = this.dependencies[widget.type];
+    this.widgets[widget.id || id] = await BaseWidget.fromJson(widget, dependencySource);
   }
  
   async updateWidget (widget: Widget, id: string) {
     this.widgets = this.widgets || {};
-    this.widgets[widget.id || id] = await BaseWidget.fromJson(widget);
+    const dependencySource = this.dependencies[widget.type];
+    this.widgets[widget.id || id] = await BaseWidget.fromJson(widget, dependencySource);
   }
   
   deleteWidget (id: string): void {
