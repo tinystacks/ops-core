@@ -41,8 +41,9 @@ export function validateConsole (console: ConsoleType): void{
     allWidgetIds.push(...console.pages[id].widgetIds);
   }); 
 
+
   Object.keys(console.widgets).forEach((id) => { 
-    (console.widgets[id].providerIds || []).forEach((providerId: string) => allProviders.push(providerId));
+    allProviders.push(...(console.widgets[id].providerIds || []));
   });
 
 

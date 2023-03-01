@@ -1,6 +1,6 @@
 {
   "name": "@tinystacks/ops-core",
-  "version": "0.0.3-release",
+  "version": "0.0.4-release",
   "main": "dist/index.js",
   "type": "module",
   "repository": {
@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.20.13",
-    "@tinystacks/ops-model": "0.0.0-release",
+    "@tinystacks/ops-model": "0.0.4-release",
     "@types/react": "^18.0.28",
     "body-parser": "^1.20.1",
     "dotenv": "^16.0.3",

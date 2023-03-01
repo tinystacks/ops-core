@@ -57,5 +57,8 @@ export abstract class BaseWidget implements Widget {
   }
 
   abstract getData (providers?: BaseProvider[], overrides?: any): void | Promise<void>;
-  abstract render (children?: (Widget & { renderedElement: JSX.Element })[]): JSX.Element;
+  abstract render (
+    children?: (Widget & { renderedElement: JSX.Element })[],
+    overridesCallback?: (overrides: any) => void
+  ): JSX.Element;
 }
