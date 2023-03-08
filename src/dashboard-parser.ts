@@ -1,7 +1,7 @@
 import { validatePropertyExists } from './parser-utils.js';
-import { Page, YamlPage } from '@tinystacks/ops-model';
+import { Dashboard, YamlDashboard } from '@tinystacks/ops-model';
 
-export class PageParser implements Page {
+export class DashboardParser implements Dashboard {
   id: string;
   route: string;
   widgetIds: string[];
@@ -16,12 +16,12 @@ export class PageParser implements Page {
     this.widgetIds = widgetIds;
   }
 
-  static parse (yamlPage: YamlPage, id?:string): Page { 
+  static parse (yamlDashboard: YamlDashboard, id?:string): Dashboard { 
 
     const {
       route,
       widgets
-    } = yamlPage; 
+    } = yamlDashboard; 
 
     const widgetIds = widgets.map((item) => { 
       const [_, __, ___, widgetId ] = item.$ref.split('/');
@@ -36,24 +36,24 @@ export class PageParser implements Page {
     };
   }
 
-  static fromJson (object: Page): PageParser {
+  static fromJson (object: Dashboard): DashboardParser {
     const { 
       id,
       route,
       widgetIds
     } = object; 
 
-    validatePropertyExists(object, 'widgetIds', 'Page');
-    validatePropertyExists(object, 'route', 'Page'); 
+    validatePropertyExists(object, 'widgetIds', 'Dashboard');
+    validatePropertyExists(object, 'route', 'Dashboard'); 
 
-    return new PageParser (
+    return new DashboardParser (
       route, 
       widgetIds, 
       id
     );
   }
 
-  toJson (): Page { 
+  toJson (): Dashboard { 
 
     return { 
       id: this.id, 
@@ -62,12 +62,12 @@ export class PageParser implements Page {
     };
   }
 
-  static toYaml (page: Page) {
+  static toYaml (dashboard: Dashboard) {
     const { 
       route, 
       widgetIds,
       id
-    } = page;
+    } = dashboard;
     // TODO: This is cheap and restrictive, we should store the original ref on the widget and use that here.
     const widgets = widgetIds.map(widgetId => ({ $ref: `#/Console/widgets/${widgetId}` }));
     return {

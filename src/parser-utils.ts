@@ -31,14 +31,14 @@ export function validateProviderReferences (providers: { [id: string]: Provider}
 export function validateConsole (console: ConsoleType): void{ 
   validatePropertyExists(console, 'name', 'Console');
   validatePropertyExists(console, 'providers', 'Console');
-  validatePropertyExists(console, 'pages', 'Console');
+  validatePropertyExists(console, 'dashboards', 'Console');
   validatePropertyExists(console, 'widgets', 'Console');
   validatePropertyExists(console, 'dependencies', 'Console');
 
   const allWidgetIds: string[] = [];
   const allProviders: string[] = [];
-  Object.keys(console.pages).forEach((id) => { 
-    allWidgetIds.push(...console.pages[id].widgetIds);
+  Object.keys(console.dashboards).forEach((id) => { 
+    allWidgetIds.push(...console.dashboards[id].widgetIds);
   }); 
 
 

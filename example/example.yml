@@ -5,12 +5,12 @@ Console:
       type: AwsProfileProvider
       credentials:
         profileName: ts-dev
-  pages:
-    MainPage:
+  dashboards:
+    MainDashboard:
       route: /
       widgets: 
         - $ref: '#/Console/widgets/PrimaryServiceHealth'
-        - $ref: '#/Console/widgets/MainPageTabPanel'
+        - $ref: '#/Console/widgets/MainDashboardTabPanel'
   widgets:
     PrimaryServiceHealth:
       type: "AwsCloudWatchMetricGraph"
@@ -30,7 +30,7 @@ Console:
             - key: ServiceName
               value: tinystacks-service
       region: us-east-1
-    MainPageTabPanel:
+    MainDashboardTabPanel:
       type: "TabPanel"
       displayName: Service Logs
       provider: 

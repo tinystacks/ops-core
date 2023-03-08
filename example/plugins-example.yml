@@ -5,8 +5,8 @@ Console:
       type: AwsProfileProvider
       credentials:
         profileName: ts-dev
-  pages:
-    MainPage:
+  dashboards:
+    MainDashboard:
       route: /
       widgets: 
         - $ref: '#/Console/widgets/PrimaryServiceHealth'

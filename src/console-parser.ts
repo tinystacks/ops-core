@@ -1,8 +1,8 @@
 import { validateConsole } from './parser-utils.js';
 import {
-  Console, Page, Provider, Widget, YamlConsole, YamlWidget, YamlProvider
+  Console, Dashboard, Provider, Widget, YamlConsole, YamlWidget, YamlProvider
 } from '@tinystacks/ops-model';
-import { PageParser } from './page-parser.js';
+import { DashboardParser } from './dashboard-parser.js';
 import { BaseProvider } from './base-provider.js';
 import { BaseWidget } from './base-widget.js';
 
@@ -19,20 +19,20 @@ type ExportConsoleYaml = Omit<YamlConsole, 'widgets'> & {
 export class ConsoleParser implements Console {
   name: string;
   providers: Record<string, BaseProvider>;
-  pages: Record<string, PageParser>;
+  dashboards: Record<string, DashboardParser>;
   widgets: Record<string, BaseWidget>;
   dependencies?: Record<string, string>;
 
   constructor (
     name: string,
     providers: Record<string, BaseProvider>,
-    pages: Record<string, PageParser>,
+    dashboards: Record<string, DashboardParser>,
     widgets: Record<string, BaseWidget>, 
     dependencies?: Console['dependencies']
   ) {
     this.name = name;
     this.providers = providers;
-    this.pages = pages;
+    this.dashboards = dashboards;
     this.widgets = widgets;
     this.dependencies = dependencies;
   }
@@ -41,14 +41,14 @@ export class ConsoleParser implements Console {
     const { 
       name,
       providers, 
-      pages,
+      dashboards,
       widgets, 
       dependencies
     } = consoleYaml;
 
-    const pageObjects : Record<string, Page> = {}; 
-    Object.keys(pages).forEach((id) => { 
-      pageObjects[id] = PageParser.parse(pages[id], id);
+    const dashboardObjects : Record<string, Dashboard> = {}; 
+    Object.keys(dashboards).forEach((id) => { 
+      dashboardObjects[id] = DashboardParser.parse(dashboards[id], id);
     });
 
     const providerObjects: Record<string, Provider> = {}; 
@@ -64,7 +64,7 @@ export class ConsoleParser implements Console {
     return {
       name, 
       providers: providerObjects,
-      pages: pageObjects,
+      dashboards: dashboardObjects,
       widgets: widgetObjects, 
       dependencies
     };
@@ -73,7 +73,7 @@ export class ConsoleParser implements Console {
   static async fromJson (object: Console): Promise<ConsoleParser> {
     const {
       name,
-      pages,
+      dashboards,
       providers,
       widgets, 
       dependencies
@@ -81,8 +81,8 @@ export class ConsoleParser implements Console {
     
     validateConsole(object);
 
-    const pageObjects = Object.entries(pages).reduce<{ [id: string]: PageParser }>((acc, [id, page]) => {
-      acc[id] = PageParser.fromJson(page);
+    const dashboardObjects = Object.entries(dashboards).reduce<{ [id: string]: DashboardParser }>((acc, [id, dashboard]) => {
+      acc[id] = DashboardParser.fromJson(dashboard);
       return acc;
     }, {});
     
@@ -99,15 +99,15 @@ export class ConsoleParser implements Console {
     return new ConsoleParser(
       name,
       resolvedProviders,
-      pageObjects,
+      dashboardObjects,
       resolvedWidgets, 
       dependencies
     );
   }
 
   toJson (): Console { 
-    const pages = Object.entries(this.pages).reduce<{ [id: string]: Page }>((acc, [id, page]) => {
-      acc[id] = page.toJson();
+    const dashboards = Object.entries(this.dashboards).reduce<{ [id: string]: Dashboard }>((acc, [id, dashboard]) => {
+      acc[id] = dashboard.toJson();
       return acc;
     }, {});
     
@@ -122,7 +122,7 @@ export class ConsoleParser implements Console {
     }, {});
     return {
       name: this.name,
-      pages,
+      dashboards,
       providers,
       widgets,
       dependencies: this.dependencies
@@ -134,19 +134,19 @@ export class ConsoleParser implements Console {
     return await ConsoleParser.fromJson(parsedYaml);
   }
 
-  addPage (page: Page, id: string): void {
-    this.pages = this.pages || {};
-    this.pages[page.id || id] = PageParser.fromJson(page);
+  addDashboard (dashboard: Dashboard, id: string): void {
+    this.dashboards = this.dashboards || {};
+    this.dashboards[dashboard.id || id] = DashboardParser.fromJson(dashboard);
   }
 
-  updatePage (page: Page, id:string): void {
-    this.pages = this.pages || {};
-    this.pages[page.id || id] = PageParser.fromJson(page);
+  updateDashboard (dashboard: Dashboard, id:string): void {
+    this.dashboards = this.dashboards || {};
+    this.dashboards[dashboard.id || id] = DashboardParser.fromJson(dashboard);
   }
   
-  deletePage (id: string): void {
-    this.pages = this.pages || {};
-    delete this.pages[id];
+  deleteDashboard (id: string): void {
+    this.dashboards = this.dashboards || {};
+    delete this.dashboards[id];
   }
   
   async addWidget (widget: Widget, id: string) {
@@ -169,15 +169,15 @@ export class ConsoleParser implements Console {
   static async toYaml (console: Console): Promise<ExportConsoleYaml> {
     const { 
       name,
-      pages,
+      dashboards,
       providers, 
       widgets, 
       dependencies
     } = console;
 
-    const pageObjects: { [id: string]: Page } = {};
-    for (const [id, page] of Object.entries(pages)) {
-      pageObjects[id] = PageParser.toYaml(page);
+    const dashboardObjects: { [id: string]: Dashboard } = {};
+    for (const [id, dashboard] of Object.entries(dashboards)) {
+      dashboardObjects[id] = DashboardParser.toYaml(dashboard);
     }
     
     const providerObjects: { [id: string]: YamlProvider } = {};
@@ -192,7 +192,7 @@ export class ConsoleParser implements Console {
 
     return {
       name,
-      pages: pageObjects,
+      dashboards: dashboardObjects,
       providers: providerObjects,
       widgets: widgetObjects,
       dependencies: dependencies
