@@ -1,6 +1,6 @@
 {
   "name": "@tinystacks/ops-core",
-  "version": "0.0.5-release",
+  "version": "0.0.0",
   "main": "dist/index.js",
   "type": "module",
   "repository": {
@@ -12,9 +12,10 @@
   ],
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf *.tgz; rm -rf ./dist; rm -rf node_modules; rm package-lock.json",
-    "clean-build": "npm run clean; npm i; npm run build",
-    "prepack": "npm run clean-build",
+    "clean": "rm -rf *.tgz; rm -rf ./dist;",
+    "clean-build": "npm run clean; npm run build;",
+    "prepack": "npm run clean-build;",
+    "hard-clean": "npm run clean;  rm -rf node_modules; rm package-lock.json;",
     "dev": "bash ./dev.sh",
     "prerelease": "npm version prerelease --preid=local --no-git-tag-version",
     "publish-local": "npm run prerelease; npm publish --tag local --@tinystacks:registry=http://local-npm-registry:4873",
@@ -55,7 +56,7 @@
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.20.13",
-    "@tinystacks/ops-model": "0.0.5-release",
+    "@tinystacks/ops-model": "0.0.0",
     "@types/react": "^18.0.28",
     "body-parser": "^1.20.1",
     "dotenv": "^16.0.3",
