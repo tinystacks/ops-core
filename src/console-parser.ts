@@ -5,6 +5,8 @@ import {
 import { DashboardParser } from './dashboard-parser.js';
 import { BaseProvider } from './base-provider.js';
 import { BaseWidget } from './base-widget.js';
+import BasicWidget from './basic-widget.js';
+import { OtherProperties } from './types.js';
 
 type ExportRefs = { [ref: string]: string }[];
 type ExportYamlWidget = Omit<YamlWidget, 'providers' | 'children'> & {
@@ -117,7 +119,7 @@ export class ConsoleParser implements Console {
     }, {});
     
     const widgets = Object.entries(this.widgets).reduce<{ [id: string]: Widget }>((acc, [id, widget]) => {
-      acc[id] = widget.toJson();
+      acc[id] = this.widgetToJson(widget);
       return acc;
     }, {});
     return {
@@ -166,36 +168,28 @@ export class ConsoleParser implements Console {
     delete this.widgets[id];
   }
 
-  static async toYaml (console: Console): Promise<ExportConsoleYaml> {
-    const { 
-      name,
-      dashboards,
-      providers, 
-      widgets, 
-      dependencies
-    } = console;
-
+  toYaml (): ExportConsoleYaml {
     const dashboardObjects: { [id: string]: Dashboard } = {};
-    for (const [id, dashboard] of Object.entries(dashboards)) {
-      dashboardObjects[id] = DashboardParser.toYaml(dashboard);
+    for (const [id, dashboard] of Object.entries(this.dashboards)) {
+      dashboardObjects[id] = dashboard.toYaml();
     }
     
     const providerObjects: { [id: string]: YamlProvider } = {};
-    for (const [id, provider] of Object.entries(providers)) {
+    for (const [id, provider] of Object.entries(this.providers)) {
       providerObjects[id] = provider;
     }
     
     const widgetObjects: { [id: string]: ExportYamlWidget } = {}; 
-    for (const [id, widget] of Object.entries(widgets)) {
+    for (const [id, widget] of Object.entries(this.widgets)) {
       widgetObjects[id] = this.widgetToYaml(widget);
     }
 
     return {
-      name,
+      name: this.name,
       dashboards: dashboardObjects,
       providers: providerObjects,
       widgets: widgetObjects,
-      dependencies: dependencies
+      dependencies: this.dependencies
     };
   }
 
@@ -215,17 +209,33 @@ export class ConsoleParser implements Console {
     return { ...yamlWidget, providerIds, childrenIds, id };
   }
 
-  static widgetToYaml (widget: Widget): ExportYamlWidget {
+  widgetToJson<T extends BaseWidget> (widget: T): Widget & OtherProperties {
+    const widgetJson = widget.toJson();
+    /** 
+     * We can't call super on a class instance, 
+     * so we use a wrapper class to access toJson from the abstract class
+     * in case the implementer doesn't call it from within their own toJson implementation.
+     */ 
+    const basicWidget = new BasicWidget(widget);
+    const baseWidgetJson = basicWidget.toJson();
     return {
-      id: widget.id,
-      displayName: widget.displayName,
-      description: widget.description,
-      type: widget.type,
-      displayOptions: widget.displayOptions,
-      // TODO: Multifile
-      providers: widget.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` })),
-      // TODO: Multifile
-      children: widget.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }))
+      ...widgetJson,
+      // Always overwrite base propeties with the response from BaseWidget.toJson
+      ...baseWidgetJson
+    };
+  }
+
+  widgetToYaml<T extends BaseWidget> (widget: T): ExportYamlWidget {
+    const widgetJson = this.widgetToJson(widget);
+    // TODO: Multifile
+    const providers = widget.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` }));
+    // TODO: Multifile
+    const children = widget.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }));
+    delete widgetJson.providerIds;
+    delete widgetJson.childrenIds;
+    return {
+      providers,
+      children
     };
   }
 
