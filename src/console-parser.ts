@@ -166,36 +166,28 @@ export class ConsoleParser implements Console {
     delete this.widgets[id];
   }
 
-  static async toYaml (console: Console): Promise<ExportConsoleYaml> {
-    const { 
-      name,
-      dashboards,
-      providers, 
-      widgets, 
-      dependencies
-    } = console;
-
+  async toYaml (): Promise<ExportConsoleYaml> {
     const dashboardObjects: { [id: string]: Dashboard } = {};
-    for (const [id, dashboard] of Object.entries(dashboards)) {
+    for (const [id, dashboard] of Object.entries(this.dashboards)) {
       dashboardObjects[id] = DashboardParser.toYaml(dashboard);
     }
     
     const providerObjects: { [id: string]: YamlProvider } = {};
-    for (const [id, provider] of Object.entries(providers)) {
+    for (const [id, provider] of Object.entries(this.providers)) {
       providerObjects[id] = provider;
     }
     
     const widgetObjects: { [id: string]: ExportYamlWidget } = {}; 
-    for (const [id, widget] of Object.entries(widgets)) {
+    for (const [id, widget] of Object.entries(this.widgets)) {
       widgetObjects[id] = this.widgetToYaml(widget);
     }
 
     return {
-      name,
+      name: this.name,
       dashboards: dashboardObjects,
       providers: providerObjects,
       widgets: widgetObjects,
-      dependencies: dependencies
+      dependencies: this.dependencies
     };
   }
 
@@ -215,17 +207,18 @@ export class ConsoleParser implements Console {
     return { ...yamlWidget, providerIds, childrenIds, id };
   }
 
-  static widgetToYaml (widget: Widget): ExportYamlWidget {
+  widgetToYaml (widget: BaseWidget): ExportYamlWidget {
+    const widgetJson = widget.toJson();
+    // TODO: Multifile
+    const providers = widget.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` }));
+    // TODO: Multifile
+    const children = widget.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }));
+    delete widgetJson.providerIds;
+    delete widgetJson.childrenIds;
     return {
-      id: widget.id,
-      displayName: widget.displayName,
-      description: widget.description,
-      type: widget.type,
-      displayOptions: widget.displayOptions,
-      // TODO: Multifile
-      providers: widget.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` })),
-      // TODO: Multifile
-      children: widget.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }))
+      ...widgetJson,
+      providers,
+      children
     };
   }
 
