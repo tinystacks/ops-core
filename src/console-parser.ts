@@ -5,6 +5,8 @@ import {
 import { DashboardParser } from './dashboard-parser.js';
 import { BaseProvider } from './base-provider.js';
 import { BaseWidget } from './base-widget.js';
+import BasicWidget from './basic-widget.js';
+import { OtherProperties } from './types.js';
 
 type ExportRefs = { [ref: string]: string }[];
 type ExportYamlWidget = Omit<YamlWidget, 'providers' | 'children'> & {
@@ -117,7 +119,7 @@ export class ConsoleParser implements Console {
     }, {});
     
     const widgets = Object.entries(this.widgets).reduce<{ [id: string]: Widget }>((acc, [id, widget]) => {
-      acc[id] = widget.toJson();
+      acc[id] = this.widgetToJson(widget);
       return acc;
     }, {});
     return {
@@ -207,8 +209,24 @@ export class ConsoleParser implements Console {
     return { ...yamlWidget, providerIds, childrenIds, id };
   }
 
-  widgetToYaml (widget: BaseWidget): ExportYamlWidget {
+  widgetToJson<T extends BaseWidget> (widget: T): Widget & OtherProperties {
     const widgetJson = widget.toJson();
+    /** 
+     * We can't call super on a class instance, 
+     * so we use a wrapper class to access toJson from the abstract class
+     * in case the implementer doesn't call it from within their own toJson implementation.
+     */ 
+    const basicWidget = new BasicWidget(widget);
+    const baseWidgetJson = basicWidget.toJson();
+    return {
+      ...widgetJson,
+      // Always overwrite base propeties with the response from BaseWidget.toJson
+      ...baseWidgetJson
+    };
+  }
+
+  widgetToYaml<T extends BaseWidget> (widget: T): ExportYamlWidget {
+    const widgetJson = this.widgetToJson(widget);
     // TODO: Multifile
     const providers = widget.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` }));
     // TODO: Multifile
@@ -216,7 +234,6 @@ export class ConsoleParser implements Console {
     delete widgetJson.providerIds;
     delete widgetJson.childrenIds;
     return {
-      ...widgetJson,
       providers,
       children
     };
