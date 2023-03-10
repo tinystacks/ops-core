@@ -166,10 +166,10 @@ export class ConsoleParser implements Console {
     delete this.widgets[id];
   }
 
-  async toYaml (): Promise<ExportConsoleYaml> {
+  toYaml (): ExportConsoleYaml {
     const dashboardObjects: { [id: string]: Dashboard } = {};
     for (const [id, dashboard] of Object.entries(this.dashboards)) {
-      dashboardObjects[id] = DashboardParser.toYaml(dashboard);
+      dashboardObjects[id] = dashboard.toYaml();
     }
     
     const providerObjects: { [id: string]: YamlProvider } = {};
