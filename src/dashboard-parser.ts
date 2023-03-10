@@ -64,7 +64,7 @@ export class DashboardParser implements Dashboard {
 
   toYaml () {
     // TODO: This is cheap and restrictive, we should store the original ref on the widget and use that here.
-    const widgets =this. widgetIds.map(widgetId => ({ $ref: `#/Console/widgets/${widgetId}` }));
+    const widgets = this.widgetIds.map(widgetId => ({ $ref: `#/Console/widgets/${widgetId}` }));
     return {
       route: this.route,
       widgets,
