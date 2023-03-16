@@ -1,7 +1,7 @@
 import { Widget } from '@tinystacks/ops-model';
-import { BaseProvider } from './base-provider';
-import { BaseWidget } from './base-widget';
-import { OtherProperties } from './types';
+import { BaseProvider } from './base-provider.js';
+import { BaseWidget } from './base-widget.js';
+import { OtherProperties } from './types.js';
 
 class BasicWidget extends BaseWidget {
   constructor (props: Widget & OtherProperties) {
