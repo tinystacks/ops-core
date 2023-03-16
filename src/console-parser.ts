@@ -234,6 +234,7 @@ export class ConsoleParser implements Console {
     delete widgetJson.providerIds;
     delete widgetJson.childrenIds;
     return {
+      ...widgetJson,
       providers,
       children
     };
