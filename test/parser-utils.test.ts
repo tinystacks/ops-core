@@ -1,135 +1,114 @@
-import { validatePropertyExists, validateWidgetReferences } from "../src/parser/parser-utils";
-import { Ref } from "../src/types";
-
+import { validatePropertyExists, validateWidgetReferences } from "../src/parser-utils.js";
 
 describe("Test Console Validation", () => {
-
   test("test error thrown for missing property on object", () => {
 
     const testObject = {
-        "type": "AwsEcsSeviceSummary",
-        "displayName": "Service Logs",
-        "awsProviderId": "AwsLocalProvider",
-        "clusterName": "cdk-synth-cluster",
-        "serviceName": "tinystacks-service"
-      };
+      "type": "AwsEcsSeviceSummary",
+      "displayName": "Service Logs",
+      "awsProviderId": "AwsLocalProvider",
+      "clusterName": "cdk-synth-cluster",
+      "serviceName": "tinystacks-service"
+    };
 
-      let thrownError;
-      try {
-        validatePropertyExists(testObject, "id", "testObject")
-      } catch (error) {
-        thrownError = error;
-      } finally { 
-        expect(thrownError).toBeDefined();
-        expect(thrownError).toHaveProperty('message', 'Error validating property id on object testObject');
-      }
-    
-
+    let thrownError;
+    try {
+      validatePropertyExists(testObject, "id", "testObject")
+    } catch (error) {
+      thrownError = error;
+    } finally {
+      expect(thrownError).toBeDefined();
+      expect(thrownError).toHaveProperty('message', `Property 'id' is missing on object type 'testObject' object ${JSON.stringify(testObject)}`);
+    }
   });
   test("test no error thrown when property exists on object", () => {
 
     const testObject = {
-        "id": "EcsWidget",
-        "type": "AwsEcsSeviceSummary",
-        "displayName": "Service Logs",
-        "awsProviderId": "AwsLocalProvider",
-        "clusterName": "cdk-synth-cluster",
-        "serviceName": "tinystacks-service"
-      };
+      "id": "EcsWidget",
+      "type": "AwsEcsSeviceSummary",
+      "displayName": "Service Logs",
+      "awsProviderId": "AwsLocalProvider",
+      "clusterName": "cdk-synth-cluster",
+      "serviceName": "tinystacks-service"
+    };
 
-      let thrownError;
-      try {
-        validatePropertyExists(testObject, "id", "testObject")
-      } catch (error) {
-        thrownError = error;
-      } finally { 
-        expect(thrownError).not.toBeDefined();
-      }
-    
+    let thrownError;
+    try {
+      validatePropertyExists(testObject, "id", "testObject")
+    } catch (error) {
+      thrownError = error;
+    } finally {
+      expect(thrownError).not.toBeDefined();
+    }
+
 
   });
 
- test("test error for missing widget reference", () => {
+  test("test error for missing widget reference", () => {
 
     const testWidgets = {
-     "SynthEcsServiceDeployments_1": {
+      "SynthEcsServiceDeployments_1": {
         "type": "AwsEcsSeviceSummary",
         "id": "SynthEcsServiceDeployments_1",
         "displayName": "Service Logs",
-        "provider": { $ref: '#/Console/providers/AwsLocalProvider'}, 
+        "provider": { $ref: '#/Console/providers/AwsLocalProvider' },
         "tabs": {}
-      
+
       },
       "SynthEcsServiceDeployments_2": {
         "type": "AwsEcsServiceDeployments",
         "id": "synth-ecs-service-deployments-2",
         "displayName": "Service Logs",
-        "provider": { $ref: '#/Console/providers/AwsLocalProvider'}, 
+        "provider": { $ref: '#/Console/providers/AwsLocalProvider' },
         "tabs": {}
       }
     }
 
-    const widgetRefs: Ref[] = [
-      
-      { 
-        $ref: "#/Console/widgets/SynthEcsServiceDeployments_1"
-      }, 
-      { 
-        $ref: "#/Console/widgets/SynthEcsServiceDeployments_3"
-      }
-    ];
-    
+    const widgetRefs = ['SynthEcsServiceDeployments_1', 'SynthEcsServiceDeployments_3'];
+
     let thrownError;
     try {
       validateWidgetReferences(testWidgets, widgetRefs);
     } catch (error) {
       thrownError = error;
-    } finally { 
+    } finally {
       expect(thrownError).toBeDefined();
-      expect(thrownError).toHaveProperty('message', 'Widget reference #/Console/widgets/SynthEcsServiceDeployments_3 is not defined');
+      expect(thrownError).toHaveProperty('message', 'Widget reference SynthEcsServiceDeployments_3 is not defined');
     }
   });
 
   test("test no error when all widget references are defined", () => {
 
     const testWidgets = {
-     "SynthEcsServiceDeployments_1": {
+      "SynthEcsServiceDeployments_1": {
         "type": "AwsEcsSeviceSummary",
         "id": "SynthEcsServiceDeployments_1",
         "displayName": "Service Logs",
-        "provider": { $ref: '#/Console/providers/AwsLocalProvider'}, 
+        "provider": { $ref: '#/Console/providers/AwsLocalProvider' },
         "tabs": {}
-      
+
       },
       "SynthEcsServiceDeployments_2": {
         "type": "AwsEcsServiceDeployments",
         "id": "synth-ecs-service-deployments-2",
         "displayName": "Service Logs",
-        "provider": { $ref: '#/Console/providers/AwsLocalProvider'}, 
+        "provider": { $ref: '#/Console/providers/AwsLocalProvider' },
         "tabs": {}
       }
     }
 
-    const widgetRefs: Ref[] = [
-      
-      { 
-        $ref: "#/Console/widgets/SynthEcsServiceDeployments_1"
-      }, 
-      { 
-        $ref: "#/Console/widgets/SynthEcsServiceDeployments_2"
-      }
-    ];
-    
+    const widgetRefs = ['SynthEcsServiceDeployments_1', 'SynthEcsServiceDeployments_2'];
+
     let thrownError;
     try {
       validateWidgetReferences(testWidgets, widgetRefs);
     } catch (error) {
       thrownError = error;
-    } finally { 
+    } finally {
       expect(thrownError).not.toBeDefined();
     }
   });
-  });
+});
 
   /*
   test("test error thrown for missing properties on widget", () => {
