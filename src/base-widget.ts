@@ -1,6 +1,8 @@
 import { validatePropertyExists } from './parser-utils.js';
 import { Widget } from '@tinystacks/ops-model';
 import { BaseProvider } from './base-provider.js';
+import { createRequire } from 'node:module';
+import { DEPENDENCIES_DIRECTORY } from './env-vars.js';
 
 // TODO: leave a note that this is a hydrated widget that we actually use in the backend/frontend to do work
 // YamlWidget: just for reading and writing config + intellisense
@@ -35,7 +37,12 @@ export abstract class BaseWidget implements Widget {
 
   private static async dynamicRequire (object: Widget, dependencySource: string): Promise<BaseWidget> {
     try {
-      const WidgetType: any = (await import(dependencySource))[object.type];
+      let dependencySourcePath = dependencySource;
+      if (DEPENDENCIES_DIRECTORY) {
+        const require = createRequire(DEPENDENCIES_DIRECTORY);
+        dependencySourcePath = require.resolve(dependencySource);
+      }
+      const WidgetType: any = (await import(dependencySourcePath))[object.type];
       const widget = await WidgetType.fromJson(object);
       return widget; 
     } catch(e){ 

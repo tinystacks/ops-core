@@ -1,5 +1,7 @@
 import { validatePropertyExists } from './parser-utils.js';
 import { Provider } from '@tinystacks/ops-model';
+import { createRequire } from 'node:module';
+import { DEPENDENCIES_DIRECTORY } from './env-vars.js';
 
 export abstract class BaseProvider implements Provider {
   id: string;
@@ -17,7 +19,12 @@ export abstract class BaseProvider implements Provider {
 
   private static async dynamicRequire (object: Provider, dependencySource?:string): Promise<BaseProvider> {
     try {
-      const providerType = (await import(dependencySource))[object.type];
+      let dependencySourcePath = dependencySource;
+      if (DEPENDENCIES_DIRECTORY) {
+        const require = createRequire(DEPENDENCIES_DIRECTORY);
+        dependencySourcePath = require.resolve(dependencySource);
+      }
+      const providerType = (await import(dependencySourcePath))[object.type];
       const provider = await providerType.fromJson(object);
       return provider; 
     } catch(e){ 
