@@ -26,7 +26,7 @@
     "setup-test-lint": "node ./scripts/setup-test-lint.js",
     "start": "node ./dist/server.js",
     "test": "jest",
-    "qa": "npm run lint && npm run test",
+    "qa": "npm run lint && npm run test-cov",
     "test-cov": "jest --coverage",
     "test-file": "jest ./test/clients/console-client/local.test.ts",
     "view-test-cov": "jest --coverage || true && open coverage/lcov-report/index.html"
