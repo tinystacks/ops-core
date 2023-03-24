@@ -1,11 +1,11 @@
 import { validateConsole } from './parser-utils.js';
 import {
-  Console, Dashboard, Provider, Widget, YamlConsole, YamlWidget, YamlProvider
+  Console, Dashboard, Provider, Widget, YamlConsole, YamlWidget, YamlProvider, YamlDashboard
 } from '@tinystacks/ops-model';
 import { DashboardParser } from './dashboard-parser.js';
 import { BaseProvider } from './base-provider.js';
 import { BaseWidget } from './base-widget.js';
-import BasicWidget from './basic-widget.js';
+import { BasicWidget } from './basic-widget.js';
 import { OtherProperties } from './types.js';
 
 type ExportRefs = { [ref: string]: string }[];
@@ -50,7 +50,7 @@ export class ConsoleParser implements Console {
 
     const dashboardObjects : Record<string, Dashboard> = {}; 
     Object.keys(dashboards).forEach((id) => { 
-      dashboardObjects[id] = DashboardParser.parse(dashboards[id], id);
+      dashboardObjects[id] = ConsoleParser.parseDashboard(dashboards[id], id);
     });
 
     const providerObjects: Record<string, Provider> = {}; 
@@ -190,6 +190,26 @@ export class ConsoleParser implements Console {
       providers: providerObjects,
       widgets: widgetObjects,
       dependencies: this.dependencies
+    };
+  }
+
+  static parseDashboard (yamlDashboard: YamlDashboard, id?:string): Dashboard { 
+
+    const {
+      route,
+      widgets
+    } = yamlDashboard; 
+
+    const widgetIds = widgets.map((item) => { 
+      const [_, __, ___, widgetId ] = item.$ref.split('/');
+      return widgetId;
+    });
+
+  
+    return {
+      route, 
+      widgetIds, 
+      id
     };
   }
 
