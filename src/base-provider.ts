@@ -19,11 +19,12 @@ export abstract class BaseProvider implements Provider {
 
   private static async dynamicRequire (object: Provider, dependencySource?:string): Promise<BaseProvider> {
     try {
-      let dependencySourcePath = dependencySource;
-      if (DEPENDENCIES_DIRECTORY) {
-        const require = createRequire(DEPENDENCIES_DIRECTORY);
-        dependencySourcePath = require.resolve(dependencySource);
-      }
+      // let dependencySourcePath = dependencySource;
+      // if (DEPENDENCIES_DIRECTORY) {
+      //   const require = createRequire(DEPENDENCIES_DIRECTORY);
+      //   dependencySourcePath = require.resolve(dependencySource);
+      // }
+      const dependencySourcePath = await import.meta.resolve(`${DEPENDENCIES_DIRECTORY}${dependencySource}`);
       const providerType = (await import(dependencySourcePath))[object.type];
       const provider = await providerType.fromJson(object);
       return provider; 

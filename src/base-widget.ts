@@ -37,11 +37,12 @@ export abstract class BaseWidget implements Widget {
 
   private static async dynamicRequire (object: Widget, dependencySource: string): Promise<BaseWidget> {
     try {
-      let dependencySourcePath = dependencySource;
-      if (DEPENDENCIES_DIRECTORY) {
-        const require = createRequire(DEPENDENCIES_DIRECTORY);
-        dependencySourcePath = require.resolve(dependencySource);
-      }
+      // let dependencySourcePath = dependencySource;
+      // if (DEPENDENCIES_DIRECTORY) {
+      //   const require = createRequire(DEPENDENCIES_DIRECTORY);
+      //   dependencySourcePath = require.resolve(dependencySource);
+      // }
+      const dependencySourcePath = await import.meta.resolve(`${DEPENDENCIES_DIRECTORY}${dependencySource}`);
       const WidgetType: any = (await import(dependencySourcePath))[object.type];
       const widget = await WidgetType.fromJson(object);
       return widget; 
