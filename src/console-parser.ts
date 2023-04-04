@@ -107,7 +107,7 @@ export class ConsoleParser implements Console {
     );
   }
 
-  toJson (): Console { 
+  toJson (): Console {
     const dashboards = Object.entries(this.dashboards).reduce<{ [id: string]: Dashboard }>((acc, [id, dashboard]) => {
       acc[id] = dashboard.toJson();
       return acc;
@@ -193,7 +193,7 @@ export class ConsoleParser implements Console {
     };
   }
 
-  static parseDashboard (yamlDashboard: YamlDashboard, id?:string): Dashboard { 
+  static parseDashboard (yamlDashboard: YamlDashboard, id?: string): Dashboard { 
 
     const {
       route,
@@ -248,9 +248,9 @@ export class ConsoleParser implements Console {
   widgetToYaml<T extends BaseWidget> (widget: T): ExportYamlWidget {
     const widgetJson = this.widgetToJson(widget);
     // TODO: Multifile
-    const providers = widget.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` }));
+    const providers = widgetJson.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` }));
     // TODO: Multifile
-    const children = widget.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }));
+    const children = widgetJson.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }));
     delete widgetJson.providerIds;
     delete widgetJson.childrenIds;
     return {

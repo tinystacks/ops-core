@@ -29,12 +29,12 @@ describe('BaseWidget Testing', () => {
     expect(widget.toJson()).toStrictEqual(fullBasicWidgetDef);
   });
 
-  it ('BasicWidget throws error on getData', () => {
+  it ('BasicWidget throws error on getData', async () => {
     const widget = BasicWidget.fromJson(fullBasicWidgetDef);
     const error = new Error('Method not implemented.');
     let thrownError: any;
     try {
-      widget.getData();
+      await widget.getData();
     } catch (e) {
       thrownError = e;
     } finally {
