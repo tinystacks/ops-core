@@ -159,11 +159,11 @@ describe("Test Console Validation", () => {
         new Parser().validatePropertiesOnWidgets(testWidgets);
       } catch (error) {
         thrownError = error;
-      } finally { 
+      } finally {
         expect(thrownError).toBeDefined();
         expect(thrownError).toHaveProperty('message', 'Error validating property id on object Widget');
       }
-    
+
 
   });
   test("test error thrown for duplicate widget ids", () => {
@@ -188,14 +188,14 @@ describe("Test Console Validation", () => {
         "showPermissions": true,
         "tabbedView": false
       }
-    ]; 
-    
+    ];
+
     let thrownError;
     try {
       new ParsingService().validateUniqueIdsForWidgets(testWidgets);
     } catch (error) {
       thrownError = error;
-    } finally { 
+    } finally {
       expect(thrownError).toBeDefined();
       expect(thrownError).toHaveProperty('message', 'Error found overlapping ids in Widgets');
     }
@@ -219,17 +219,17 @@ describe("Test Console Validation", () => {
         "clusterName": "cdk-synth-cluster",
         "serviceName": "tinystacks-service",
       }
-    ]; 
+    ];
 
     const widgetIds = ["synth-ecs-service-deployments-1", "synth-ecs-service-deployments-2", "synth-ecs-service-deployments-3"];
-    
+
     let thrownError;
     try {
       new ParsingService().validateAllWidgetsDefined(widgetIds, testWidgets);
       //validateAllWidgetsDefined
     } catch (error) {
       thrownError = error;
-    } finally { 
+    } finally {
       expect(thrownError).toBeDefined();
       expect(thrownError).toHaveProperty('message', 'Widget with id synth-ecs-service-deployments-3 is not defined');
     }
@@ -253,16 +253,16 @@ describe("Test Console Validation", () => {
         "clusterName": "cdk-synth-cluster",
         "serviceName": "tinystacks-service",
       }
-    ]; 
+    ];
 
     const widgetIds = ["synth-ecs-service-deployments-1", "synth-ecs-service-deployments-2"];
-    
+
     let thrownError;
     try {
       new ParsingService().validateAllWidgetsDefined(widgetIds, testWidgets);
     } catch (error) {
       thrownError = error;
-    } finally { 
+    } finally {
       expect(thrownError).not.toBeDefined();
     }
   });

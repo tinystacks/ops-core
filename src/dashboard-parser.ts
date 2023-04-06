@@ -1,26 +1,30 @@
 import { validatePropertyExists } from './parser-utils.js';
-import { Dashboard, YamlDashboard } from '@tinystacks/ops-model';
+import { Dashboard, YamlDashboard, Parameter } from '@tinystacks/ops-model';
 
 export class DashboardParser implements Dashboard {
   id: string;
   route: string;
   widgetIds: string[];
+  parameters: Parameter[];
 
   constructor (
     route: string,
-    widgetIds: string[] = [], 
-    id: string
+    widgetIds: string[] = [],
+    id: string,
+    parameters: Parameter[] = []
   ) {
     this.id = id;
     this.route = route;
     this.widgetIds = widgetIds;
+    this.parameters = parameters;
   }
 
   static parse (yamlDashboard: YamlDashboard, id?:string): Dashboard { 
 
     const {
       route,
-      widgets
+      widgets,
+      parameters
     } = yamlDashboard; 
 
     const widgetIds = widgets.map((item) => { 
@@ -31,34 +35,38 @@ export class DashboardParser implements Dashboard {
   
     return {
       route, 
-      widgetIds, 
+      widgetIds,
+      parameters 
       id
     };
   }
 
   static fromJson (object: Dashboard): DashboardParser {
-    const { 
+    const {
       id,
       route,
-      widgetIds
-    } = object; 
+      widgetIds,
+      parameters
+    } = object;
 
     validatePropertyExists(object, 'widgetIds', 'Dashboard');
-    validatePropertyExists(object, 'route', 'Dashboard'); 
+    validatePropertyExists(object, 'route', 'Dashboard');
 
     return new DashboardParser (
-      route, 
-      widgetIds, 
-      id
+      route,
+      widgetIds,
+      id,
+      parameters
     );
   }
 
-  toJson (): Dashboard { 
+  toJson (): Dashboard {
 
-    return { 
-      id: this.id, 
-      route: this.route, 
-      widgetIds: this.widgetIds
+    return {
+      id: this.id,
+      route: this.route,
+      widgetIds: this.widgetIds,
+      parameters: this.parameters
     };
   }
 
@@ -68,7 +76,8 @@ export class DashboardParser implements Dashboard {
     return {
       route: this.route,
       widgets,
-      id: this.id
+      id: this.id,
+      parameters: this.parameters
     };
   }
 

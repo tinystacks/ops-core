@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.20.13",
-    "@tinystacks/ops-model": "0.0.0",
+    "@tinystacks/ops-model": "file:../ops-model/tinystacks-ops-model-0.0.1.tgz",
     "@types/react": "^18.0.28",
     "body-parser": "^1.20.1",
     "dotenv": "^16.0.3",

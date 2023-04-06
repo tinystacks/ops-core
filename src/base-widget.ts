@@ -1,6 +1,7 @@
 import { validatePropertyExists } from './parser-utils.js';
 import { Widget } from '@tinystacks/ops-model';
 import { BaseProvider } from './base-provider.js';
+import { OtherProperties } from './types.js';
 
 // TODO: leave a note that this is a hydrated widget that we actually use in the backend/frontend to do work
 // YamlWidget: just for reading and writing config + intellisense
@@ -44,19 +45,19 @@ export abstract class BaseWidget implements Widget {
     }
   }
 
-  toJson (): Widget { 
-    return { 
+  toJson (): Widget {
+    return {
       id: this.id,
-      type: this.type, 
+      type: this.type,
       displayName: this.displayName,
       providerIds: this.providerIds,
       childrenIds: this.childrenIds,
       description: this.description,
       displayOptions: this.displayOptions
-    };    
+    };
   }
 
-  abstract getData (providers?: BaseProvider[], overrides?: any): void | Promise<void>;
+  abstract getData (providers?: BaseProvider[], overrides?: any, parameters?: OtherProperties): void | Promise<void>;
   abstract render (
     children?: (Widget & { renderedElement: JSX.Element })[],
     overridesCallback?: (overrides: any) => void
