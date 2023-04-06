@@ -118,7 +118,7 @@ describe('validateProviderReferences', () => {
         type: 'MockProvider'
       }
     };
-    const providerReferences = ['MockProvider', 'MockProvider2']
+    const providerReferences = ['MockProvider', 'MockProvider2'];
     let thrownError;
     try {
       validateProviderReferences(providers, providerReferences);
@@ -139,7 +139,7 @@ describe('validateProviderReferences', () => {
         type: 'MockProvider2'
       }
     };
-    const providerReferences = ['MockProvider', 'MockProvider2']
+    const providerReferences = ['MockProvider', 'MockProvider2'];
     let thrownError;
     try {
       validateProviderReferences(providers, providerReferences);
@@ -220,11 +220,11 @@ test('validateConsole', () => {
         new Parser().validatePropertiesOnWidgets(testWidgets);
       } catch (error) {
         thrownError = error;
-      } finally { 
+      } finally {
         expect(thrownError).toBeDefined();
         expect(thrownError).toHaveProperty('message', 'Error validating property id on object Widget');
       }
-    
+
 
   });
   it("test error thrown for duplicate widget ids", () => {
@@ -249,14 +249,14 @@ test('validateConsole', () => {
         "showPermissions": true,
         "tabbedView": false
       }
-    ]; 
-    
+    ];
+
     let thrownError;
     try {
       new ParsingService().validateUniqueIdsForWidgets(testWidgets);
     } catch (error) {
       thrownError = error;
-    } finally { 
+    } finally {
       expect(thrownError).toBeDefined();
       expect(thrownError).toHaveProperty('message', 'Error found overlapping ids in Widgets');
     }
@@ -280,17 +280,17 @@ test('validateConsole', () => {
         "clusterName": "cdk-synth-cluster",
         "serviceName": "tinystacks-service",
       }
-    ]; 
+    ];
 
     const widgetIds = ["synth-ecs-service-deployments-1", "synth-ecs-service-deployments-2", "synth-ecs-service-deployments-3"];
-    
+
     let thrownError;
     try {
       new ParsingService().validateAllWidgetsDefined(widgetIds, testWidgets);
       //validateAllWidgetsDefined
     } catch (error) {
       thrownError = error;
-    } finally { 
+    } finally {
       expect(thrownError).toBeDefined();
       expect(thrownError).toHaveProperty('message', 'Widget with id synth-ecs-service-deployments-3 is not defined');
     }
@@ -314,16 +314,16 @@ test('validateConsole', () => {
         "clusterName": "cdk-synth-cluster",
         "serviceName": "tinystacks-service",
       }
-    ]; 
+    ];
 
     const widgetIds = ["synth-ecs-service-deployments-1", "synth-ecs-service-deployments-2"];
-    
+
     let thrownError;
     try {
       new ParsingService().validateAllWidgetsDefined(widgetIds, testWidgets);
     } catch (error) {
       thrownError = error;
-    } finally { 
+    } finally {
       expect(thrownError).not.toBeDefined();
     }
   });
