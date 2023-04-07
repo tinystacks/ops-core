@@ -1,4 +1,4 @@
-import { validatePropertyExists } from './parser-utils.js';
+import { dynamicRequire, validatePropertyExists } from './parser-utils.js';
 import { Widget } from '@tinystacks/ops-model';
 import { BaseProvider } from './base-provider.js';
 
@@ -30,18 +30,7 @@ export abstract class BaseWidget implements Widget {
     validatePropertyExists(object, 'id', 'Widget');
     validatePropertyExists(object, 'type', 'Widget');
     validatePropertyExists(object, 'displayName', 'Widget');
-    return BaseWidget.dynamicRequire(object, dependencySource);
-  }
-
-  private static async dynamicRequire (object: Widget, dependencySource: string): Promise<BaseWidget> {
-    try {
-      const WidgetType: any = (await import(dependencySource))[object.type];
-      const widget = await WidgetType.fromJson(object);
-      return widget; 
-    } catch(e){ 
-      console.error(e);
-      throw Error(`Error trying to load module ${dependencySource} for type ${object.type}`);
-    }
+    return dynamicRequire<Widget>(object, dependencySource);
   }
 
   toJson (): Widget { 

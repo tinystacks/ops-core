@@ -1,11 +1,11 @@
 import { validateConsole } from './parser-utils.js';
 import {
-  Console, Dashboard, Provider, Widget, YamlConsole, YamlWidget, YamlProvider
+  Console, Dashboard, Provider, Widget, YamlConsole, YamlWidget, YamlProvider, YamlDashboard
 } from '@tinystacks/ops-model';
 import { DashboardParser } from './dashboard-parser.js';
 import { BaseProvider } from './base-provider.js';
 import { BaseWidget } from './base-widget.js';
-import BasicWidget from './basic-widget.js';
+import { BasicWidget } from './basic-widget.js';
 import { OtherProperties } from './types.js';
 
 type ExportRefs = { [ref: string]: string }[];
@@ -50,7 +50,7 @@ export class ConsoleParser implements Console {
 
     const dashboardObjects : Record<string, Dashboard> = {}; 
     Object.keys(dashboards).forEach((id) => { 
-      dashboardObjects[id] = DashboardParser.parse(dashboards[id], id);
+      dashboardObjects[id] = ConsoleParser.parseDashboard(dashboards[id], id);
     });
 
     const providerObjects: Record<string, Provider> = {}; 
@@ -107,7 +107,7 @@ export class ConsoleParser implements Console {
     );
   }
 
-  toJson (): Console { 
+  toJson (): Console {
     const dashboards = Object.entries(this.dashboards).reduce<{ [id: string]: Dashboard }>((acc, [id, dashboard]) => {
       acc[id] = dashboard.toJson();
       return acc;
@@ -193,6 +193,26 @@ export class ConsoleParser implements Console {
     };
   }
 
+  static parseDashboard (yamlDashboard: YamlDashboard, id?: string): Dashboard { 
+
+    const {
+      route,
+      widgets
+    } = yamlDashboard; 
+
+    const widgetIds = widgets.map((item) => { 
+      const [_, __, ___, widgetId ] = item.$ref.split('/');
+      return widgetId;
+    });
+
+  
+    return {
+      route, 
+      widgetIds, 
+      id
+    };
+  }
+
   static parseProvider (yamlProvider: any, id: string): Provider { 
     //need to figure out credentials
     return {
@@ -228,9 +248,9 @@ export class ConsoleParser implements Console {
   widgetToYaml<T extends BaseWidget> (widget: T): ExportYamlWidget {
     const widgetJson = this.widgetToJson(widget);
     // TODO: Multifile
-    const providers = widget.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` }));
+    const providers = widgetJson.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` }));
     // TODO: Multifile
-    const children = widget.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }));
+    const children = widgetJson.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }));
     delete widgetJson.providerIds;
     delete widgetJson.childrenIds;
     return {
