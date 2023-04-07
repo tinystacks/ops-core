@@ -38,8 +38,8 @@ export abstract class BaseWidget implements Widget {
     try {
       const WidgetType: any = (await import(dependencySource))[object.type];
       const widget = await WidgetType.fromJson(object);
-      return widget; 
-    } catch(e){ 
+      return widget;
+    } catch(e){
       console.error(e);
       throw Error(`Error trying to load module ${dependencySource} for type ${object.type}`);
     }

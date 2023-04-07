@@ -48,8 +48,8 @@ export class ConsoleParser implements Console {
       dependencies
     } = consoleYaml;
 
-    const dashboardObjects : Record<string, Dashboard> = {}; 
-    Object.keys(dashboards).forEach((id) => { 
+    const dashboardObjects : Record<string, Dashboard> = {};
+    Object.keys(dashboards).forEach((id) => {
       dashboardObjects[id] = DashboardParser.parse(dashboards[id], id);
     });
 
@@ -107,7 +107,7 @@ export class ConsoleParser implements Console {
     );
   }
 
-  toJson (): Console { 
+  toJson (): Console {
     const dashboards = Object.entries(this.dashboards).reduce<{ [id: string]: Dashboard }>((acc, [id, dashboard]) => {
       acc[id] = dashboard.toJson();
       return acc;
@@ -193,7 +193,7 @@ export class ConsoleParser implements Console {
     };
   }
 
-  static parseProvider (yamlProvider: any, id: string): Provider { 
+  static parseProvider (yamlProvider: any, id: string): Provider {
     //need to figure out credentials
     return {
       ...yamlProvider,

@@ -19,24 +19,24 @@ export class DashboardParser implements Dashboard {
     this.parameters = parameters;
   }
 
-  static parse (yamlDashboard: YamlDashboard, id?:string): Dashboard { 
+  static parse (yamlDashboard: YamlDashboard, id?:string): Dashboard {
 
     const {
       route,
       widgets,
       parameters
-    } = yamlDashboard; 
+    } = yamlDashboard;
 
-    const widgetIds = widgets.map((item) => { 
+    const widgetIds = widgets.map((item) => {
       const [_, __, ___, widgetId ] = item.$ref.split('/');
       return widgetId;
     });
 
-  
+
     return {
-      route, 
+      route,
       widgetIds,
-      parameters 
+      parameters,
       id
     };
   }
