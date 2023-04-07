@@ -1,44 +1,50 @@
 import { validatePropertyExists } from './parser-utils.js';
-import { Dashboard } from '@tinystacks/ops-model';
+import { Dashboard, Parameter } from '@tinystacks/ops-model';
 
 export class DashboardParser implements Dashboard {
   id: string;
   route: string;
   widgetIds: string[];
+  parameters: Parameter[];
 
   constructor (
     route: string,
-    widgetIds: string[] = [], 
-    id: string
+    widgetIds: string[] = [],
+    id: string,
+    parameters: Parameter[] = []
   ) {
     this.id = id;
     this.route = route;
     this.widgetIds = widgetIds;
+    this.parameters = parameters;
   }
 
   static fromJson (object: Dashboard): DashboardParser {
-    const { 
+    const {
       id,
       route,
-      widgetIds
-    } = object; 
+      widgetIds,
+      parameters
+    } = object;
 
     validatePropertyExists(object, 'widgetIds', 'Dashboard');
-    validatePropertyExists(object, 'route', 'Dashboard'); 
+    validatePropertyExists(object, 'route', 'Dashboard');
 
     return new DashboardParser (
-      route, 
-      widgetIds, 
-      id
+      route,
+      widgetIds,
+      id,
+      parameters
     );
   }
 
-  toJson (): Dashboard { 
+  toJson (): Dashboard {
 
-    return { 
-      id: this.id, 
-      route: this.route, 
-      widgetIds: this.widgetIds
+    return {
+      id: this.id,
+      route: this.route,
+      widgetIds: this.widgetIds,
+      parameters: this.parameters
     };
   }
 
@@ -48,7 +54,8 @@ export class DashboardParser implements Dashboard {
     return {
       route: this.route,
       widgets,
-      id: this.id
+      id: this.id,
+      parameters: this.parameters
     };
   }
 }

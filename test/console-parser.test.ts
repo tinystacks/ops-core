@@ -333,7 +333,7 @@ describe('ConsoleParser tests', () => {
     const yamlDashboard: YamlDashboard = {
       route: 'mock-dashboard',
       widgets: [
-        widgetRef   
+        widgetRef
       ]
     };
 
@@ -343,7 +343,7 @@ describe('ConsoleParser tests', () => {
       widgetIds: [
         'Md1'
       ]
-    })
+    });
   });
   it('parseProvider', () => {
     const yamlProvider = {
@@ -391,7 +391,7 @@ describe('ConsoleParser tests', () => {
       ],
       providerIds: ['MyProvider'],
       childrenIds: ['Md1']
-    })
+    });
   });
   it('widgetToJson', () => {
     const consoleParser = new ConsoleParser(
@@ -406,23 +406,23 @@ describe('ConsoleParser tests', () => {
       description: 'a mock widget',
       otherProp: 'other value'
     };
-    const mockWidget = {
+    const testWidget = {
       toJson: () => mockWidgetJson
     } as unknown as BaseWidget;
 
     const mockBaseWidgetJson = {
       id: 'mock-basic-widget',
-      type: 'MockBasicWidget', 
+      type: 'MockBasicWidget',
       displayName: 'Mock Basic Widget',
       description: 'a mock basic widget'
     };
-    mockBasicWidgetToJson.mockReturnValue(mockBaseWidgetJson)
+    mockBasicWidgetToJson.mockReturnValue(mockBaseWidgetJson);
 
-    const jsonWidget = consoleParser.widgetToJson(mockWidget);
+    const jsonWidget = consoleParser.widgetToJson(testWidget);
 
     expect(jsonWidget).toEqual({
       id: 'mock-basic-widget',
-      type: 'MockBasicWidget', 
+      type: 'MockBasicWidget',
       displayName: 'Mock Basic Widget',
       description: 'a mock basic widget',
       otherProp: 'other value'
@@ -441,25 +441,25 @@ describe('ConsoleParser tests', () => {
       description: 'a mock widget',
       otherProp: 'other value'
     };
-    const mockWidget = {
+    const testWidget = {
       toJson: () => mockWidgetJson
     } as unknown as BaseWidget;
 
     const mockBaseWidgetJson = {
       id: 'mock-basic-widget',
-      type: 'MockBasicWidget', 
+      type: 'MockBasicWidget',
       displayName: 'Mock Basic Widget',
       description: 'a mock basic widget',
       providerIds: ['MockProvider'],
       childrenIds: ['MockChildWidget']
     };
-    mockBasicWidgetToJson.mockReturnValue(mockBaseWidgetJson)
+    mockBasicWidgetToJson.mockReturnValue(mockBaseWidgetJson);
 
-    const jsonWidget = consoleParser.widgetToYaml(mockWidget);
+    const jsonWidget = consoleParser.widgetToYaml(testWidget);
 
     expect(jsonWidget).toEqual({
       id: 'mock-basic-widget',
-      type: 'MockBasicWidget', 
+      type: 'MockBasicWidget',
       displayName: 'Mock Basic Widget',
       description: 'a mock basic widget',
       otherProp: 'other value',
