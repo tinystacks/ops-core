@@ -1,9 +1,11 @@
+import { Parameter } from '@tinystacks/ops-model';
 import { DashboardParser } from '../src/dashboard-parser.js';
 
 const basicDashboard = {
   id: 'MockDashboard',
   route: '/',
-  widgetIds: ['MockWidget']
+  widgetIds: ['MockWidget'],
+  parameters: [] as Parameter[]
 };
 
 const yamlDashboard = {
@@ -11,7 +13,8 @@ const yamlDashboard = {
   route: '/',
   widgets: [{
     '$ref': '#/Console/widgets/MockWidget'
-  }]
+  }],
+  parameters: [] as Parameter[]
 };
 
 describe('Dashboard', () => {

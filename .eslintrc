@@ -82,6 +82,7 @@
       }
     ],
     "import/no-cycle": "error",
-    "no-shadow": "error"
+    "no-shadow": "error",
+    "no-trailing-spaces": "error"
   }
 }
