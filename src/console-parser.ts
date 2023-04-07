@@ -1,6 +1,6 @@
 import { validateConsole } from './parser-utils.js';
 import {
-  Console, Dashboard, Provider, Widget, YamlConsole, YamlWidget, YamlProvider, YamlDashboard
+  Console, Dashboard, Provider, Widget, YamlConsole, YamlWidget, YamlProvider, YamlDashboard, Constant
 } from '@tinystacks/ops-model';
 import { DashboardParser } from './dashboard-parser.js';
 import { BaseProvider } from './base-provider.js';
@@ -24,19 +24,22 @@ export class ConsoleParser implements Console {
   dashboards: Record<string, DashboardParser>;
   widgets: Record<string, BaseWidget>;
   dependencies?: Record<string, string>;
+  constants?: Record<string, Constant>;
 
   constructor (
     name: string,
     providers: Record<string, BaseProvider>,
     dashboards: Record<string, DashboardParser>,
     widgets: Record<string, BaseWidget>,
-    dependencies?: Console['dependencies']
+    dependencies?: Console['dependencies'],
+    constants?: Record<string, Constant>
   ) {
     this.name = name;
     this.providers = providers;
     this.dashboards = dashboards;
     this.widgets = widgets;
     this.dependencies = dependencies;
+    this.constants = constants;
   }
 
   static parse (consoleYaml: YamlConsole): Console {
@@ -45,7 +48,8 @@ export class ConsoleParser implements Console {
       providers,
       dashboards,
       widgets,
-      dependencies
+      dependencies,
+      constants
     } = consoleYaml;
 
     const dashboardObjects : Record<string, Dashboard> = {};
@@ -68,7 +72,8 @@ export class ConsoleParser implements Console {
       providers: providerObjects,
       dashboards: dashboardObjects,
       widgets: widgetObjects,
-      dependencies
+      dependencies,
+      constants
     };
   }
 
@@ -78,7 +83,8 @@ export class ConsoleParser implements Console {
       dashboards,
       providers,
       widgets,
-      dependencies
+      dependencies,
+      constants
     } = object;
 
     validateConsole(object);
@@ -103,7 +109,8 @@ export class ConsoleParser implements Console {
       resolvedProviders,
       dashboardObjects,
       resolvedWidgets,
-      dependencies
+      dependencies,
+      constants
     );
   }
 
@@ -127,7 +134,8 @@ export class ConsoleParser implements Console {
       dashboards,
       providers,
       widgets,
-      dependencies: this.dependencies
+      dependencies: this.dependencies,
+      constants: this.constants
     };
   }
 
@@ -189,7 +197,8 @@ export class ConsoleParser implements Console {
       dashboards: dashboardObjects,
       providers: providerObjects,
       widgets: widgetObjects,
-      dependencies: this.dependencies
+      dependencies: this.dependencies,
+      constants: this.constants
     };
   }
 
