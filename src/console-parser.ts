@@ -32,7 +32,7 @@ export class ConsoleParser implements Console {
     dashboards: Record<string, DashboardParser>,
     widgets: Record<string, BaseWidget>,
     dependencies?: Console['dependencies'],
-    constants?: Record<string, Constant>
+    constants: Record<string, Constant> = {}
   ) {
     this.name = name;
     this.providers = providers;
@@ -49,7 +49,7 @@ export class ConsoleParser implements Console {
       dashboards,
       widgets,
       dependencies,
-      constants
+      constants = {}
     } = consoleYaml;
 
     const dashboardObjects : Record<string, Dashboard> = {};
@@ -84,7 +84,7 @@ export class ConsoleParser implements Console {
       providers,
       widgets,
       dependencies,
-      constants
+      constants = {}
     } = object;
 
     validateConsole(object);
