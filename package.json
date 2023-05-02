@@ -28,7 +28,7 @@
     "test": "jest",
     "qa": "npm run lint && npm run test-cov",
     "test-cov": "jest --coverage",
-    "test-file": "jest ./test/parser-utils.test.ts",
+    "test-file": "jest ./test/tinystacks-error.test.ts",
     "view-test-cov": "jest --coverage || true && open coverage/lcov-report/index.html"
   },
   "devDependencies": {
