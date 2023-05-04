@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@tinystacks/ops-model": "^0.2.0",
-    "@types/react": "^18.0.28",
+    "@types/react": "^18.0.35",
     "lodash.get": "^4.4.2",
     "lodash.isnil": "^4.0.0"
   }
