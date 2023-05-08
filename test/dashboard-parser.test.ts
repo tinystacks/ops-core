@@ -5,7 +5,8 @@ const basicDashboard = {
   id: 'MockDashboard',
   route: '/',
   widgetIds: ['MockWidget'],
-  parameters: [] as Parameter[]
+  parameters: [] as Parameter[],
+  description: undefined as string | undefined
 };
 
 const yamlDashboard = {
@@ -14,7 +15,8 @@ const yamlDashboard = {
   widgets: [{
     '$ref': '#/Console/widgets/MockWidget'
   }],
-  parameters: [] as Parameter[]
+  parameters: [] as Parameter[],
+  description: undefined as string | undefined
 };
 
 describe('Dashboard', () => {

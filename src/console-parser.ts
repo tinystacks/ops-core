@@ -207,7 +207,8 @@ export class ConsoleParser implements Console {
     const {
       route,
       widgets,
-      parameters
+      parameters,
+      description
     } = yamlDashboard;
 
     const widgetIds = widgets.map((item) => {
@@ -220,6 +221,7 @@ export class ConsoleParser implements Console {
       route,
       widgetIds,
       parameters,
+      description,
       id
     };
   }
