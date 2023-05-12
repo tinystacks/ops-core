@@ -6,17 +6,20 @@ export class DashboardParser implements Dashboard {
   route: string;
   widgetIds: string[];
   parameters: Parameter[];
+  description?: string;
 
   constructor (
     route: string,
     widgetIds: string[] = [],
     id: string,
-    parameters: Parameter[] = []
+    parameters: Parameter[] = [],
+    description?: string
   ) {
     this.id = id;
     this.route = route;
     this.widgetIds = widgetIds;
     this.parameters = parameters;
+    this.description = description;
   }
 
   static fromJson (object: Dashboard): DashboardParser {
@@ -24,7 +27,8 @@ export class DashboardParser implements Dashboard {
       id,
       route,
       widgetIds,
-      parameters
+      parameters,
+      description
     } = object;
 
     validatePropertyExists(object, 'widgetIds', 'Dashboard');
@@ -34,7 +38,8 @@ export class DashboardParser implements Dashboard {
       route,
       widgetIds,
       id,
-      parameters
+      parameters,
+      description
     );
   }
 
@@ -44,7 +49,8 @@ export class DashboardParser implements Dashboard {
       id: this.id,
       route: this.route,
       widgetIds: this.widgetIds,
-      parameters: this.parameters
+      parameters: this.parameters,
+      description: this.description
     };
   }
 
@@ -55,7 +61,8 @@ export class DashboardParser implements Dashboard {
       route: this.route,
       widgets,
       id: this.id,
-      parameters: this.parameters
+      parameters: this.parameters,
+      description: this.description
     };
   }
 }
