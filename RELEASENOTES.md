@@ -1,1 +1,1 @@
-- Add description to dashboard
+Try to publish a new version
