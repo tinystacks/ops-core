@@ -1,3 +1,7 @@
+v0.2.0
+---
+Try to publish a new version
+ 
 v0.1.0
 ---
 - Add TinyStacksError class
