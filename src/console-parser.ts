@@ -20,6 +20,7 @@ type ExportConsoleYaml = Omit<YamlConsole, 'widgets'> & {
 
 export class ConsoleParser implements Console {
   name: string;
+  repository?: { url?: string; branch?: string; configFile?: string };
   providers: Record<string, BaseProvider>;
   dashboards: Record<string, DashboardParser>;
   widgets: Record<string, BaseWidget>;
@@ -32,7 +33,8 @@ export class ConsoleParser implements Console {
     dashboards: Record<string, DashboardParser>,
     widgets: Record<string, BaseWidget>,
     dependencies?: Console['dependencies'],
-    constants: Record<string, Constant> = {}
+    constants: Record<string, Constant> = {},
+    repository?: { url?: string; branch?: string; configFile?: string }
   ) {
     this.name = name;
     this.providers = providers;
@@ -40,6 +42,7 @@ export class ConsoleParser implements Console {
     this.widgets = widgets;
     this.dependencies = dependencies;
     this.constants = constants;
+    this.repository = repository;
   }
 
   static parse (consoleYaml: YamlConsole): Console {
@@ -49,7 +52,8 @@ export class ConsoleParser implements Console {
       dashboards,
       widgets,
       dependencies,
-      constants = {}
+      constants = {},
+      repository
     } = consoleYaml;
 
     const dashboardObjects : Record<string, Dashboard> = {};
@@ -73,7 +77,8 @@ export class ConsoleParser implements Console {
       dashboards: dashboardObjects,
       widgets: widgetObjects,
       dependencies,
-      constants
+      constants,
+      repository
     };
   }
 
@@ -84,7 +89,8 @@ export class ConsoleParser implements Console {
       providers,
       widgets,
       dependencies,
-      constants = {}
+      constants = {},
+      repository
     } = object;
 
     validateConsole(object);
@@ -110,7 +116,8 @@ export class ConsoleParser implements Console {
       dashboardObjects,
       resolvedWidgets,
       dependencies,
-      constants
+      constants,
+      repository
     );
   }
 
@@ -135,7 +142,8 @@ export class ConsoleParser implements Console {
       providers,
       widgets,
       dependencies: this.dependencies,
-      constants: this.constants
+      constants: this.constants,
+      repository: this.repository
     };
   }
 
@@ -198,7 +206,8 @@ export class ConsoleParser implements Console {
       providers: providerObjects,
       widgets: widgetObjects,
       dependencies: this.dependencies,
-      constants: this.constants
+      constants: this.constants,
+      repository: this.repository
     };
   }
 
