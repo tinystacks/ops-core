@@ -1,3 +1,7 @@
+v0.3.1
+---
+- Use structured errors when throwing
+ 
 v0.3.0
 ---
 
