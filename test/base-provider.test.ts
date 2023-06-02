@@ -1,5 +1,6 @@
 import { BaseProvider } from '../src/base-provider.js';
 import { BasicProvider } from '../src/basic-provider.js';
+import TinyStacksError from '../src/tinystacks-error.js';
 
 const fullBasicProviderDef: any = {
   id: 'MockProvider',
@@ -25,7 +26,10 @@ describe('BaseProvider', () => {
   it ('throw when type is not present',  async () => {
     const providerJson = { ...fullBasicProviderDef };
     delete providerJson.type;
-    const error = new Error(`Property 'type' is missing on object type 'Provider' object ${JSON.stringify(providerJson)}`);
+    const error = TinyStacksError.fromJson({
+      message: `Property 'type' is missing on object type 'Provider' object ${JSON.stringify(providerJson)}`,
+      status: 400
+    });
     let thrownError: any;
     try {
       await BaseProvider.fromJson(providerJson, require.resolve('../src/basic-provider'));

@@ -1,5 +1,6 @@
 import { Parameter } from '@tinystacks/ops-model';
 import { DashboardParser } from '../src/dashboard-parser.js';
+import TinyStacksError from '../src/tinystacks-error.js';
 
 const basicDashboard = {
   id: 'MockDashboard',
@@ -31,8 +32,10 @@ describe('Dashboard', () => {
   it('missing widgetIds throws', () => {
     const dashJson: any = { ...basicDashboard };
     delete dashJson.widgetIds;
-    const error =
-      new Error(`Property 'widgetIds' is missing on object type 'Dashboard' object ${JSON.stringify(dashJson)}`);
+    const error = TinyStacksError.fromJson({
+      message: `Property 'widgetIds' is missing on object type 'Dashboard' object ${JSON.stringify(dashJson)}`,
+      status: 400
+    });
     let thrownError: any;
     try {
       DashboardParser.fromJson(dashJson);
@@ -46,8 +49,10 @@ describe('Dashboard', () => {
   it('missing route throws', () => {
     const dashJson: any = { ...basicDashboard };
     delete dashJson.route;
-    const error =
-      new Error(`Property 'route' is missing on object type 'Dashboard' object ${JSON.stringify(dashJson)}`);
+    const error = TinyStacksError.fromJson({
+      message: `Property 'route' is missing on object type 'Dashboard' object ${JSON.stringify(dashJson)}`,
+      status: 400
+    });
     let thrownError: any;
     try {
       DashboardParser.fromJson(dashJson);

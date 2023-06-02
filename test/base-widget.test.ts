@@ -1,5 +1,6 @@
 import { BaseWidget } from '../src/base-widget.js';
 import { BasicWidget } from '../src/basic-widget.js';
+import { TinyStacksError } from '../src/tinystacks-error.js';
 
 const fullBasicWidgetDef: any = {
   id: 'mock-widget',
@@ -31,7 +32,10 @@ describe('BaseWidget Testing', () => {
 
   it ('BasicWidget throws error on getData', async () => {
     const widget = BasicWidget.fromJson(fullBasicWidgetDef);
-    const error = new Error('Method not implemented.');
+    const error = TinyStacksError.fromJson({
+      message: 'Method not implemented.',
+      status: 400
+    });
     let thrownError: any;
     try {
       await widget.getData();
@@ -45,7 +49,10 @@ describe('BaseWidget Testing', () => {
 
   it ('BasicWidget throws error on render', () => {
     const widget = BasicWidget.fromJson(fullBasicWidgetDef);
-    const error = new Error('Method not implemented.');
+    const error = TinyStacksError.fromJson({
+      message: 'Method not implemented.',
+      status: 400
+    });
     let thrownError: any;
     try {
       widget.render();
@@ -60,7 +67,10 @@ describe('BaseWidget Testing', () => {
   it ('throw when id is not present',  async () => {
     const widgetJson = { ...fullBasicWidgetDef };
     delete widgetJson.id;
-    const error = new Error(`Property 'id' is missing on object type 'Widget' object ${JSON.stringify(widgetJson)}`);
+    const error = TinyStacksError.fromJson({
+      message: `Property 'id' is missing on object type 'Widget' object ${JSON.stringify(widgetJson)}`,
+      status: 400
+    });
     let thrownError: any;
     try {
       await BaseWidget.fromJson(widgetJson, require.resolve('../src/basic-widget'));
@@ -75,7 +85,10 @@ describe('BaseWidget Testing', () => {
   it ('throw when type is not present',  async () => {
     const widgetJson = { ...fullBasicWidgetDef };
     delete widgetJson.type;
-    const error = new Error(`Property 'type' is missing on object type 'Widget' object ${JSON.stringify(widgetJson)}`);
+    const error = TinyStacksError.fromJson({
+      message: `Property 'type' is missing on object type 'Widget' object ${JSON.stringify(widgetJson)}`,
+      status: 400
+    });
     let thrownError: any;
     try {
       await BaseWidget.fromJson(widgetJson, require.resolve('../src/basic-widget'));
@@ -90,7 +103,10 @@ describe('BaseWidget Testing', () => {
   it ('throw when displayName is not present',  async () => {
     const widgetJson = { ...fullBasicWidgetDef };
     delete widgetJson.displayName;
-    const error = new Error(`Property 'displayName' is missing on object type 'Widget' object ${JSON.stringify(widgetJson)}`);
+    const error = TinyStacksError.fromJson({
+      message: `Property 'displayName' is missing on object type 'Widget' object ${JSON.stringify(widgetJson)}`,
+      status: 400
+    });
     let thrownError: any;
     try {
       await BaseWidget.fromJson(widgetJson, require.resolve('../src/basic-widget'));
