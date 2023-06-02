@@ -1,8 +1,8 @@
 import get from 'lodash.get';
 import isNil from 'lodash.isnil';
 import { Console as ConsoleType, Provider, Widget } from '@tinystacks/ops-model';
-import { BaseWidget } from './base-widget';
-import TinyStacksError from './tinystacks-error';
+import { BaseWidget } from './base-widget.js';
+import TinyStacksError from './tinystacks-error.js';
 
 export function validatePropertyExists (obj: any, propertyName: string, objectType: string){
   const propertyValue = get(obj, propertyName);
