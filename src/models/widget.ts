@@ -1,13 +1,8 @@
-import { dynamicRequire, validatePropertyExists } from './parser-utils.js';
 import { Widget } from '@tinystacks/ops-model';
-import { BaseProvider } from './base-provider.js';
-import { OtherProperties } from './types.js';
+import { Parsable } from '../types.js';
+import { dynamicRequire, validatePropertyExists } from '../parser-utils.js';
 
-// TODO: leave a note that this is a hydrated widget that we actually use in the backend/frontend to do work
-// YamlWidget: just for reading and writing config + intellisense
-// Widget: for transacting and passing around widgets
-
-export abstract class BaseWidget implements Widget {
+export abstract class WidgetModel implements Widget, Parsable<Widget, WidgetModel> {
   id: string;
   type: string;
   displayName: string;
@@ -15,6 +10,7 @@ export abstract class BaseWidget implements Widget {
   providerIds?: string[];
   childrenIds?: string[];
   description?: string;
+  fromJson: (object: Widget, dependencySource: string) => WidgetModel | Promise<WidgetModel>;
 
   constructor (widgetProps: Widget) {
     const { id, type, displayName, providerIds, childrenIds, displayOptions, description } = widgetProps;
@@ -25,13 +21,14 @@ export abstract class BaseWidget implements Widget {
     this.childrenIds = childrenIds;
     this.description = description;
     this.displayOptions = displayOptions;
+    this.fromJson = WidgetModel.fromJson;
   }
 
-  static fromJson (object: Widget, dependencySource: string): Promise<BaseWidget> | BaseWidget {
+  static fromJson (object: Widget, dependencySource: string): Promise<WidgetModel> | WidgetModel {
     validatePropertyExists(object, 'id', 'Widget');
     validatePropertyExists(object, 'type', 'Widget');
     validatePropertyExists(object, 'displayName', 'Widget');
-    return dynamicRequire<Widget>(object, dependencySource);
+    return dynamicRequire<Widget, WidgetModel>(object, dependencySource);
   }
 
   toJson (): Widget {
@@ -45,10 +42,4 @@ export abstract class BaseWidget implements Widget {
       displayOptions: this.displayOptions
     };
   }
-
-  abstract getData (providers?: BaseProvider[], overrides?: any, parameters?: OtherProperties): void | Promise<void>;
-  abstract render (
-    children?: (Widget & { renderedElement: JSX.Element })[],
-    overridesCallback?: (overrides: any) => void
-  ): JSX.Element;
 }

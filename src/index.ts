@@ -1,4 +1,4 @@
-export * from './base-provider.js';
+export * from './models/provider.js';
 export * from './base-widget.js';
 export * from './console-parser.js';
 export * from './dashboard-parser.js';

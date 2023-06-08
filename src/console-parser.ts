@@ -1,12 +1,20 @@
 import { validateConsole } from './parser-utils.js';
 import {
-  Console, Dashboard, Provider, Widget, YamlConsole, YamlWidget, YamlProvider, YamlDashboard, Constant
+  Console as ConsoleType,
+  Dashboard,
+  Provider as ProviderType,
+  Widget,
+  YamlConsole,
+  YamlWidget,
+  YamlProvider,
+  YamlDashboard,
+  Constant
 } from '@tinystacks/ops-model';
 import { DashboardParser } from './dashboard-parser.js';
-import { BaseProvider } from './base-provider.js';
-import { BaseWidget } from './base-widget.js';
-import { BasicWidget } from './basic-widget.js';
-import { OtherProperties } from './types.js';
+import { Provider } from './models/provider.js';
+import { WidgetModel } from './models/widget.js';
+import { BaseWidget } from './models/base-widget.js';
+import { Json, Parsable } from './types.js';
 
 type ExportRefs = { [ref: string]: string }[];
 type ExportYamlWidget = Omit<YamlWidget, 'providers' | 'children'> & {
@@ -18,21 +26,21 @@ type ExportConsoleYaml = Omit<YamlConsole, 'widgets'> & {
   widgets: { [id: string]: ExportYamlWidget }
 }
 
-export class ConsoleParser implements Console {
+export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
   name: string;
   repository?: { url?: string; branch?: string; configFile?: string };
-  providers: Record<string, BaseProvider>;
+  providers: Record<string, Provider>;
   dashboards: Record<string, DashboardParser>;
-  widgets: Record<string, BaseWidget>;
+  widgets: Record<string, WidgetModel>;
   dependencies?: Record<string, string>;
   constants?: Record<string, Constant>;
 
   constructor (
     name: string,
-    providers: Record<string, BaseProvider>,
+    providers: Record<string, Provider>,
     dashboards: Record<string, DashboardParser>,
-    widgets: Record<string, BaseWidget>,
-    dependencies?: Console['dependencies'],
+    widgets: Record<string, WidgetModel>,
+    dependencies?: ConsoleType['dependencies'],
     constants: Record<string, Constant> = {},
     repository?: { url?: string; branch?: string; configFile?: string }
   ) {
@@ -45,7 +53,7 @@ export class ConsoleParser implements Console {
     this.repository = repository;
   }
 
-  static parse (consoleYaml: YamlConsole): Console {
+  static parse (consoleYaml: YamlConsole): ConsoleType {
     const {
       name,
       providers,
@@ -58,10 +66,10 @@ export class ConsoleParser implements Console {
 
     const dashboardObjects : Record<string, Dashboard> = {};
     Object.keys(dashboards).forEach((id) => {
-      dashboardObjects[id] = ConsoleParser.parseDashboard(dashboards[id], id);
+      dashboardObjects[id] = Console.parseDashboard(dashboards[id], id);
     });
 
-    const providerObjects: Record<string, Provider> = {};
+    const providerObjects: Record<string, ProviderType> = {};
     Object.keys(providers).forEach((id) => {
       providerObjects[id] = this.parseProvider(providers[id], id);
     });
@@ -82,7 +90,7 @@ export class ConsoleParser implements Console {
     };
   }
 
-  static async fromJson (object: Console): Promise<ConsoleParser> {
+  static async fromJson (object: ConsoleType): Promise<Console> {
     const {
       name,
       dashboards,
@@ -100,17 +108,17 @@ export class ConsoleParser implements Console {
       return acc;
     }, {});
 
-    const resolvedProviders: { [id: string]: BaseProvider } = {};
+    const resolvedProviders: { [id: string]: Provider } = {};
     for (const [id, provider] of Object.entries(providers)) {
-      resolvedProviders[id] = await BaseProvider.fromJson(provider, dependencies[providers[id].type]);
+      resolvedProviders[id] = await Provider.fromJson(provider, dependencies[providers[id].type]);
     }
 
-    const resolvedWidgets: { [id: string]: BaseWidget } = {};
+    const resolvedWidgets: { [id: string]: WidgetModel } = {};
     for (const [id, widget] of Object.entries(widgets)) {
-      resolvedWidgets[id] = await BaseWidget.fromJson(widget, dependencies[widgets[id].type]);
+      resolvedWidgets[id] = await WidgetModel.fromJson(widget, dependencies[widgets[id].type]);
     }
 
-    return new ConsoleParser(
+    return new Console(
       name,
       resolvedProviders,
       dashboardObjects,
@@ -121,13 +129,13 @@ export class ConsoleParser implements Console {
     );
   }
 
-  toJson (): Console {
+  toJson (): ConsoleType {
     const dashboards = Object.entries(this.dashboards).reduce<{ [id: string]: Dashboard }>((acc, [id, dashboard]) => {
       acc[id] = dashboard.toJson();
       return acc;
     }, {});
 
-    const providers = Object.entries(this.providers).reduce<{ [id: string]: Provider }>((acc, [id, provider]) => {
+    const providers = Object.entries(this.providers).reduce<{ [id: string]: ProviderType }>((acc, [id, provider]) => {
       acc[id] = provider.toJson();
       return acc;
     }, {});
@@ -147,9 +155,9 @@ export class ConsoleParser implements Console {
     };
   }
 
-  async deepParse (consoleYaml: YamlConsole): Promise<ConsoleParser> {
-    const parsedYaml: Console = ConsoleParser.parse(consoleYaml);
-    return await ConsoleParser.fromJson(parsedYaml);
+  async deepParse (consoleYaml: YamlConsole): Promise<Console> {
+    const parsedYaml: ConsoleType = Console.parse(consoleYaml);
+    return await Console.fromJson(parsedYaml);
   }
 
   addDashboard (dashboard: Dashboard, id: string): void {
@@ -170,13 +178,13 @@ export class ConsoleParser implements Console {
   async addWidget (widget: Widget, id: string) {
     this.widgets = this.widgets || {};
     const dependencySource = this.dependencies[widget.type];
-    this.widgets[widget.id || id] = await BaseWidget.fromJson(widget, dependencySource);
+    this.widgets[widget.id || id] = await WidgetModel.fromJson(widget, dependencySource);
   }
 
   async updateWidget (widget: Widget, id: string) {
     this.widgets = this.widgets || {};
     const dependencySource = this.dependencies[widget.type];
-    this.widgets[widget.id || id] = await BaseWidget.fromJson(widget, dependencySource);
+    this.widgets[widget.id || id] = await WidgetModel.fromJson(widget, dependencySource);
   }
 
   deleteWidget (id: string): void {
@@ -235,7 +243,7 @@ export class ConsoleParser implements Console {
     };
   }
 
-  static parseProvider (yamlProvider: any, id: string): Provider {
+  static parseProvider (yamlProvider: any, id: string): ProviderType {
     //need to figure out credentials
     return {
       ...yamlProvider,
@@ -251,28 +259,28 @@ export class ConsoleParser implements Console {
     return { ...yamlWidget, providerIds, childrenIds, id };
   }
 
-  widgetToJson<T extends BaseWidget> (widget: T): Widget & OtherProperties {
+  widgetToJson<T extends WidgetModel> (widget: T): Widget & Json {
     const widgetJson = widget.toJson();
     /**
      * We can't call super on a class instance,
      * so we use a wrapper class to access toJson from the abstract class
      * in case the implementer doesn't call it from within their own toJson implementation.
      */
-    const basicWidget = new BasicWidget(widget);
-    const baseWidgetJson = basicWidget.toJson();
+    const baseWidget = new BaseWidget(widget);
+    const baseWidgetJson = baseWidget.toJson();
     return {
       ...widgetJson,
-      // Always overwrite base propeties with the response from BaseWidget.toJson
+      // Always overwrite base propeties with the response from WidgetModel.toJson
       ...baseWidgetJson
     };
   }
 
-  widgetToYaml<T extends BaseWidget> (widget: T): ExportYamlWidget {
+  widgetToYaml<T extends WidgetModel> (widget: T): ExportYamlWidget {
     const widgetJson = this.widgetToJson(widget);
     // TODO: Multifile
-    const providers = widgetJson.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` }));
+    const providers = widgetJson.providerIds.map(providerId => ({ $ref: `#/ConsoleType/providers/${providerId}` }));
     // TODO: Multifile
-    const children = widgetJson.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }));
+    const children = widgetJson.childrenIds.map(childId => ({ $ref: `#/ConsoleType/widgets/${childId}` }));
     delete widgetJson.providerIds;
     delete widgetJson.childrenIds;
     return {
