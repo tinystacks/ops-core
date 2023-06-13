@@ -78,6 +78,19 @@ class TinyStacksError implements TinyStacksErrorType {
     );
   }
 
+  toJson (): TinyStacksErrorType {
+    return {
+      name: this.name,
+      message: this.message,
+      status: this.status,
+      stack: this.stack,
+      type: this.type,
+      cause: this.cause,
+      fields: this.fields,
+      context: this.context
+    };
+  }
+
   static isTinyStacksError (error: unknown): boolean {
     const e = error as any;
     const hasTinyStacksErrorName: boolean = (e?.name && e?.name === TinyStacksError.TinyStacksErrorName) || false;
