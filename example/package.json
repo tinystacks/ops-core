@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-cloudwatch": "^3.262.0",
+    "@aws-sdk/client-cloudwatch": "^3.350.0",
     "@tinystacks/ops-model": "file:../local-deps/tinystacks-ops-model-1.0.0.tgz",
     "dayjs": "^1.11.7"
   },
