@@ -1,20 +1,20 @@
-import { validateConsole } from './parser-utils.js';
+import { validateConsole } from '../parser-utils.js';
 import {
   Console as ConsoleType,
-  Dashboard,
+  Dashboard as DashboardType,
   Provider as ProviderType,
-  Widget,
+  Widget as WidgetType,
   YamlConsole,
   YamlWidget,
   YamlProvider,
   YamlDashboard,
   Constant
 } from '@tinystacks/ops-model';
-import { DashboardParser } from './dashboard-parser.js';
-import { Provider } from './models/provider.js';
-import { WidgetModel } from './models/widget.js';
-import { BaseWidget } from './models/base-widget.js';
-import { Json, Parsable } from './types.js';
+import { Dashboard } from './dashboard.js';
+import { Provider } from './provider.js';
+import { Widget } from './widget.js';
+import { BaseWidget } from './base-widget.js';
+import { Json, Parsable } from '../types.js';
 
 type ExportRefs = { [ref: string]: string }[];
 type ExportYamlWidget = Omit<YamlWidget, 'providers' | 'children'> & {
@@ -30,16 +30,17 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
   name: string;
   repository?: { url?: string; branch?: string; configFile?: string };
   providers: Record<string, Provider>;
-  dashboards: Record<string, DashboardParser>;
-  widgets: Record<string, WidgetModel>;
+  dashboards: Record<string, Dashboard>;
+  widgets: Record<string, Widget>;
   dependencies?: Record<string, string>;
   constants?: Record<string, Constant>;
+  fromJson: (object: ConsoleType, dependencySource: string) => Console | Promise<Console>;
 
   constructor (
     name: string,
     providers: Record<string, Provider>,
-    dashboards: Record<string, DashboardParser>,
-    widgets: Record<string, WidgetModel>,
+    dashboards: Record<string, Dashboard>,
+    widgets: Record<string, Widget>,
     dependencies?: ConsoleType['dependencies'],
     constants: Record<string, Constant> = {},
     repository?: { url?: string; branch?: string; configFile?: string }
@@ -51,6 +52,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
     this.dependencies = dependencies;
     this.constants = constants;
     this.repository = repository;
+    this.fromJson = Console.fromJson;
   }
 
   static parse (consoleYaml: YamlConsole): ConsoleType {
@@ -64,7 +66,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
       repository
     } = consoleYaml;
 
-    const dashboardObjects : Record<string, Dashboard> = {};
+    const dashboardObjects : Record<string, DashboardType> = {};
     Object.keys(dashboards).forEach((id) => {
       dashboardObjects[id] = Console.parseDashboard(dashboards[id], id);
     });
@@ -74,7 +76,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
       providerObjects[id] = this.parseProvider(providers[id], id);
     });
 
-    const widgetObjects: Record<string, Widget> = {};
+    const widgetObjects: Record<string, WidgetType> = {};
     Object.keys(widgets).forEach((id) => {
       widgetObjects[id] = this.parseWidget(widgets[id], id);
     });
@@ -103,8 +105,8 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
 
     validateConsole(object);
 
-    const dashboardObjects = Object.entries(dashboards).reduce<{ [id: string]: DashboardParser }>((acc, [id, dashboard]) => {
-      acc[id] = DashboardParser.fromJson(dashboard);
+    const dashboardObjects = Object.entries(dashboards).reduce<{ [id: string]: Dashboard }>((acc, [id, dashboard]) => {
+      acc[id] = Dashboard.fromJson(dashboard);
       return acc;
     }, {});
 
@@ -113,9 +115,9 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
       resolvedProviders[id] = await Provider.fromJson(provider, dependencies[providers[id].type]);
     }
 
-    const resolvedWidgets: { [id: string]: WidgetModel } = {};
+    const resolvedWidgets: { [id: string]: Widget } = {};
     for (const [id, widget] of Object.entries(widgets)) {
-      resolvedWidgets[id] = await WidgetModel.fromJson(widget, dependencies[widgets[id].type]);
+      resolvedWidgets[id] = await Widget.fromJson(widget, dependencies[widgets[id].type]);
     }
 
     return new Console(
@@ -130,7 +132,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
   }
 
   toJson (): ConsoleType {
-    const dashboards = Object.entries(this.dashboards).reduce<{ [id: string]: Dashboard }>((acc, [id, dashboard]) => {
+    const dashboards = Object.entries(this.dashboards).reduce<{ [id: string]: DashboardType }>((acc, [id, dashboard]) => {
       acc[id] = dashboard.toJson();
       return acc;
     }, {});
@@ -140,7 +142,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
       return acc;
     }, {});
 
-    const widgets = Object.entries(this.widgets).reduce<{ [id: string]: Widget }>((acc, [id, widget]) => {
+    const widgets = Object.entries(this.widgets).reduce<{ [id: string]: WidgetType }>((acc, [id, widget]) => {
       acc[id] = this.widgetToJson(widget);
       return acc;
     }, {});
@@ -160,14 +162,14 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
     return await Console.fromJson(parsedYaml);
   }
 
-  addDashboard (dashboard: Dashboard, id: string): void {
+  addDashboard (dashboard: DashboardType, id: string): void {
     this.dashboards = this.dashboards || {};
-    this.dashboards[dashboard.id || id] = DashboardParser.fromJson(dashboard);
+    this.dashboards[dashboard.id || id] = Dashboard.fromJson(dashboard);
   }
 
-  updateDashboard (dashboard: Dashboard, id:string): void {
+  updateDashboard (dashboard: DashboardType, id:string): void {
     this.dashboards = this.dashboards || {};
-    this.dashboards[dashboard.id || id] = DashboardParser.fromJson(dashboard);
+    this.dashboards[dashboard.id || id] = Dashboard.fromJson(dashboard);
   }
 
   deleteDashboard (id: string): void {
@@ -175,16 +177,16 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
     delete this.dashboards[id];
   }
 
-  async addWidget (widget: Widget, id: string) {
+  async addWidget (widget: WidgetType, id: string) {
     this.widgets = this.widgets || {};
     const dependencySource = this.dependencies[widget.type];
-    this.widgets[widget.id || id] = await WidgetModel.fromJson(widget, dependencySource);
+    this.widgets[widget.id || id] = await Widget.fromJson(widget, dependencySource);
   }
 
-  async updateWidget (widget: Widget, id: string) {
+  async updateWidget (widget: WidgetType, id: string) {
     this.widgets = this.widgets || {};
     const dependencySource = this.dependencies[widget.type];
-    this.widgets[widget.id || id] = await WidgetModel.fromJson(widget, dependencySource);
+    this.widgets[widget.id || id] = await Widget.fromJson(widget, dependencySource);
   }
 
   deleteWidget (id: string): void {
@@ -193,7 +195,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
   }
 
   toYaml (): ExportConsoleYaml {
-    const dashboardObjects: { [id: string]: Dashboard } = {};
+    const dashboardObjects: { [id: string]: DashboardType } = {};
     for (const [id, dashboard] of Object.entries(this.dashboards)) {
       dashboardObjects[id] = dashboard.toYaml();
     }
@@ -219,7 +221,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
     };
   }
 
-  static parseDashboard (yamlDashboard: YamlDashboard, id?: string): Dashboard {
+  static parseDashboard (yamlDashboard: YamlDashboard, id?: string): DashboardType {
 
     const {
       route,
@@ -251,7 +253,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
     };
   }
 
-  static parseWidget (yamlWidget: YamlWidget, id: string): Widget {
+  static parseWidget (yamlWidget: YamlWidget, id: string): WidgetType {
     // TODO: Multifile
     const providerIds = (yamlWidget.providers || []).map((provider: any) => provider.$ref.split('/')[3]);
     // TODO: Multifile
@@ -259,7 +261,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
     return { ...yamlWidget, providerIds, childrenIds, id };
   }
 
-  widgetToJson<T extends WidgetModel> (widget: T): Widget & Json {
+  widgetToJson<T extends Widget> (widget: T): WidgetType & Json {
     const widgetJson = widget.toJson();
     /**
      * We can't call super on a class instance,
@@ -270,17 +272,17 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
     const baseWidgetJson = baseWidget.toJson();
     return {
       ...widgetJson,
-      // Always overwrite base propeties with the response from WidgetModel.toJson
+      // Always overwrite base propeties with the response from Widget.toJson
       ...baseWidgetJson
     };
   }
 
-  widgetToYaml<T extends WidgetModel> (widget: T): ExportYamlWidget {
+  widgetToYaml<T extends Widget> (widget: T): ExportYamlWidget {
     const widgetJson = this.widgetToJson(widget);
     // TODO: Multifile
-    const providers = widgetJson.providerIds.map(providerId => ({ $ref: `#/ConsoleType/providers/${providerId}` }));
+    const providers = widgetJson.providerIds.map(providerId => ({ $ref: `#/Console/providers/${providerId}` }));
     // TODO: Multifile
-    const children = widgetJson.childrenIds.map(childId => ({ $ref: `#/ConsoleType/widgets/${childId}` }));
+    const children = widgetJson.childrenIds.map(childId => ({ $ref: `#/Console/widgets/${childId}` }));
     delete widgetJson.providerIds;
     delete widgetJson.childrenIds;
     return {

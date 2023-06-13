@@ -1,13 +1,12 @@
-import { Widget } from '@tinystacks/ops-model';
-import { Json } from '../types.js';
-import { WidgetModel } from './widget.js';
+import { Widget as WidgetType } from '@tinystacks/ops-model';
+import { Widget } from './widget.js';
 
-export class BaseWidget extends WidgetModel {
-  constructor (props: Widget & Json) {
+export class BaseWidget extends Widget {
+  constructor (props: WidgetType) {
     super(props);
   }
 
-  static fromJson (props: Widget): BaseWidget {
+  static fromJson (props: WidgetType): BaseWidget {
     return new BaseWidget(props);
   }
 }

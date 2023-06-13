@@ -11,7 +11,7 @@ export abstract class Provider implements ProviderType {
   }
 
   static fromJson (object: ProviderType, dependencySource?: string): Promise<Provider> | Provider {
-    validatePropertyExists(object, 'type', 'ProviderType');
+    validatePropertyExists(object, 'type', 'Provider');
     return dynamicRequire<ProviderType, Provider>(object, dependencySource);
   }
 

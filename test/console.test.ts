@@ -2,8 +2,8 @@ const mockValidateConsole = jest.fn();
 const mockDashboardParserFromJson = jest.fn();
 const mockBaseProviderFromJson = jest.fn();
 const mockBaseWidgetFromJson = jest.fn();
-const mockBasicWidget = jest.fn();
-const mockBasicWidgetToJson = jest.fn();
+const mockBaseWidget = jest.fn();
+const mockBaseWidgetToJson = jest.fn();
 const mockFromJson = jest.fn();
 const mockToJson = jest.fn();
 const mockToYaml = jest.fn();
@@ -11,27 +11,27 @@ const mockToYaml = jest.fn();
 jest.mock('../src/parser-utils.js', () => ({
   validateConsole: mockValidateConsole
 }));
-jest.mock('../src/dashboard-parser.js', () => ({
-  DashboardParser: {
+jest.mock('../src/models/dashboard.js', () => ({
+  Dashboard: {
     fromJson: mockDashboardParserFromJson
   }
 }));
-jest.mock('../src/base-provider.js', () => ({
-  BaseProvider: {
+jest.mock('../src/models/provider.js', () => ({
+  Provider: {
     fromJson: mockBaseProviderFromJson
   }
 }));
-jest.mock('../src/base-widget.js', () => ({
-  BaseWidget: {
+jest.mock('../src/models/widget.js', () => ({
+  Widget: {
     fromJson: mockBaseWidgetFromJson
   }
 }));
-jest.mock('../src/basic-widget.js', () => ({
-  BasicWidget: mockBasicWidget
+jest.mock('../src/models/base-widget.js', () => ({
+  BaseWidget: mockBaseWidget
 }));
 
-const mockBasicWidgetInstance = {
-  toJson: mockBasicWidgetToJson
+const mockBaseWidgetInstance = {
+  toJson: mockBaseWidgetToJson
 };
 
 const mockParseable = {
@@ -40,22 +40,22 @@ const mockParseable = {
 };
 
 
-import { Dashboard, Provider, Widget, YamlDashboard, YamlWidget } from '@tinystacks/ops-model';
-import { BaseProvider } from '../src/base-provider';
-import { BaseWidget } from '../src/base-widget';
-import { ConsoleParser } from '../src/console-parser';
-import { DashboardParser } from '../src/dashboard-parser';
+import { Dashboard as DashboardType, Provider as ProviderType, Widget as WidgetType, YamlDashboard, YamlWidget } from '@tinystacks/ops-model';
+import { Provider } from '../src/models/provider';
+import { Widget } from '../src/models/widget';
+import { Console } from '../src/models/console';
+import { Dashboard } from '../src/models/dashboard';
 
-const mockBaseProvider = { ...mockParseable } as unknown as BaseProvider;
-const mockProvider: Provider = { id: 'mock-provider', type: 'MockProvider' };
-const mockDashboardParser = { ...mockParseable, toYaml: mockToYaml } as unknown as DashboardParser;
-const mockDashboard: Dashboard = { id: 'mock-dashboard', route: '/mock-provider' };
-const mockBaseWidget = { ...mockParseable } as unknown as BaseWidget;
-const mockWidget: Widget = { id: 'mock-widget', type: 'MockWidget', displayName: 'Mock Widget' };
+const mockBaseProvider = { ...mockParseable } as unknown as Provider;
+const mockProvider: ProviderType = { id: 'mock-provider', type: 'MockProvider' };
+const mockDashboardParser = { ...mockParseable, toYaml: mockToYaml } as unknown as Dashboard;
+const mockDashboard: DashboardType = { id: 'mock-dashboard', route: '/mock-provider' };
+const mockBaseWidgetJson = { ...mockParseable } as unknown as Widget;
+const mockWidget: WidgetType = { id: 'mock-widget', type: 'MockWidget', displayName: 'Mock WidgetType' };
 
-describe('ConsoleParser tests', () => {
+describe('Console tests', () => {
   beforeEach(() => {
-    mockBasicWidget.mockReturnValue(mockBasicWidgetInstance);
+    mockBaseWidget.mockReturnValue(mockBaseWidgetInstance);
   });
   afterEach(() => {
     // for mocks
@@ -65,7 +65,7 @@ describe('ConsoleParser tests', () => {
   });
 
   it('constructor accepts properties and assigns them', () => {
-    const consoleParser = new ConsoleParser(
+    const consoleParser = new Console(
       'test-parser',
       {
         'mock-provider': mockBaseProvider
@@ -74,20 +74,20 @@ describe('ConsoleParser tests', () => {
         'mock-dashboard': mockDashboardParser
       },
       {
-        'mock-widget': mockBaseWidget
+        'mock-widget': mockBaseWidgetJson
       }
     );
 
     expect(consoleParser).toHaveProperty('name', 'test-parser');
     expect(consoleParser).toHaveProperty('providers', { 'mock-provider': mockBaseProvider });
     expect(consoleParser).toHaveProperty('dashboards', { 'mock-dashboard': mockDashboardParser });
-    expect(consoleParser).toHaveProperty('widgets', { 'mock-widget': mockBaseWidget });
+    expect(consoleParser).toHaveProperty('widgets', { 'mock-widget': mockBaseWidgetJson });
   });
   it('parse', () => {
-    jest.spyOn(ConsoleParser, 'parseDashboard').mockReturnValue(mockDashboard);
-    jest.spyOn(ConsoleParser, 'parseProvider').mockReturnValue(mockProvider);
-    jest.spyOn(ConsoleParser, 'parseWidget').mockReturnValue(mockWidget);
-    const console = ConsoleParser.parse({
+    jest.spyOn(Console, 'parseDashboard').mockReturnValue(mockDashboard);
+    jest.spyOn(Console, 'parseProvider').mockReturnValue(mockProvider);
+    jest.spyOn(Console, 'parseWidget').mockReturnValue(mockWidget);
+    const console = Console.parse({
       name: 'test-console',
       dashboards: {
         'mock-dashboard': mockDashboard
@@ -109,7 +109,7 @@ describe('ConsoleParser tests', () => {
     mockDashboardParserFromJson.mockReturnValue(mockDashboard);
     mockBaseProviderFromJson.mockReturnValue(mockProvider);
     mockBaseWidgetFromJson.mockReturnValue(mockWidget);
-    const console = await ConsoleParser.fromJson({
+    const console = await Console.fromJson({
       name: 'test-console',
       dashboards: {
         'mock-dashboard': mockDashboard
@@ -133,8 +133,8 @@ describe('ConsoleParser tests', () => {
   it('toJson', async () => {
     mockToJson.mockReturnValueOnce(mockDashboard);
     mockToJson.mockReturnValueOnce(mockProvider);
-    jest.spyOn(ConsoleParser.prototype, 'widgetToJson').mockReturnValueOnce(mockWidget);
-    const console = new ConsoleParser(
+    jest.spyOn(Console.prototype, 'widgetToJson').mockReturnValueOnce(mockWidget);
+    const console = new Console(
       'test-console',
       {
         'mock-provider': mockBaseProvider
@@ -143,7 +143,7 @@ describe('ConsoleParser tests', () => {
         'mock-dashboard': mockDashboardParser
       },
       {
-        'mock-widget': mockBaseWidget
+        'mock-widget': mockBaseWidgetJson
       },
       {
         MockProvider: 'mock-plugin'
@@ -158,14 +158,14 @@ describe('ConsoleParser tests', () => {
     expect(consoleJson).toHaveProperty('widgets', { 'mock-widget': mockWidget });
   });
   it('deepParse', async () => {
-    jest.spyOn(ConsoleParser, 'parseDashboard').mockReturnValue(mockDashboard);
-    jest.spyOn(ConsoleParser, 'parseProvider').mockReturnValue(mockProvider);
-    jest.spyOn(ConsoleParser, 'parseWidget').mockReturnValue(mockWidget);
+    jest.spyOn(Console, 'parseDashboard').mockReturnValue(mockDashboard);
+    jest.spyOn(Console, 'parseProvider').mockReturnValue(mockProvider);
+    jest.spyOn(Console, 'parseWidget').mockReturnValue(mockWidget);
     mockDashboardParserFromJson.mockReturnValue(mockDashboard);
     mockBaseProviderFromJson.mockReturnValue(mockProvider);
     mockBaseWidgetFromJson.mockReturnValue(mockWidget);
 
-    const consoleParser = new ConsoleParser(
+    const consoleParser = new Console(
       'test-parser',
       {
         'mock-provider': mockBaseProvider
@@ -174,7 +174,7 @@ describe('ConsoleParser tests', () => {
         'mock-dashboard': mockDashboardParser
       },
       {
-        'mock-widget': mockBaseWidget
+        'mock-widget': mockBaseWidgetJson
       }
     );
 
@@ -201,7 +201,7 @@ describe('ConsoleParser tests', () => {
   });
   it('addDashboard', () => {
     mockDashboardParserFromJson.mockReturnValue(mockDashboard);
-    const console = new ConsoleParser(
+    const console = new Console(
       'test-parser',
       {},
       {},
@@ -214,22 +214,22 @@ describe('ConsoleParser tests', () => {
   });
   it('updateDashboard', () => {
     mockDashboardParserFromJson.mockReturnValue(mockDashboard);
-    const console = new ConsoleParser(
+    const console = new Console(
       'test-parser',
       {},
       {
-        'mock-dashboard': {} as unknown as DashboardParser
+        'mock-dashboard': {} as unknown as Dashboard
       },
       {}
     );
 
-    console.updateDashboard({ route: '/mock-dashboard' } as Dashboard, 'mock-dashboard');
+    console.updateDashboard({ route: '/mock-dashboard' } as DashboardType, 'mock-dashboard');
 
     expect(console).toHaveProperty('dashboards', { 'mock-dashboard': mockDashboard });
   });
   it('deleteDashboard', () => {
     mockDashboardParserFromJson.mockReturnValue(mockDashboard);
-    const console = new ConsoleParser(
+    const console = new Console(
       'test-parser',
       {},
       {
@@ -245,7 +245,7 @@ describe('ConsoleParser tests', () => {
   it('addWidget', async () => {
     mockBaseWidgetFromJson.mockReturnValue(mockWidget);
 
-    const console = new ConsoleParser(
+    const console = new Console(
       'test-parser',
       {},
       {},
@@ -262,31 +262,31 @@ describe('ConsoleParser tests', () => {
   it('updateWidget', async () => {
     mockBaseWidgetFromJson.mockReturnValue(mockWidget);
 
-    const console = new ConsoleParser(
+    const console = new Console(
       'test-parser',
       {},
       {},
       {
-        'mock-widget-1': mockBaseWidget
+        'mock-widget-1': mockBaseWidgetJson
       },
       {
         MockWidget: 'mock-plugin'
       }
     );
 
-    await console.updateWidget({ ...mockWidget, id: undefined } as unknown as Widget, 'mock-widget-1');
+    await console.updateWidget({ ...mockWidget, id: undefined } as unknown as WidgetType, 'mock-widget-1');
 
     expect(console).toHaveProperty('widgets', { 'mock-widget-1': mockWidget });
   });
   it('deleteWidget', async () => {
     mockBaseWidgetFromJson.mockReturnValue(mockWidget);
 
-    const console = new ConsoleParser(
+    const console = new Console(
       'test-parser',
       {},
       {},
       {
-        'mock-widget': mockBaseWidget
+        'mock-widget': mockBaseWidgetJson
       },
       {
         MockWidget: 'mock-plugin'
@@ -300,18 +300,18 @@ describe('ConsoleParser tests', () => {
   it('toYaml', () => {
     const mockYamlWidget = { ...mockWidget, providers: [] as any[], children: [] as any[] };
     mockToYaml.mockReturnValueOnce(mockDashboard);
-    jest.spyOn(ConsoleParser.prototype, 'widgetToYaml').mockReturnValueOnce(mockYamlWidget);
+    jest.spyOn(Console.prototype, 'widgetToYaml').mockReturnValueOnce(mockYamlWidget);
 
-    const console = new ConsoleParser(
+    const console = new Console(
       'test-console',
       {
-        'mock-provider': mockProvider as unknown as BaseProvider
+        'mock-provider': mockProvider as unknown as Provider
       },
       {
         'mock-dashboard': mockDashboardParser
       },
       {
-        'mock-widget': mockBaseWidget
+        'mock-widget': mockBaseWidgetJson
       },
       {
         MockWidget: 'mock-plugin'
@@ -337,7 +337,7 @@ describe('ConsoleParser tests', () => {
       ]
     };
 
-    const parsedDashboard = ConsoleParser.parseDashboard(yamlDashboard);
+    const parsedDashboard = Console.parseDashboard(yamlDashboard);
     expect(parsedDashboard).toEqual({
       route: 'mock-dashboard',
       widgetIds: [
@@ -351,7 +351,7 @@ describe('ConsoleParser tests', () => {
       id: 'my-id-1'
     };
 
-    const parsedProvider = ConsoleParser.parseProvider(yamlProvider, 'my-id');
+    const parsedProvider = Console.parseProvider(yamlProvider, 'my-id');
 
     expect(parsedProvider).toEqual({
       any: 'prop',
@@ -374,7 +374,7 @@ describe('ConsoleParser tests', () => {
       ]
     } as unknown as YamlWidget;
 
-    const parsedWidget = ConsoleParser.parseWidget(yamlWidget, 'mock-widget');
+    const parsedWidget = Console.parseWidget(yamlWidget, 'mock-widget');
 
     expect(parsedWidget).toEqual({
       id: 'mock-widget',
@@ -394,7 +394,7 @@ describe('ConsoleParser tests', () => {
     });
   });
   it('widgetToJson', () => {
-    const consoleParser = new ConsoleParser(
+    const consoleParser = new Console(
       'test-parser',
       {},
       {},
@@ -402,34 +402,34 @@ describe('ConsoleParser tests', () => {
     );
 
     const mockWidgetJson = {
-      displayName: 'Mock Widget',
+      displayName: 'Mock WidgetType',
       description: 'a mock widget',
       otherProp: 'other value'
     };
     const testWidget = {
       toJson: () => mockWidgetJson
-    } as unknown as BaseWidget;
+    } as unknown as Widget;
 
     const mockBaseWidgetJson = {
-      id: 'mock-basic-widget',
-      type: 'MockBasicWidget',
-      displayName: 'Mock Basic Widget',
-      description: 'a mock basic widget'
+      id: 'mock-base-widget',
+      type: 'MockBaseWidget',
+      displayName: 'Mock Base WidgetType',
+      description: 'a mock base widget'
     };
-    mockBasicWidgetToJson.mockReturnValue(mockBaseWidgetJson);
+    mockBaseWidgetToJson.mockReturnValue(mockBaseWidgetJson);
 
     const jsonWidget = consoleParser.widgetToJson(testWidget);
 
     expect(jsonWidget).toEqual({
-      id: 'mock-basic-widget',
-      type: 'MockBasicWidget',
-      displayName: 'Mock Basic Widget',
-      description: 'a mock basic widget',
+      id: 'mock-base-widget',
+      type: 'MockBaseWidget',
+      displayName: 'Mock Base WidgetType',
+      description: 'a mock base widget',
       otherProp: 'other value'
     });
   });
   it('widgetToYaml', () => {
-    const consoleParser = new ConsoleParser(
+    const consoleParser = new Console(
       'test-parser',
       {},
       {},
@@ -437,31 +437,31 @@ describe('ConsoleParser tests', () => {
     );
 
     const mockWidgetJson = {
-      displayName: 'Mock Widget',
+      displayName: 'Mock WidgetType',
       description: 'a mock widget',
       otherProp: 'other value'
     };
     const testWidget = {
       toJson: () => mockWidgetJson
-    } as unknown as BaseWidget;
+    } as unknown as Widget;
 
     const mockBaseWidgetJson = {
-      id: 'mock-basic-widget',
-      type: 'MockBasicWidget',
-      displayName: 'Mock Basic Widget',
-      description: 'a mock basic widget',
+      id: 'mock-base-widget',
+      type: 'MockBaseWidget',
+      displayName: 'Mock Base WidgetType',
+      description: 'a mock base widget',
       providerIds: ['MockProvider'],
       childrenIds: ['MockChildWidget']
     };
-    mockBasicWidgetToJson.mockReturnValue(mockBaseWidgetJson);
+    mockBaseWidgetToJson.mockReturnValue(mockBaseWidgetJson);
 
     const jsonWidget = consoleParser.widgetToYaml(testWidget);
 
     expect(jsonWidget).toEqual({
-      id: 'mock-basic-widget',
-      type: 'MockBasicWidget',
-      displayName: 'Mock Basic Widget',
-      description: 'a mock basic widget',
+      id: 'mock-base-widget',
+      type: 'MockBaseWidget',
+      displayName: 'Mock Base WidgetType',
+      description: 'a mock base widget',
       otherProp: 'other value',
       providers: [
         {

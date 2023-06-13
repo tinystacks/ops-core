@@ -1,9 +1,9 @@
-import { Widget } from '@tinystacks/ops-model';
-import { WidgetModel } from 'ops-core/models/widget.js';
+import { Widget as WidgetType } from '@tinystacks/ops-model';
+import { Widget as WidgetModel } from 'ops-core/models/widget.js';
 
-export interface WidgetView extends WidgetModel {
+export interface Widget extends WidgetModel {
   render (
-    children?: (Widget & { renderedElement: JSX.Element })[],
+    children?: (WidgetType & { renderedElement: JSX.Element })[],
     overridesCallback?: (overrides: any) => void
   ): JSX.Element;
 }

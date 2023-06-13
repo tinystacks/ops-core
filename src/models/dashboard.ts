@@ -1,12 +1,14 @@
-import { validatePropertyExists } from './parser-utils.js';
-import { Dashboard, Parameter } from '@tinystacks/ops-model';
+import { Parsable } from '../types.js';
+import { validatePropertyExists } from '../parser-utils.js';
+import { Dashboard as DashboardType, Parameter } from '@tinystacks/ops-model';
 
-export class DashboardParser implements Dashboard {
+export class Dashboard implements DashboardType, Parsable<DashboardType, Dashboard> {
   id: string;
   route: string;
   widgetIds: string[];
   parameters: Parameter[];
   description?: string;
+  fromJson: (object: DashboardType, dependencySource: string) => Dashboard | Promise<Dashboard>;
 
   constructor (
     route: string,
@@ -20,9 +22,10 @@ export class DashboardParser implements Dashboard {
     this.widgetIds = widgetIds;
     this.parameters = parameters;
     this.description = description;
+    this.fromJson = Dashboard.fromJson;
   }
 
-  static fromJson (object: Dashboard): DashboardParser {
+  static fromJson (object: DashboardType): Dashboard {
     const {
       id,
       route,
@@ -34,7 +37,7 @@ export class DashboardParser implements Dashboard {
     validatePropertyExists(object, 'widgetIds', 'Dashboard');
     validatePropertyExists(object, 'route', 'Dashboard');
 
-    return new DashboardParser (
+    return new Dashboard (
       route,
       widgetIds,
       id,
@@ -43,7 +46,7 @@ export class DashboardParser implements Dashboard {
     );
   }
 
-  toJson (): Dashboard {
+  toJson (): DashboardType {
 
     return {
       id: this.id,

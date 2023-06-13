@@ -1,10 +1,12 @@
-import { BaseWidget } from '../src/base-widget.js';
-import { BasicWidget } from '../src/basic-widget.js';
+import { Widget } from '../src/models/widget.js';
+import { BaseWidget } from '../src/models/base-widget.js';
+import { BaseWidget as BaseWidgetController } from '../src/controllers/base-widget.js';
+import { BaseWidget as BaseWidgetView } from '../src/views/base-widget.js';
 import { TinyStacksError } from '../src/tinystacks-error.js';
 
 const fullBasicWidgetDef: any = {
   id: 'mock-widget',
-  type: 'BasicWidget',
+  type: 'BaseWidget',
   displayName: 'Mock Widget',
   displayOptions: {
     showDisplayName: true
@@ -14,24 +16,24 @@ const fullBasicWidgetDef: any = {
   description: 'a mock widget'
 };
 
-describe('BaseWidget Testing', () => {
+describe('Widget Testing', () => {
   it('constructor is lossless', () => {
-    const widget = new BasicWidget(fullBasicWidgetDef);
+    const widget = new BaseWidget(fullBasicWidgetDef);
     expect(widget.toJson()).toStrictEqual(fullBasicWidgetDef);
   });
 
   it('fromJson is lossless', async () => {
-    const widget = BasicWidget.fromJson(fullBasicWidgetDef);
+    const widget = BaseWidget.fromJson(fullBasicWidgetDef);
     expect(widget.toJson()).toStrictEqual(fullBasicWidgetDef);
   });
 
-  it('BaseWidget fromJson is lossless', async () => {
-    const widget = await BaseWidget.fromJson(fullBasicWidgetDef, require.resolve('../src/basic-widget'));
+  it('Widget fromJson is lossless', async () => {
+    const widget = await Widget.fromJson(fullBasicWidgetDef, require.resolve('../src/models/base-widget'));
     expect(widget.toJson()).toStrictEqual(fullBasicWidgetDef);
   });
 
-  it ('BasicWidget throws error on getData', async () => {
-    const widget = BasicWidget.fromJson(fullBasicWidgetDef);
+  it ('BaseWidget throws error on getData', async () => {
+    const widget: BaseWidgetController = BaseWidgetController.fromJson(fullBasicWidgetDef);
     const error = TinyStacksError.fromJson({
       message: 'Method not implemented.',
       status: 400
@@ -47,8 +49,8 @@ describe('BaseWidget Testing', () => {
     }
   });
 
-  it ('BasicWidget throws error on render', () => {
-    const widget = BasicWidget.fromJson(fullBasicWidgetDef);
+  it ('BaseWidget throws error on render', () => {
+    const widget: BaseWidgetView = BaseWidgetView.fromJson(fullBasicWidgetDef);
     const error = TinyStacksError.fromJson({
       message: 'Method not implemented.',
       status: 400
@@ -73,7 +75,7 @@ describe('BaseWidget Testing', () => {
     });
     let thrownError: any;
     try {
-      await BaseWidget.fromJson(widgetJson, require.resolve('../src/basic-widget'));
+      await Widget.fromJson(widgetJson, require.resolve('../src/models/base-widget'));
     } catch (e) {
       thrownError = e;
     } finally {
@@ -91,7 +93,7 @@ describe('BaseWidget Testing', () => {
     });
     let thrownError: any;
     try {
-      await BaseWidget.fromJson(widgetJson, require.resolve('../src/basic-widget'));
+      await Widget.fromJson(widgetJson, require.resolve('../src/models/base-widget'));
     } catch (e) {
       thrownError = e;
     } finally {
@@ -109,7 +111,7 @@ describe('BaseWidget Testing', () => {
     });
     let thrownError: any;
     try {
-      await BaseWidget.fromJson(widgetJson, require.resolve('../src/basic-widget'));
+      await Widget.fromJson(widgetJson, require.resolve('../src/models/base-widget'));
     } catch (e) {
       thrownError = e;
     } finally {
