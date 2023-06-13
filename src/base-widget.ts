@@ -31,7 +31,7 @@ export abstract class BaseWidget implements Widget {
     validatePropertyExists(object, 'id', 'Widget');
     validatePropertyExists(object, 'type', 'Widget');
     validatePropertyExists(object, 'displayName', 'Widget');
-    return dynamicRequire<Widget>(object, dependencySource);
+    return dynamicRequire<Widget>(object, dependencySource, 'Widget');
   }
 
   toJson (): Widget {

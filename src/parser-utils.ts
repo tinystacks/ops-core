@@ -3,6 +3,7 @@ import isNil from 'lodash.isnil';
 import { Console as ConsoleType, Provider, Widget } from '@tinystacks/ops-model';
 import { BaseWidget } from './base-widget.js';
 import TinyStacksError from './tinystacks-error.js';
+import { StatusCodes } from 'http-status-codes';
 
 export function validatePropertyExists (obj: any, propertyName: string, objectType: string){
   const propertyValue = get(obj, propertyName);
@@ -62,12 +63,23 @@ export function validateConsole (console: ConsoleType): void{
   validateProviderReferences(console.providers, allProviders);
 }
 
-export async function dynamicRequire<E extends { type: string }> (object: E, dependencySource: string): Promise<BaseWidget> {
+export async function dynamicRequire<E extends { type: string, id: string }> (object: E, dependencySource: string, entityType: string): Promise<BaseWidget> {
+  const missingDependencyError = TinyStacksError.fromJson({
+    message: 'Missing dependency!',
+    status: StatusCodes.FAILED_DEPENDENCY,
+    cause: `Cannot find module for ${object.type} used in ${entityType} ${object.id}.`
+  });
+  if (isNil(dependencySource)) {
+    throw missingDependencyError;
+  }
   try {
     const WidgetType: any = (await import(dependencySource))[object.type];
     const widget = await WidgetType.fromJson(object);
     return widget;
-  } catch(e){
+  } catch (e: any) {
+    if (e.code === 'ERR_MODULE_NOT_FOUND') {
+      throw missingDependencyError;
+    }
     console.error(e);
     throw TinyStacksError.fromJson({
       message: `Error trying to load module ${dependencySource} for type ${object.type}`,
