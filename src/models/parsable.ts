@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
-import TinyStacksError from '../tinystacks-error';
-import { Json, Typed } from '../types';
+import TinyStacksError from '../tinystacks-error.js';
+import { Json, Typed } from '../types.js';
 
 export abstract class Parsable implements Typed {
   static fromJson (_object: Json, ..._args: any[]): Promise<Parsable> | Parsable {
