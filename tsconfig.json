@@ -21,16 +21,12 @@
     "esModuleInterop": true,
     "typeRoots": ["./node_modules/@types"],
     "outDir": "./dist",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "jsx": "preserve",
     "allowJs": true,
     "baseUrl": ".",
-    "paths": { 
-      "ops-core/*": [
-        "./src/*"
-      ]
-    }
+    "paths": {}
   },
   "include": ["./src"]
 }

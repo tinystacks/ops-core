@@ -1,5 +1,5 @@
 import { Widget as WidgetType } from '@tinystacks/ops-model';
-import { Widget as WidgetModel } from 'ops-core/models/widget.js';
+import { Widget as WidgetModel } from '../models/widget.js';
 
 export interface Widget extends WidgetModel {
   render (
