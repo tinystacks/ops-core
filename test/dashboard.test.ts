@@ -1,5 +1,5 @@
 import { Parameter } from '@tinystacks/ops-model';
-import { Dashboard } from '../src/models/dashboard.js';
+import { Dashboard } from '../src/core/dashboard.js';
 import TinyStacksError from '../src/tinystacks-error.js';
 
 const basicDashboard = {

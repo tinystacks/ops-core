@@ -1,6 +1,6 @@
 import { Widget as WidgetType } from '@tinystacks/ops-model';
 import { BaseWidget as BaseWidgetModel } from '../models/base-widget.js';
-import { Provider } from '../models/provider.js';
+import { Provider } from '../core/provider.js';
 import { TinyStacksError } from '../tinystacks-error.js';
 import { Widget } from './widget.js';
 

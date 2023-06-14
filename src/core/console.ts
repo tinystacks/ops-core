@@ -12,8 +12,8 @@ import {
 } from '@tinystacks/ops-model';
 import { Dashboard } from './dashboard.js';
 import { Provider } from './provider.js';
-import { Widget } from './widget.js';
-import { BaseWidget } from './base-widget.js';
+import { Widget } from '../models/widget.js';
+import { BaseWidget } from '../models/base-widget.js';
 import { Json } from '../types.js';
 import { Parsable } from './parsable.js';
 

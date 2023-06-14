@@ -12,7 +12,8 @@
     "src/node.ts",
     "src/controllers/index.ts",
     "src/models/index.ts",
-    "src/views/index.ts"
+    "src/views/index.ts",
+    "src/core/index.ts"
   ],
 	"coverageThreshold": {
 		"global": {
@@ -27,8 +28,11 @@
     "^(\\.{1,2}/.*)\\.js$": "$1"
   },
   "transform": {
-    "^.+\\.js$": "babel-jest",
-    "^.+\\.ts$": "ts-jest"
+    "^.+\\.ts$": ["ts-jest", {
+      "tsconfig": "tsconfig.test.json",
+      "isolatedModules": true,
+      "useESM": true
+    }]
   },
   "transformIgnorePatterns": [
     "\\/node_modules\\/(?!(@tinystacks\\/))"

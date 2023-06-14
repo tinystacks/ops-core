@@ -1,4 +1,4 @@
-import { Provider } from '../src/models/provider.js';
+import { Provider } from '../src/core/provider.js';
 import { BaseProvider } from '../src/models/base-provider.js';
 import TinyStacksError from '../src/tinystacks-error.js';
 

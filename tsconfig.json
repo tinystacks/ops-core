@@ -21,7 +21,7 @@
     "esModuleInterop": true,
     "typeRoots": ["./node_modules/@types"],
     "outDir": "./dist",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "jsx": "preserve",
     "allowJs": true,

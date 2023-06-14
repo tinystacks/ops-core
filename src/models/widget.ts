@@ -1,6 +1,6 @@
 import { Widget as WidgetType } from '@tinystacks/ops-model';
 import { dynamicRequire, validatePropertyExists } from '../parser-utils.js';
-import { Parsable } from './parsable.js';
+import { Parsable } from '../core/parsable.js';
 import { Typed } from '../types.js';
 
 export abstract class Widget extends Parsable implements WidgetType, Typed {

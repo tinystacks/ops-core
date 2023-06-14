@@ -1,4 +1,4 @@
-import { Provider } from '../models/provider.js';
+import { Provider } from '../core/provider.js';
 import { Json } from '../types.js';
 import { Widget as WidgetModel } from 'ops-core/models/widget.js';
 

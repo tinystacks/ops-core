@@ -1,10 +1,10 @@
 {
   "name": "@tinystacks/ops-core",
   "version": "0.3.2",
-  "main": "./dist/index.js",
   "exports": {
     "node": "./dist/node.js",
-    "browser": "./dist/browser.js"
+    "browser": "./dist/browser.js",
+    "default": "./dist/index.js"
   },
   "type": "module",
   "repository": {

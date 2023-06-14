@@ -11,12 +11,12 @@ const mockToYaml = jest.fn();
 jest.mock('../src/parser-utils.js', () => ({
   validateConsole: mockValidateConsole
 }));
-jest.mock('../src/models/dashboard.js', () => ({
+jest.mock('../src/core/dashboard.js', () => ({
   Dashboard: {
     fromJson: mockDashboardParserFromJson
   }
 }));
-jest.mock('../src/models/provider.js', () => ({
+jest.mock('../src/core/provider.js', () => ({
   Provider: {
     fromJson: mockBaseProviderFromJson
   }
@@ -41,10 +41,10 @@ const mockParseable = {
 
 
 import { Dashboard as DashboardType, Provider as ProviderType, Widget as WidgetType, YamlDashboard, YamlWidget } from '@tinystacks/ops-model';
-import { Provider } from '../src/models/provider';
 import { Widget } from '../src/models/widget';
-import { Console } from '../src/models/console';
-import { Dashboard } from '../src/models/dashboard';
+import { Provider } from '../src/core/provider';
+import { Console } from '../src/core/console';
+import { Dashboard } from '../src/core/dashboard';
 
 const mockBaseProvider = { ...mockParseable } as unknown as Provider;
 const mockProvider: ProviderType = { id: 'mock-provider', type: 'MockProvider' };
