@@ -1,6 +1,5 @@
-export * from './models/provider.js';
-export * from './base-widget.js';
-export * from './models/console.js';
-export * from './models/dashboard.js';
-export * from './parser-utils.js';
+export * as Controllers from './controllers/index.js';
+export * as Models from './models/index.js';
+export * as Types from './types.js';
+export * as Views from './views/index.js';
 export * from './tinystacks-error.js';

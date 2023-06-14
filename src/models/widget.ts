@@ -1,8 +1,9 @@
 import { Widget as WidgetType } from '@tinystacks/ops-model';
-import { Parsable } from '../types.js';
 import { dynamicRequire, validatePropertyExists } from '../parser-utils.js';
+import { Parsable } from './parsable.js';
+import { Typed } from '../types.js';
 
-export abstract class Widget implements WidgetType, Parsable<WidgetType, Widget> {
+export abstract class Widget extends Parsable implements WidgetType, Typed {
   id: string;
   type: string;
   displayName: string;
@@ -10,9 +11,9 @@ export abstract class Widget implements WidgetType, Parsable<WidgetType, Widget>
   providerIds?: string[];
   childrenIds?: string[];
   description?: string;
-  fromJson: (object: WidgetType, dependencySource: string) => Widget | Promise<Widget>;
 
   constructor (widgetProps: WidgetType) {
+    super();
     const { id, type, displayName, providerIds, childrenIds, displayOptions, description } = widgetProps;
     this.id = id;
     this.type = type;
@@ -21,7 +22,6 @@ export abstract class Widget implements WidgetType, Parsable<WidgetType, Widget>
     this.childrenIds = childrenIds;
     this.description = description;
     this.displayOptions = displayOptions;
-    this.fromJson = Widget.fromJson;
   }
 
   static fromJson (object: WidgetType, dependencySource: string): Promise<Widget> | Widget {

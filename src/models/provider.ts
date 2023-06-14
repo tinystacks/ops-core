@@ -1,11 +1,13 @@
 import { dynamicRequire, validatePropertyExists } from '../parser-utils.js';
 import { Provider as ProviderType } from '@tinystacks/ops-model';
+import { Parsable } from './parsable.js';
 
-export abstract class Provider implements ProviderType {
+export abstract class Provider extends Parsable implements ProviderType {
   id: string;
   type: string;
 
   constructor (props: ProviderType) {
+    super();
     this.id = props.id;
     this.type = props.type;
   }

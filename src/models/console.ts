@@ -14,7 +14,8 @@ import { Dashboard } from './dashboard.js';
 import { Provider } from './provider.js';
 import { Widget } from './widget.js';
 import { BaseWidget } from './base-widget.js';
-import { Json, Parsable } from '../types.js';
+import { Json } from '../types.js';
+import { Parsable } from './parsable.js';
 
 type ExportRefs = { [ref: string]: string }[];
 type ExportYamlWidget = Omit<YamlWidget, 'providers' | 'children'> & {
@@ -26,7 +27,7 @@ type ExportConsoleYaml = Omit<YamlConsole, 'widgets'> & {
   widgets: { [id: string]: ExportYamlWidget }
 }
 
-export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
+export class Console extends Parsable implements ConsoleType {
   name: string;
   repository?: { url?: string; branch?: string; configFile?: string };
   providers: Record<string, Provider>;
@@ -45,6 +46,7 @@ export class Console implements ConsoleType, Parsable<ConsoleType, Console> {
     constants: Record<string, Constant> = {},
     repository?: { url?: string; branch?: string; configFile?: string }
   ) {
+    super();
     this.name = name;
     this.providers = providers;
     this.dashboards = dashboards;

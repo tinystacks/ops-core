@@ -1,14 +1,13 @@
-import { Parsable } from '../types.js';
+import { Parsable } from './parsable.js';
 import { validatePropertyExists } from '../parser-utils.js';
 import { Dashboard as DashboardType, Parameter } from '@tinystacks/ops-model';
 
-export class Dashboard implements DashboardType, Parsable<DashboardType, Dashboard> {
+export class Dashboard extends Parsable implements DashboardType {
   id: string;
   route: string;
   widgetIds: string[];
   parameters: Parameter[];
   description?: string;
-  fromJson: (object: DashboardType, dependencySource: string) => Dashboard | Promise<Dashboard>;
 
   constructor (
     route: string,
@@ -17,12 +16,12 @@ export class Dashboard implements DashboardType, Parsable<DashboardType, Dashboa
     parameters: Parameter[] = [],
     description?: string
   ) {
+    super();
     this.id = id;
     this.route = route;
     this.widgetIds = widgetIds;
     this.parameters = parameters;
     this.description = description;
-    this.fromJson = Dashboard.fromJson;
   }
 
   static fromJson (object: DashboardType): Dashboard {

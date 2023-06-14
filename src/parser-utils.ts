@@ -2,7 +2,7 @@ import get from 'lodash.get';
 import isNil from 'lodash.isnil';
 import { Console as ConsoleType, Provider, Widget } from '@tinystacks/ops-model';
 import TinyStacksError from './tinystacks-error.js';
-import { Parsable, Typed } from './types.js';
+import { Typed } from './types.js';
 
 export function validatePropertyExists (obj: any, propertyName: string, objectType: string){
   const propertyValue = get(obj, propertyName);
@@ -64,7 +64,7 @@ export function validateConsole (console: ConsoleType): void{
 
 export async function dynamicRequire<E extends Typed, U extends E> (object: E, dependencySource: string): Promise<U> {
   try {
-    const ParsableType: Parsable<E, U> = (await import(dependencySource))[object.type];
+    const ParsableType: U = (await import(dependencySource))[object.type];
     const parsable = await ParsableType.fromJson(object);
     return parsable;
   } catch(e){
