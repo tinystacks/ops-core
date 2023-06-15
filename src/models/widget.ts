@@ -28,7 +28,7 @@ export abstract class Widget extends Parsable implements WidgetType, Typed {
     validatePropertyExists(object, 'id', 'Widget');
     validatePropertyExists(object, 'type', 'Widget');
     validatePropertyExists(object, 'displayName', 'Widget');
-    return dynamicRequire<WidgetType, Widget>(object, dependencySource);
+    return dynamicRequire<WidgetType, Widget>(object, dependencySource, 'Widget');
   }
 
   toJson (): WidgetType {

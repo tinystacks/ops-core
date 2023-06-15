@@ -14,7 +14,7 @@ export abstract class Provider extends Parsable implements ProviderType {
 
   static fromJson (object: ProviderType, dependencySource?: string): Promise<Provider> | Provider {
     validatePropertyExists(object, 'type', 'Provider');
-    return dynamicRequire<ProviderType, Provider>(object, dependencySource);
+    return dynamicRequire<ProviderType, Provider>(object, dependencySource, 'Provider');
   }
 
   toJson (): ProviderType {
