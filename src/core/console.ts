@@ -35,7 +35,6 @@ export class Console extends Parsable implements ConsoleType {
   widgets: Record<string, Widget>;
   dependencies?: Record<string, string>;
   constants?: Record<string, Constant>;
-  fromJson: (object: ConsoleType, dependencySource: string) => Console | Promise<Console>;
 
   constructor (
     name: string,
@@ -54,7 +53,6 @@ export class Console extends Parsable implements ConsoleType {
     this.dependencies = dependencies;
     this.constants = constants;
     this.repository = repository;
-    this.fromJson = Console.fromJson;
   }
 
   static parse (consoleYaml: YamlConsole): ConsoleType {
