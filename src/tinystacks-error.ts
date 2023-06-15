@@ -45,7 +45,6 @@ class TinyStacksError implements TinyStacksErrorType {
     },
     context?: string
   ) {
-    super();
     this.name = TinyStacksError.TinyStacksErrorName;
     this.message = message;
     this.status = status;
