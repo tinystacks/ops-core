@@ -78,6 +78,7 @@ export async function dynamicRequire<E extends Typed, U extends E> (object: E, d
     return parsable;
   } catch(e: any){
     if (e.code === 'ERR_MODULE_NOT_FOUND') {
+      missingDependencyError.cause = `Cannot find module ${dependencySource} for ${entityType.toLowerCase()} ${object.type} used in ${object.id}.`;
       throw missingDependencyError;
     }
     console.error(e);
