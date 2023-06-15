@@ -1,6 +1,5 @@
 import { TinyStacksError as TinyStacksErrorType } from '@tinystacks/ops-model';
 import { ReasonPhrases, StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { Parsable } from './core';
 
 type ShortTinyStacksError = {
   status: number;
@@ -22,7 +21,7 @@ function getErrorType (status: number) {
   }
 }
 
-class TinyStacksError extends Parsable implements TinyStacksErrorType {
+class TinyStacksError implements TinyStacksErrorType {
   static TinyStacksErrorName = 'TinyStacksError';
   name: string;
   type: string;
