@@ -17,32 +17,29 @@ describe('TinyStacksError', () => {
       expect(tsError).toHaveProperty('message', 'error');
       expect(tsError).toHaveProperty('status', 418);
       expect(tsError).toHaveProperty('stack', 'Error at line 1');
-      expect(tsError).toHaveProperty('type', TinyStacksErrorType.type.VALIDATION);
+      expect(tsError).toHaveProperty('type', 'Validation');
     });
     
-    it('defaults type to Validation if type is not in enum and status is 4xx', () => {
+    it('defaults type to standard type for status if type is not specified', () => {
       const inputError = {
         message: 'error',
-        status: 418,
-        stack: 'Error at line 1',
-        type: 'I\'m a teapot'
+        status: 424,
+        stack: 'Error at line 1'
       } as unknown as TinyStacksErrorType;
 
       const tsError = TinyStacksError.fromJson(inputError);
 
       expect(tsError).toHaveProperty('name', TinyStacksError.TinyStacksErrorName);
       expect(tsError).toHaveProperty('message', 'error');
-      expect(tsError).toHaveProperty('status', 418);
+      expect(tsError).toHaveProperty('status', 424);
       expect(tsError).toHaveProperty('stack', 'Error at line 1');
-      expect(tsError).toHaveProperty('type', TinyStacksErrorType.type.VALIDATION);
-   
+      expect(tsError).toHaveProperty('type', 'Failed Dependency');
     });
-    it('defaults type to InternalServerError if type is not in enum and status is not 4xx', () => {
+    it('defaults type to standard type for error category if standard type is not found for specific status code', () => {
       const inputError = {
         message: 'error',
         status: 508,
-        stack: 'Error at line 1',
-        type: 'Loop Detected'
+        stack: 'Error at line 1'
       } as unknown as TinyStacksErrorType;
 
       const tsError = TinyStacksError.fromJson(inputError);
@@ -51,7 +48,7 @@ describe('TinyStacksError', () => {
       expect(tsError).toHaveProperty('message', 'error');
       expect(tsError).toHaveProperty('status', 508);
       expect(tsError).toHaveProperty('stack', 'Error at line 1');
-      expect(tsError).toHaveProperty('type', TinyStacksErrorType.type.INTERNAL_SERVER_ERROR);
+      expect(tsError).toHaveProperty('type', 'Internal Server Error');
     });
   });
 
@@ -72,18 +69,6 @@ describe('TinyStacksError', () => {
       const errorObject = {
         name: 'OtherError',
         type: 'Validation',
-        status: 418,
-        message: 'Error!'
-      };
-
-      const isTsError = TinyStacksError.isTinyStacksError(errorObject);
-
-      expect(isTsError).toBe(false);
-    });
-    it('returns false if object does not have type in enum', () => {
-      const errorObject = {
-        name: 'TinyStacksError',
-        type: 'OtherType',
         status: 418,
         message: 'Error!'
       };
