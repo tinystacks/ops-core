@@ -1,3 +1,7 @@
+v0.4.0
+---
+- Implement enhanced TinyStacksError
+ 
 v0.3.2
 ---
 
