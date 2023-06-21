@@ -1,5 +1,5 @@
 import { Parameter } from '@tinystacks/ops-model';
-import { DashboardParser } from '../src/dashboard-parser.js';
+import { Dashboard } from '../src/core/dashboard.js';
 import TinyStacksError from '../src/tinystacks-error.js';
 
 const basicDashboard = {
@@ -22,11 +22,11 @@ const yamlDashboard = {
 
 describe('Dashboard', () => {
   it('constructor does not lose core data', () => {
-    const dashboard = new DashboardParser(basicDashboard.route, basicDashboard.widgetIds, basicDashboard.id);
+    const dashboard = new Dashboard(basicDashboard.route, basicDashboard.widgetIds, basicDashboard.id);
     expect(dashboard.toJson()).toStrictEqual(basicDashboard);
   });
   it('fromJson does not lose core data', () => {
-    const dashboard = DashboardParser.fromJson(basicDashboard);
+    const dashboard = Dashboard.fromJson(basicDashboard);
     expect(dashboard.toJson()).toStrictEqual(basicDashboard);
   });
   it('missing widgetIds throws', () => {
@@ -38,7 +38,7 @@ describe('Dashboard', () => {
     });
     let thrownError: any;
     try {
-      DashboardParser.fromJson(dashJson);
+      Dashboard.fromJson(dashJson);
     } catch (e) {
       thrownError = e;
     } finally {
@@ -55,7 +55,7 @@ describe('Dashboard', () => {
     });
     let thrownError: any;
     try {
-      DashboardParser.fromJson(dashJson);
+      Dashboard.fromJson(dashJson);
     } catch (e) {
       thrownError = e;
     } finally {
@@ -65,7 +65,7 @@ describe('Dashboard', () => {
   });
 
   it('toYaml renders yaml correctly', () => {
-    const dashboardYaml = DashboardParser.fromJson(basicDashboard).toYaml();
+    const dashboardYaml = Dashboard.fromJson(basicDashboard).toYaml();
     expect(dashboardYaml).toStrictEqual(yamlDashboard);
   });
 });

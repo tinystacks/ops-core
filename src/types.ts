@@ -1,7 +1,7 @@
-type OtherProperties = {
+export type Json = {
   [key: string]: any
 };
 
-export {
-  OtherProperties
-};
+export type Typed = Json & {
+  type?: string | undefined;
+}

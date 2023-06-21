@@ -1,8 +1,8 @@
 import get from 'lodash.get';
 import isNil from 'lodash.isnil';
 import { Console as ConsoleType, Provider, Widget } from '@tinystacks/ops-model';
-import { BaseWidget } from './base-widget.js';
 import TinyStacksError from './tinystacks-error.js';
+import { Typed } from './types.js';
 import { StatusCodes } from 'http-status-codes';
 
 export function validatePropertyExists (obj: any, propertyName: string, objectType: string){
@@ -63,7 +63,7 @@ export function validateConsole (console: ConsoleType): void{
   validateProviderReferences(console.providers, allProviders);
 }
 
-export async function dynamicRequire<E extends { type: string, id: string }> (object: E, dependencySource: string, entityType: string): Promise<BaseWidget> {
+export async function dynamicRequire<E extends Typed, U extends E> (object: E, dependencySource: string, entityType: string): Promise<U> {
   const missingDependencyError = TinyStacksError.fromJson({
     message: 'Missing dependency!',
     status: StatusCodes.FAILED_DEPENDENCY,
@@ -73,10 +73,10 @@ export async function dynamicRequire<E extends { type: string, id: string }> (ob
     throw missingDependencyError;
   }
   try {
-    const WidgetType: any = (await import(dependencySource))[object.type];
-    const widget = await WidgetType.fromJson(object);
-    return widget;
-  } catch (e: any) {
+    const ParsableType: U = (await import(dependencySource))[object.type];
+    const parsable = await ParsableType.fromJson(object);
+    return parsable;
+  } catch(e: any){
     if (e.code === 'ERR_MODULE_NOT_FOUND') {
       missingDependencyError.cause = `Cannot find module ${dependencySource} for ${entityType.toLowerCase()} ${object.type} used in ${object.id}.`;
       throw missingDependencyError;

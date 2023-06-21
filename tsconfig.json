@@ -26,11 +26,7 @@
     "jsx": "preserve",
     "allowJs": true,
     "baseUrl": ".",
-    "paths": { 
-      "ops-core/*": [
-        "./src/*"
-      ]
-    }
+    "paths": {}
   },
   "include": ["./src"]
 }
