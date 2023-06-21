@@ -42,9 +42,6 @@
     "view-test-cov": "jest --coverage || true && open coverage/lcov-report/index.html"
   },
   "devDependencies": {
-    "@babel/cli": "^7.20.7",
-    "@babel/core": "^7.20.12",
-    "@babel/preset-env": "^7.20.2",
     "@types/http-status-codes": "^1.2.0",
     "@types/jest": "^29.4.0",
     "@types/lodash.get": "^4.4.7",
